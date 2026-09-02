@@ -1,4 +1,4 @@
-# Song Hàng
+# Song Hành
 
 Trợ lý lên lịch trình cho vùng Quy Nhơn – Gia Lai sau sáp nhập. Người dùng nhập số ngày, sở thích và điểm xuất phát; trang web gợi ý lịch trình chia theo cụm biển và cụm cao nguyên, không bao giờ ghép hai vùng cách xa nhau vào cùng một ngày.
 
