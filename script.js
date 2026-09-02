@@ -1,5 +1,5 @@
 /**
- * Song Hàng — logic sinh lịch trình
+ * Song Hành — logic sinh lịch trình
  *
  * GHI CHÚ: Phần dưới đây dùng một bộ dữ liệu điểm đến tĩnh cùng luật
  * logic viết sẵn (đúng theo ràng buộc địa lý: không ghép hai vùng
