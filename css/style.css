@@ -1,31 +1,25 @@
 /* =====================================================================
-   1. BIẾN & TOKEN THIẾT KẾ
-   Màu chủ đạo lấy cảm hứng từ chính hai vùng đất: đỏ bazan của cao
-   nguyên Gia Lai làm màu thương hiệu, xanh ngọc của biển Kỳ Co làm
-   màu phụ cho cụm biển. Đây là lý do "Song Hành" luôn xuất hiện với
-   hai tông màu song song thay vì một màu duy nhất.
+   1. BIẾN & TOKEN THIẾT KẾ (theo đúng bảng màu 60-30-10 đã chốt)
    ===================================================================== */
 :root {
-  --bazan: #9c2b1b;
-  --bazan-dark: #6b1d12;
-  --bazan-tint: #f0dcd5;
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --ink: #1A1A2E;
+  --slate: #2D3748;
+  --slate-soft: #94A3B8;
+  --border: #E2E8F0;
 
-  --kyco: #12746c;
-  --kyco-dark: #0b4d47;
-  --kyco-tint: #d9efec;
+  --accent: #C62828;
+  --accent-soft: #FDEAEA;
 
-  --sand: #f7efe1;
-  --sand-deep: #efe0c8;
+  --warn: #E65100;
+  --warn-bg: #FFF3E0;
 
-  --ink: #241512;
-  --ink-soft: #6b544c;
+  --blue: #1565C0;
+  --blue-bg: #E3F2FD;
 
-  --warn: #a3591a;
-  --warn-bg: #fbeedd;
-
-  --white: #fffaf6;
-
-  --shadow: 0 8px 24px rgba(36, 21, 18, 0.12);
+  --shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+  --shadow-lg: 0 10px 30px rgba(198, 40, 40, 0.35);
 
   --font-display: "Be Vietnam Pro", system-ui, sans-serif;
   --font-body: "Sarabun", system-ui, sans-serif;
@@ -44,564 +38,532 @@ html {
 
 body {
   margin: 0;
-  background: var(--sand);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3 {
   margin: 0;
+  font-family: var(--font-display);
 }
 
 p {
   margin: 0;
 }
 
-a {
-  color: inherit;
-}
-
 button {
   font: inherit;
 }
 
+svg {
+  display: block;
+}
+
 :focus-visible {
-  outline: 3px solid var(--bazan);
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
 
 /* =====================================================================
-   3. LAYOUT DÙNG CHUNG (container, nút bấm)
+   3. LAYOUT DÙNG CHUNG
    ===================================================================== */
 .container {
-  width: min(1120px, 92%);
+  width: min(1100px, 92%);
   margin-inline: auto;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.95rem;
-  padding: 0.85rem 1.6rem;
-  border-radius: 999px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.btn--primary {
-  background: var(--bazan);
-  color: var(--white);
-}
-
-.btn--primary:hover {
-  background: var(--bazan-dark);
-}
-
-.btn--onDark {
-  background: var(--white);
-  color: var(--bazan);
-}
-
-.btn--onDark:hover {
-  background: var(--sand);
-  box-shadow: 0 6px 18px rgba(36, 21, 18, 0.2);
-}
-
-.btn--outline {
-  background: transparent;
-  color: var(--warn);
-  border-color: var(--warn);
-}
-
-.btn--outline:hover {
-  background: var(--warn);
-  color: var(--white);
-}
+/* kích thước icon theo từng ngữ cảnh — lucide.createIcons() giữ lại
+   class gốc khi thay <i data-lucide> bằng <svg>, nên style theo class */
+.label-icon { width: 16px; height: 16px; stroke-width: 2.25; color: var(--accent); }
+.chevron-icon { width: 16px; height: 16px; color: var(--slate-soft); }
+.cta-icon { width: 20px; height: 20px; }
+.clock-icon { width: 12px; height: 12px; }
+.activity-icon { width: 16px; height: 16px; }
+.warn-icon { width: 24px; height: 24px; flex-shrink: 0; color: var(--warn); }
+.strategy-icon { width: 24px; height: 24px; flex-shrink: 0; color: var(--accent); }
 
 /* =====================================================================
-   4. HEADER
-   ===================================================================== */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: var(--sand);
-  border-bottom: 1px solid rgba(36, 21, 18, 0.08);
-}
-
-.site-header__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-block: 1rem;
-}
-
-.logo {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 1.35rem;
-  color: var(--bazan);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-}
-
-.site-nav {
-  display: flex;
-  gap: 1.75rem;
-}
-
-.site-nav a {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-decoration: none;
-}
-
-.site-nav a:hover {
-  color: var(--bazan);
-}
-
-/* =====================================================================
-   5. HERO
-   Hai mảng màu chéo đại diện cho hai vùng đất, gặp nhau ở một
-   đường chéo duy nhất — đây là điểm nhấn thị giác chính của trang,
-   mọi phần khác giữ tiết chế xung quanh nó.
+   4. HERO
    ===================================================================== */
 .hero {
   position: relative;
-  min-height: min(88vh, 720px);
-  display: flex;
-  align-items: center;
   overflow: hidden;
+  padding: 5.5rem 1.5rem 7rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--slate) 100%);
 }
 
-.hero__side {
+.hero__glow {
   position: absolute;
   inset: 0;
+  background: radial-gradient(800px 420px at 15% 0%, rgba(198, 40, 40, 0.4), transparent 60%);
+  pointer-events: none;
 }
 
-.hero__side--soil {
-  clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%);
-  background: linear-gradient(155deg, var(--bazan) 0%, var(--bazan-dark) 100%);
+.hero__icon {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  color: #ffffff;
+  opacity: 0.08;
+  pointer-events: none;
 }
 
-.hero__side--sea {
-  clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
-  background: linear-gradient(155deg, var(--kyco) 0%, var(--kyco-dark) 100%);
+.hero__icon--left {
+  left: -2rem;
+  bottom: -1rem;
+}
+
+.hero__icon--right {
+  right: -2rem;
+  top: 1rem;
 }
 
 .hero__content {
   position: relative;
-  z-index: 2;
-  max-width: 640px;
-  color: var(--white);
-  background: rgba(36, 21, 18, 0.32);
-  backdrop-filter: blur(6px);
-  border-radius: 24px;
-  padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
+  max-width: 720px;
 }
 
 .hero h1 {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
-  line-height: 1.08;
+  font-weight: 800;
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  line-height: 1.15;
+  color: #ffffff;
   letter-spacing: -0.01em;
-  margin-bottom: 1.25rem;
 }
 
 .hero p {
-  font-size: 1.05rem;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.92);
-  max-width: 52ch;
-  margin-bottom: 1.75rem;
-}
-
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem 1.5rem;
-}
-
-.hero__stat {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.85);
-  border: 1px dashed rgba(255, 255, 255, 0.5);
-  border-radius: 999px;
-  padding: 0.45rem 0.9rem;
+  margin-top: 1.1rem;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* =====================================================================
-   6. PHẦN CÂU CHUYỆN HAI VÙNG (#story)
+   5. FORM (planner-card)
    ===================================================================== */
-.story {
-  padding-block: 6rem 5rem;
-}
-
-.story__grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 3.5rem;
-  align-items: start;
-}
-
-.story h2 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.7rem, 3vw, 2.3rem);
-  max-width: 20ch;
-  margin-bottom: 1.25rem;
-}
-
-.story__text p {
-  color: var(--ink-soft);
-  line-height: 1.75;
-  max-width: 62ch;
-  margin-bottom: 1.1rem;
-}
-
-.story__clusters {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.cluster-card {
-  border-radius: 20px;
-  padding: 1.5rem 1.75rem;
-  color: var(--white);
-}
-
-.cluster-card h3 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.cluster-card p {
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.cluster-card--sea {
-  background: var(--kyco);
-}
-
-.cluster-card--highland {
-  background: var(--bazan);
-}
-
-/* =====================================================================
-   7. FORM LÊN LỊCH TRÌNH (#planner)
-   ===================================================================== */
-.planner {
-  padding-block: 5rem;
-}
-
-.planner h2 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.7rem, 3vw, 2.3rem);
-  margin-bottom: 0.6rem;
-}
-
-.planner__intro {
-  color: var(--ink-soft);
-  max-width: 56ch;
-  margin-bottom: 2.25rem;
-}
-
-.planner-form {
-  background: var(--white);
+.planner-card {
+  position: relative;
+  margin-top: -4rem;
+  background: var(--surface);
   border-radius: 24px;
-  padding: clamp(1.75rem, 4vw, 2.75rem);
-  box-shadow: var(--shadow);
+  box-shadow: 0 20px 45px rgba(26, 26, 46, 0.12);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+}
+
+.planner-grid {
   display: grid;
-  gap: 1.75rem;
-  max-width: 640px;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
 .field {
-  display: grid;
-  gap: 0.6rem;
-  border: none;
-  margin: 0;
-  padding: 0;
+  margin-top: 2rem;
+}
+
+.planner-grid .field {
+  margin-top: 0;
 }
 
 .field label,
-.field legend {
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.9rem;
-  padding: 0;
+  color: var(--slate);
 }
 
-.field input[type="number"],
-.field select {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--sand-deep);
-  border-radius: 12px;
-  background: var(--sand);
-  color: var(--ink);
-}
-
-.field input[type="number"]:focus-visible,
-.field select:focus-visible {
-  outline: none;
-  border-color: var(--bazan);
-}
-
-.choice-group {
+/* --- thanh trượt số ngày --- */
+.slider-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.85rem;
 }
 
-.choice-pill {
-  display: inline-flex;
+input[type="range"] {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border);
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
-.choice-pill input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  margin-top: -6px;
 }
 
-.choice-pill span {
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+}
+
+.days-badge {
+  flex-shrink: 0;
+  width: 3.25rem;
+  text-align: center;
+  padding: 0.4rem 0;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--slate-soft);
+}
+
+/* --- dropdown điểm khởi hành --- */
+.select-wrap {
+  position: relative;
+  margin-top: 0.85rem;
+}
+
+.select-wrap select {
+  width: 100%;
+  appearance: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
   font-weight: 500;
-  font-size: 0.9rem;
-  padding: 0.6rem 1.15rem;
-  border: 2px solid var(--sand-deep);
-  border-radius: 999px;
-  background: var(--sand);
-  color: var(--ink-soft);
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  color: var(--ink);
+  background: #F8FAFC;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem 2.5rem 0.85rem 1rem;
 }
 
-.choice-pill input:checked + span {
-  background: var(--bazan);
-  border-color: var(--bazan);
-  color: var(--white);
+.select-wrap select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
 }
 
-.choice-pill input:focus-visible + span {
-  outline: 2px solid var(--bazan);
-  outline-offset: 2px;
-}
-
-.planner-form .btn {
-  justify-self: start;
+.chevron-icon {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 /* =====================================================================
-   8. KẾT QUẢ / LỊCH TRÌNH (#result)
-   Đường kẻ chấm dọc tượng trưng cho hành trình di chuyển, mỗi điểm
-   tròn là một ngày — cùng một ẩn dụ "tuyến đường" xuyên suốt trang.
+   6. THẺ SỞ THÍCH (interest tags)
+   ===================================================================== */
+.field--tags {
+  margin-top: 2.25rem;
+}
+
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.tag {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--slate);
+  padding: 0.65rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.tag:hover {
+  border-color: var(--accent);
+}
+
+.tag.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+/* =====================================================================
+   7. NÚT CTA + SPINNER
+   ===================================================================== */
+.cta-row {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: none;
+  border-radius: 999px;
+  padding: 1rem 2.2rem;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(198, 40, 40, 0.45);
+}
+
+.cta-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+  transform: none;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================================
+   8. KẾT QUẢ — cảnh báo & chiến lược
    ===================================================================== */
 .result {
-  padding-block: 1rem 6rem;
+  margin-top: 3rem;
+  padding-bottom: 5rem;
 }
 
 .result[hidden] {
   display: none;
 }
 
-.result-heading {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  margin-bottom: 0.5rem;
-}
-
-.result-sub {
-  color: var(--ink-soft);
-  margin-bottom: 2rem;
-}
-
-.warning-card {
+.warning-box {
+  display: flex;
+  gap: 1rem;
   background: var(--warn-bg);
   border: 2px solid var(--warn);
   border-radius: 20px;
-  padding: 1.75rem 2rem;
-  display: grid;
-  gap: 1rem;
-  max-width: 640px;
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 1.5rem;
 }
 
-.warning-card h3 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.2rem;
+.warning-box h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
-.warning-card p {
-  color: var(--ink-soft);
+.warning-box p {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
   line-height: 1.6;
+  color: var(--slate);
 }
 
-.warning-card__actions {
+.strategy-box {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.itinerary {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2.25rem;
-  position: relative;
-  padding-left: 3.25rem;
-  margin: 0;
-  max-width: 720px;
-}
-
-.itinerary::before {
-  content: "";
-  position: absolute;
-  left: 14px;
-  top: 6px;
-  bottom: 6px;
-  border-left: 3px dashed var(--sand-deep);
-}
-
-.day-card {
-  position: relative;
-  background: var(--white);
+  gap: 1rem;
+  background: var(--surface);
+  border-left: 4px solid var(--accent);
   border-radius: 20px;
-  padding: 1.5rem 1.75rem;
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 2rem;
   box-shadow: var(--shadow);
 }
 
-.day-card__marker {
-  position: absolute;
-  left: -3.25rem;
-  top: 1.4rem;
+.strategy-box h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.strategy-box p {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--slate);
+}
+
+/* =====================================================================
+   9. LƯỚI THẺ NGÀY (day cards) + DÒNG THỜI GIAN
+   ===================================================================== */
+.day-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.day-card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--accent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.day-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(26, 26, 46, 0.14);
+}
+
+.day-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.day-card__number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.day-card__badge {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+}
+
+.day-timeline {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.day-timeline li {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.day-timeline__icon-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.day-timeline__icon {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 0.9rem;
-  color: var(--white);
 }
 
-.day-card--bien .day-card__marker {
-  background: var(--kyco);
-}
-
-.day-card--caonguyen .day-card__marker {
-  background: var(--bazan);
-}
-
-.day-card__badge {
-  display: inline-block;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.75rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  margin-bottom: 0.6rem;
-}
-
-.day-card--bien .day-card__badge {
-  background: var(--kyco-tint);
-  color: var(--kyco-dark);
-}
-
-.day-card--caonguyen .day-card__badge {
-  background: var(--bazan-tint);
-  color: var(--bazan-dark);
-}
-
-.day-card__places {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-  margin-bottom: 0.35rem;
-}
-
-.day-card p:last-child {
-  color: var(--ink-soft);
-  line-height: 1.65;
-}
-
-/* =====================================================================
-   9. FOOTER
-   ===================================================================== */
-.site-footer {
-  padding-block: 2.5rem;
-  border-top: 1px solid rgba(36, 21, 18, 0.08);
-}
-
-.site-footer__inner p {
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-}
-
-.site-footer__inner p + p {
+.day-timeline__line {
+  width: 1px;
+  flex: 1;
+  background: var(--border);
   margin-top: 0.25rem;
 }
 
+.day-timeline__time {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--slate-soft);
+}
+
+.day-timeline__title {
+  margin-top: 0.2rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.day-timeline__desc {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--slate);
+}
+
 /* =====================================================================
-   10. RESPONSIVE
+   10. FOOTER
    ===================================================================== */
-@media (max-width: 860px) {
-  .story__grid {
-    grid-template-columns: 1fr;
+.site-footer {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.site-footer p {
+  font-size: 0.8rem;
+  color: var(--slate-soft);
+}
+
+/* =====================================================================
+   11. RESPONSIVE
+   ===================================================================== */
+@media (min-width: 640px) {
+  .day-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 560px) {
-  .site-nav {
-    gap: 1rem;
-    font-size: 0.85rem;
+@media (min-width: 1024px) {
+  .day-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .planner-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .planner-grid .field:last-child {
+    margin-top: 2rem;
   }
 
   .hero {
-    min-height: auto;
-    padding-block: 5rem 3rem;
+    padding: 4rem 1.25rem 6rem;
   }
 
-  .hero__content {
-    padding: 1.75rem;
-    margin-inline: 1rem;
-  }
-
-  .itinerary {
-    padding-left: 2.5rem;
-  }
-
-  .day-card__marker {
-    left: -2.5rem;
-    width: 28px;
-    height: 28px;
-    font-size: 0.8rem;
+  .planner-card {
+    margin-top: -3rem;
   }
 }
 
 /* =====================================================================
-   11. TÔN TRỌNG NGƯỜI DÙNG GIẢM CHUYỂN ĐỘNG
+   12. TÔN TRỌNG NGƯỜI DÙNG GIẢM CHUYỂN ĐỘNG
    ===================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -610,5 +572,6 @@ button {
 
   * {
     transition: none !important;
+    animation: none !important;
   }
 }

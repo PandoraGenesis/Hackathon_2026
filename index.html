@@ -3,120 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Song Hành — Trợ lý hành trình Quy Nhơn – Gia Lai</title>
-<meta name="description" content="Song Hành gợi ý lịch trình hợp lý giữa vùng biển Quy Nhơn và vùng cao nguyên Gia Lai, dựa trên số ngày, sở thích và điểm xuất phát của bạn.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%239c2b1b%22/%3E%3C/svg%3E">
+<title>Song Hành — Trợ Lý Du Lịch AI Quy Nhơn – Gia Lai</title>
+<meta name="description" content="Trợ lý AI lên lịch trình giữa Quy Nhơn và Gia Lai, tự động phân cụm theo thực tế địa lý giữa vùng biển đảo và cao nguyên.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23C62828%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800;900&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container site-header__inner">
-    <a href="#top" class="logo">Song Hành</a>
-    <nav class="site-nav">
-      <a href="#story">Câu chuyện</a>
-      <a href="#planner">Lên lịch trình</a>
-    </nav>
+<!-- ============ 1. HERO HEADER ============ -->
+<header class="hero">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <i data-lucide="waves" class="hero__icon hero__icon--left" aria-hidden="true"></i>
+  <i data-lucide="mountain" class="hero__icon hero__icon--right" aria-hidden="true"></i>
+  <div class="container hero__content">
+    <h1>Trợ Lý Du Lịch AI: Kết Nối Quy Nhơn – Gia Lai</h1>
+    <p>Tự động phân cụm lịch trình tối ưu theo thực tế địa lý giữa Biển Đảo &amp; Cao Nguyên</p>
   </div>
 </header>
 
-<main id="top">
+<main>
 
-  <section class="hero">
-    <div class="hero__side hero__side--soil" aria-hidden="true"></div>
-    <div class="hero__side hero__side--sea" aria-hidden="true"></div>
-    <div class="container hero__content">
-      <h1>Một tỉnh, hai vùng đất,<br>một hành trình song hành.</h1>
-      <p>Song Hành là trợ lý lên lịch trình cho vùng đất Quy Nhơn – Gia Lai sau sáp nhập. Cho biết số ngày, sở thích và điểm xuất phát, hệ thống sắp xếp hành trình hợp lý giữa biển và cao nguyên — không bao giờ ghép hai vùng cách nhau hàng trăm cây số vào chung một ngày.</p>
-      <div class="hero__actions">
-        <a href="#planner" class="btn btn--onDark">Bắt đầu lên lịch trình</a>
-        <span class="hero__stat">180–200km · khoảng 4 giờ lái xe giữa Quy Nhơn và Pleiku</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="story" id="story">
-    <div class="container story__grid">
-      <div class="story__text">
-        <h2>Vì sao cần một trợ lý hiểu cả hai vùng?</h2>
-        <p>Sau khi sáp nhập với Bình Định cũ, tỉnh sở hữu hai cụm tài nguyên du lịch mang bản sắc gần như đối lập: một bên là biển, một bên là cao nguyên. Phần lớn nội dung du lịch hiện nay vẫn viết tách biệt "Quy Nhơn" và "Gia Lai" như hai điểm đến độc lập, hiếm khi có ai chủ động kể chuyện một tỉnh có hai vùng đất song hành.</p>
-        <p>Vấn đề không chỉ là thiếu thông tin, mà là thiếu một công cụ hiểu đủ sâu cả hai vùng để tư vấn một lịch trình hợp lý — nhất là khi khoảng cách di chuyển giữa hai vùng đủ lớn để phá hỏng một chuyến đi nếu không được tính toán kỹ.</p>
-      </div>
-      <div class="story__clusters">
-        <div class="cluster-card cluster-card--sea">
-          <h3>Cụm biển</h3>
-          <p>Kỳ Co · Eo Gió · Ghềnh Ráng · Cù Lao Xanh</p>
+  <!-- ============ 2. FORM NHẬP LIỆU ============ -->
+  <section class="planner-card container">
+    <div class="planner-grid">
+      <div class="field">
+        <label for="days"><i data-lucide="calendar-days" class="label-icon"></i> Số ngày trải nghiệm</label>
+        <div class="slider-row">
+          <input type="range" id="days" min="1" max="7" value="3">
+          <span id="days-value" class="days-badge">3</span>
         </div>
-        <div class="cluster-card cluster-card--highland">
-          <h3>Cụm cao nguyên</h3>
-          <p>Biển Hồ · Thác K50 · Làng Bahnar, Jrai · Đồi chè, cà phê</p>
-        </div>
+        <div class="slider-labels"><span>1 ngày</span><span>7 ngày</span></div>
       </div>
-    </div>
-  </section>
 
-  <section class="planner" id="planner">
-    <div class="container">
-      <h2>Lên lịch trình của bạn</h2>
-      <p class="planner__intro">Điền vài thông tin, Song Hành sẽ gợi ý lịch trình theo từng ngày — chia rõ theo vùng, không trộn lẫn.</p>
-
-      <form id="planner-form" class="planner-form" novalidate>
-        <div class="field">
-          <label for="days">Số ngày</label>
-          <input type="number" id="days" name="days" min="1" max="10" value="3" required>
-        </div>
-
-        <fieldset class="field">
-          <legend>Sở thích</legend>
-          <div class="choice-group">
-            <label class="choice-pill">
-              <input type="checkbox" name="interest" value="bien">
-              <span>Biển</span>
-            </label>
-            <label class="choice-pill">
-              <input type="checkbox" name="interest" value="caonguyen">
-              <span>Văn hoá – thiên nhiên</span>
-            </label>
-            <label class="choice-pill">
-              <input type="checkbox" name="interest" value="amthuc">
-              <span>Ẩm thực</span>
-            </label>
-            <label class="choice-pill">
-              <input type="checkbox" name="interest" value="phieuluu">
-              <span>Phiêu lưu</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <div class="field">
-          <label for="start">Điểm xuất phát</label>
-          <select id="start" name="start">
-            <option value="quynhon">Quy Nhơn</option>
-            <option value="pleiku">Pleiku</option>
+      <div class="field">
+        <label for="departure"><i data-lucide="navigation" class="label-icon"></i> Điểm khởi hành</label>
+        <div class="select-wrap">
+          <select id="departure">
+            <option>TP. Quy Nhơn</option>
+            <option>TP. Pleiku</option>
+            <option>Sân bay Phù Cát (UIH)</option>
+            <option>Sân bay Pleiku (PXU)</option>
           </select>
+          <i data-lucide="chevron-down" class="chevron-icon"></i>
         </div>
+      </div>
+    </div>
 
-        <button type="submit" class="btn btn--primary">Tạo lịch trình</button>
-      </form>
+    <div class="field field--tags">
+      <p class="field-label"><i data-lucide="heart" class="label-icon"></i> Bạn muốn trải nghiệm điều gì?</p>
+      <div class="tag-group" id="tag-group">
+        <button type="button" class="tag active" data-tag="bien">🌊 Biển đảo &amp; Lặn ngắm san hô</button>
+        <button type="button" class="tag" data-tag="caphe">☕ Cà phê &amp; Đồi chè</button>
+        <button type="button" class="tag active" data-tag="thac">⛰️ Thác nước &amp; Thiên nhiên</button>
+        <button type="button" class="tag" data-tag="vanhoa">🪕 Văn hóa Tây Nguyên &amp; Cồng chiêng</button>
+        <button type="button" class="tag" data-tag="amthuc">🍲 Ẩm thực bản địa (Bún rạm / Phở khô 2 tô)</button>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button type="button" id="generate-btn" class="cta-btn">
+        <i data-lucide="sparkles" class="cta-icon"></i>
+        <span>Tạo Lịch Trình Thông Minh</span>
+      </button>
     </div>
   </section>
 
-  <section class="result" id="result" aria-live="polite" hidden>
-    <div class="container" id="result-container"></div>
-  </section>
+  <!-- ============ 3. KẾT QUẢ — được script.js render vào đây ============ -->
+  <section id="result" class="container result" hidden></section>
 
 </main>
 
 <footer class="site-footer">
-  <div class="container site-footer__inner">
-    <p><strong>Song Hành</strong> — trợ lý khám phá Quy Nhơn – Gia Lai.</p>
-    <p class="site-footer__note">Dự án dự thi Gia Lai Youth HackAIthon 2026.</p>
-  </div>
+  <p>Song Hành — Dự án dự thi Gia Lai Youth HackAIthon 2026.</p>
 </footer>
 
-<script src="js/script.js" defer></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="script.js" defer></script>
 </body>
 </html>
