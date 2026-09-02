@@ -1,0 +1,614 @@
+/* =====================================================================
+   1. BIẾN & TOKEN THIẾT KẾ
+   Màu chủ đạo lấy cảm hứng từ chính hai vùng đất: đỏ bazan của cao
+   nguyên Gia Lai làm màu thương hiệu, xanh ngọc của biển Kỳ Co làm
+   màu phụ cho cụm biển. Đây là lý do "Song Hàng" luôn xuất hiện với
+   hai tông màu song song thay vì một màu duy nhất.
+   ===================================================================== */
+:root {
+  --bazan: #9c2b1b;
+  --bazan-dark: #6b1d12;
+  --bazan-tint: #f0dcd5;
+
+  --kyco: #12746c;
+  --kyco-dark: #0b4d47;
+  --kyco-tint: #d9efec;
+
+  --sand: #f7efe1;
+  --sand-deep: #efe0c8;
+
+  --ink: #241512;
+  --ink-soft: #6b544c;
+
+  --warn: #a3591a;
+  --warn-bg: #fbeedd;
+
+  --white: #fffaf6;
+
+  --shadow: 0 8px 24px rgba(36, 21, 18, 0.12);
+
+  --font-display: "Be Vietnam Pro", system-ui, sans-serif;
+  --font-body: "Sarabun", system-ui, sans-serif;
+}
+
+/* =====================================================================
+   2. RESET & NỀN CHUNG
+   ===================================================================== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--sand);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--bazan);
+  outline-offset: 2px;
+}
+
+/* =====================================================================
+   3. LAYOUT DÙNG CHUNG (container, nút bấm)
+   ===================================================================== */
+.container {
+  width: min(1120px, 92%);
+  margin-inline: auto;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn--primary {
+  background: var(--bazan);
+  color: var(--white);
+}
+
+.btn--primary:hover {
+  background: var(--bazan-dark);
+}
+
+.btn--onDark {
+  background: var(--white);
+  color: var(--bazan);
+}
+
+.btn--onDark:hover {
+  background: var(--sand);
+  box-shadow: 0 6px 18px rgba(36, 21, 18, 0.2);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+.btn--outline:hover {
+  background: var(--warn);
+  color: var(--white);
+}
+
+/* =====================================================================
+   4. HEADER
+   ===================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--sand);
+  border-bottom: 1px solid rgba(36, 21, 18, 0.08);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1rem;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.35rem;
+  color: var(--bazan);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.site-nav a {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--bazan);
+}
+
+/* =====================================================================
+   5. HERO
+   Hai mảng màu chéo đại diện cho hai vùng đất, gặp nhau ở một
+   đường chéo duy nhất — đây là điểm nhấn thị giác chính của trang,
+   mọi phần khác giữ tiết chế xung quanh nó.
+   ===================================================================== */
+.hero {
+  position: relative;
+  min-height: min(88vh, 720px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero__side {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__side--soil {
+  clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%);
+  background: linear-gradient(155deg, var(--bazan) 0%, var(--bazan-dark) 100%);
+}
+
+.hero__side--sea {
+  clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
+  background: linear-gradient(155deg, var(--kyco) 0%, var(--kyco-dark) 100%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  color: var(--white);
+  background: rgba(36, 21, 18, 0.32);
+  backdrop-filter: blur(6px);
+  border-radius: 24px;
+  padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
+}
+
+.hero p {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 52ch;
+  margin-bottom: 1.75rem;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+
+.hero__stat {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+}
+
+/* =====================================================================
+   6. PHẦN CÂU CHUYỆN HAI VÙNG (#story)
+   ===================================================================== */
+.story {
+  padding-block: 6rem 5rem;
+}
+
+.story__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.story h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  max-width: 20ch;
+  margin-bottom: 1.25rem;
+}
+
+.story__text p {
+  color: var(--ink-soft);
+  line-height: 1.75;
+  max-width: 62ch;
+  margin-bottom: 1.1rem;
+}
+
+.story__clusters {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cluster-card {
+  border-radius: 20px;
+  padding: 1.5rem 1.75rem;
+  color: var(--white);
+}
+
+.cluster-card h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cluster-card p {
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cluster-card--sea {
+  background: var(--kyco);
+}
+
+.cluster-card--highland {
+  background: var(--bazan);
+}
+
+/* =====================================================================
+   7. FORM LÊN LỊCH TRÌNH (#planner)
+   ===================================================================== */
+.planner {
+  padding-block: 5rem;
+}
+
+.planner h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  margin-bottom: 0.6rem;
+}
+
+.planner__intro {
+  color: var(--ink-soft);
+  max-width: 56ch;
+  margin-bottom: 2.25rem;
+}
+
+.planner-form {
+  background: var(--white);
+  border-radius: 24px;
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 1.75rem;
+  max-width: 640px;
+}
+
+.field {
+  display: grid;
+  gap: 0.6rem;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.field label,
+.field legend {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.field input[type="number"],
+.field select {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--sand-deep);
+  border-radius: 12px;
+  background: var(--sand);
+  color: var(--ink);
+}
+
+.field input[type="number"]:focus-visible,
+.field select:focus-visible {
+  outline: none;
+  border-color: var(--bazan);
+}
+
+.choice-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.choice-pill {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.choice-pill input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.choice-pill span {
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.15rem;
+  border: 2px solid var(--sand-deep);
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--ink-soft);
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.choice-pill input:checked + span {
+  background: var(--bazan);
+  border-color: var(--bazan);
+  color: var(--white);
+}
+
+.choice-pill input:focus-visible + span {
+  outline: 2px solid var(--bazan);
+  outline-offset: 2px;
+}
+
+.planner-form .btn {
+  justify-self: start;
+}
+
+/* =====================================================================
+   8. KẾT QUẢ / LỊCH TRÌNH (#result)
+   Đường kẻ chấm dọc tượng trưng cho hành trình di chuyển, mỗi điểm
+   tròn là một ngày — cùng một ẩn dụ "tuyến đường" xuyên suốt trang.
+   ===================================================================== */
+.result {
+  padding-block: 1rem 6rem;
+}
+
+.result[hidden] {
+  display: none;
+}
+
+.result-heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 0.5rem;
+}
+
+.result-sub {
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+}
+
+.warning-card {
+  background: var(--warn-bg);
+  border: 2px solid var(--warn);
+  border-radius: 20px;
+  padding: 1.75rem 2rem;
+  display: grid;
+  gap: 1rem;
+  max-width: 640px;
+}
+
+.warning-card h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.warning-card p {
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.warning-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.itinerary {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  position: relative;
+  padding-left: 3.25rem;
+  margin: 0;
+  max-width: 720px;
+}
+
+.itinerary::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 6px;
+  bottom: 6px;
+  border-left: 3px dashed var(--sand-deep);
+}
+
+.day-card {
+  position: relative;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow);
+}
+
+.day-card__marker {
+  position: absolute;
+  left: -3.25rem;
+  top: 1.4rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--white);
+}
+
+.day-card--bien .day-card__marker {
+  background: var(--kyco);
+}
+
+.day-card--caonguyen .day-card__marker {
+  background: var(--bazan);
+}
+
+.day-card__badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  margin-bottom: 0.6rem;
+}
+
+.day-card--bien .day-card__badge {
+  background: var(--kyco-tint);
+  color: var(--kyco-dark);
+}
+
+.day-card--caonguyen .day-card__badge {
+  background: var(--bazan-tint);
+  color: var(--bazan-dark);
+}
+
+.day-card__places {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.35rem;
+}
+
+.day-card p:last-child {
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+/* =====================================================================
+   9. FOOTER
+   ===================================================================== */
+.site-footer {
+  padding-block: 2.5rem;
+  border-top: 1px solid rgba(36, 21, 18, 0.08);
+}
+
+.site-footer__inner p {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.site-footer__inner p + p {
+  margin-top: 0.25rem;
+}
+
+/* =====================================================================
+   10. RESPONSIVE
+   ===================================================================== */
+@media (max-width: 860px) {
+  .story__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-nav {
+    gap: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-block: 5rem 3rem;
+  }
+
+  .hero__content {
+    padding: 1.75rem;
+    margin-inline: 1rem;
+  }
+
+  .itinerary {
+    padding-left: 2.5rem;
+  }
+
+  .day-card__marker {
+    left: -2.5rem;
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+}
+
+/* =====================================================================
+   11. TÔN TRỌNG NGƯỜI DÙNG GIẢM CHUYỂN ĐỘNG
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    transition: none !important;
+  }
+}
