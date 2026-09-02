@@ -177,93 +177,237 @@ svg {
   color: var(--slate);
 }
 
-/* --- thanh trượt số ngày --- */
-.slider-row {
-  display: flex;
+/* --- Stepper Thời Gian --- */
+.duration-control {
+  margin-top: 1rem;
+}
+
+.stepper {
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  margin-top: 0.85rem;
-}
-
-input[type="range"] {
-  width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--border);
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  margin-top: -6px;
-}
-
-input[type="range"]::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  cursor: pointer;
-}
-
-.days-badge {
-  flex-shrink: 0;
-  width: 3.25rem;
-  text-align: center;
-  padding: 0.4rem 0;
-  border-radius: 12px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-
-.slider-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.4rem;
-  font-size: 0.75rem;
-  color: var(--slate-soft);
-}
-
-/* --- dropdown điểm khởi hành --- */
-.select-wrap {
-  position: relative;
-  margin-top: 0.85rem;
-}
-
-.select-wrap select {
-  width: 100%;
-  appearance: none;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--ink);
   background: #F8FAFC;
   border: 1.5px solid var(--border);
   border-radius: 12px;
-  padding: 0.85rem 2.5rem 0.85rem 1rem;
+  padding: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
-.select-wrap select:focus-visible {
+.stepper-btn {
+  background: none;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--slate-soft);
+  transition: all 0.2s ease;
+}
+
+.stepper-btn:hover {
+  background: #fff;
+  color: var(--accent);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.stepper input {
+  width: 50px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  appearance: textfield;
+}
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.stepper input:focus {
   outline: none;
+}
+
+.preset-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.preset-btn {
+  background: #F8FAFC;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--slate);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-btn:hover {
+  background: #F1F5F9;
+}
+
+.preset-btn.active {
+  background: rgba(198, 40, 40, 0.1);
+  color: var(--accent);
+  border-color: rgba(198, 40, 40, 0.3);
+}
+
+/* --- Combobox Điểm khởi hành --- */
+.combobox {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.combobox-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.combobox-trigger:hover,
+.combobox-trigger:focus-visible {
   border-color: var(--accent);
+  outline: none;
+}
+
+.combobox-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  z-index: 50;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideDown 0.2s ease-out forwards;
+}
+
+.combobox-dropdown[hidden] {
+  display: none;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.combobox-search-row {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  gap: 0.5rem;
+}
+
+.combobox-search-row input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+}
+
+.search-icon, .combobox-search-row button i {
+  width: 16px;
+  height: 16px;
+  color: var(--slate-soft);
+}
+
+.combobox-search-row button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.combobox-list {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.combobox-group {
+  margin-bottom: 0.75rem;
+}
+.combobox-group:last-child {
+  margin-bottom: 0;
+}
+
+.combobox-group-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--slate-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+}
+
+.combobox-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.5rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--slate);
+  cursor: pointer;
+  text-align: left;
+}
+
+.combobox-option:hover {
+  background: #F8FAFC;
+}
+
+.combobox-option.selected {
+  background: rgba(198, 40, 40, 0.08);
+  color: var(--accent);
+}
+
+.combobox-option.selected .check-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
 }
 
 .chevron-icon {
-  position: absolute;
-  right: 0.9rem;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
+  width: 16px;
+  height: 16px;
+  color: var(--slate-soft);
+  transition: transform 0.2s ease;
+}
+.chevron-icon.open {
+  transform: rotate(180deg);
 }
 
 /* =====================================================================
@@ -362,157 +506,228 @@ input[type="range"]::-moz-range-thumb {
   display: none;
 }
 
-.warning-box {
+/* --- Smart Distance Alert --- */
+.smart-alert {
   display: flex;
+  align-items: flex-start;
   gap: 1rem;
-  background: var(--warn-bg);
-  border: 2px solid var(--warn);
-  border-radius: 20px;
-  padding: 1.4rem 1.6rem;
-  margin-bottom: 1.5rem;
-}
-
-.warning-box h3 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--ink);
-}
-
-.warning-box p {
-  margin-top: 0.4rem;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--slate);
-}
-
-.strategy-box {
-  display: flex;
-  gap: 1rem;
-  background: var(--surface);
-  border-left: 4px solid var(--accent);
-  border-radius: 20px;
-  padding: 1.4rem 1.6rem;
+  background: rgba(230, 81, 0, 0.1);
+  border: 1px solid rgba(230, 81, 0, 0.2);
+  border-radius: 16px;
+  padding: 1.25rem;
   margin-bottom: 2rem;
-  box-shadow: var(--shadow);
+  animation: slideDown 0.3s ease-out;
 }
 
-.strategy-box h3 {
+.smart-alert[hidden] {
+  display: none;
+}
+
+.alert-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--warn);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.smart-alert h4 {
+  margin: 0 0 0.25rem 0;
+  font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--ink);
+  color: var(--warn);
 }
 
-.strategy-box p {
-  margin-top: 0.4rem;
+.smart-alert p {
+  margin: 0;
   font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--slate);
+  line-height: 1.5;
+  color: rgba(230, 81, 0, 0.8);
 }
 
 /* =====================================================================
-   9. LƯỚI THẺ NGÀY (day cards) + DÒNG THỜI GIAN
+   9. LƯỚI THẺ ĐỊA ĐIỂM (RICH IMAGE CARDS)
    ===================================================================== */
-.day-grid {
+.result-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.result-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+
+.result-header p {
+  font-size: 1rem;
+  color: var(--slate-soft);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.destination-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-.day-card {
-  background: var(--surface);
-  border-radius: 20px;
-  padding: 1.4rem 1.6rem;
-  box-shadow: var(--shadow);
-  border-left: 4px solid var(--accent);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.day-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 34px rgba(26, 26, 46, 0.14);
-}
-
-.day-card__top {
+.destination-card {
+  position: relative;
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
-.day-card__number {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--ink);
+.destination-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
-.day-card__badge {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.75rem;
-  padding: 0.3rem 0.75rem;
+.dest-image-wrap {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.dest-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.destination-card:hover .dest-image-wrap img {
+  transform: scale(1.1);
+}
+
+.dest-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(26, 26, 46, 0.8), transparent, transparent);
+}
+
+.dest-tags {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dest-tags span {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  padding: 0.25rem 0.75rem;
   border-radius: 999px;
-}
-
-.day-timeline {
-  list-style: none;
-  margin: 1.1rem 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-
-.day-timeline li {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.day-timeline__icon-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.day-timeline__icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.day-timeline__line {
-  width: 1px;
-  flex: 1;
-  background: var(--border);
-  margin-top: 0.25rem;
-}
-
-.day-timeline__time {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-family: var(--font-display);
-  font-weight: 600;
   font-size: 0.75rem;
-  color: var(--slate-soft);
-}
-
-.day-timeline__title {
-  margin-top: 0.2rem;
-  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.9rem;
   color: var(--ink);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.day-timeline__desc {
-  margin-top: 0.2rem;
-  font-size: 0.78rem;
-  line-height: 1.55;
+.dest-title {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.dest-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dest-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--slate-soft);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.dest-meta > div {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dest-meta .meta-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+
+.dest-hours {
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dest-hours h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--slate-soft);
+  text-transform: uppercase;
+  margin: 0 0 0.4rem 0;
+}
+
+.dest-hours p {
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.dest-tips {
+  background: rgba(198, 40, 40, 0.05);
+  border: 1px solid rgba(198, 40, 40, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.destination-card:hover .dest-tips {
+  background: rgba(198, 40, 40, 0.1);
+}
+
+.dest-tips h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin: 0 0 0.4rem 0;
+}
+
+.dest-tips .tips-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.dest-tips p {
+  font-size: 0.85rem;
+  line-height: 1.6;
   color: var(--slate);
+  margin: 0;
 }
 
 /* =====================================================================

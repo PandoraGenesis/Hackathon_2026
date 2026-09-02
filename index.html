@@ -1,86 +1,121 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Song Hành — Trợ Lý Du Lịch AI Quy Nhơn – Gia Lai</title>
-<meta name="description" content="Trợ lý AI lên lịch trình giữa Quy Nhơn và Gia Lai, tự động phân cụm theo thực tế địa lý giữa vùng biển đảo và cao nguyên.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23C62828%22/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800;900&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Song Hành — Trợ Lý Du Lịch AI Quy Nhơn – Gia Lai</title>
+  <meta name="description"
+    content="Trợ lý AI lên lịch trình giữa Quy Nhơn và Gia Lai, tự động phân cụm theo thực tế địa lý giữa vùng biển đảo và cao nguyên.">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23C62828%22/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800;900&family=Sarabun:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1">
 </head>
+
 <body>
 
-<!-- ============ 1. HERO HEADER ============ -->
-<header class="hero">
-  <div class="hero__glow" aria-hidden="true"></div>
-  <i data-lucide="waves" class="hero__icon hero__icon--left" aria-hidden="true"></i>
-  <i data-lucide="mountain" class="hero__icon hero__icon--right" aria-hidden="true"></i>
-  <div class="container hero__content">
-    <h1>Trợ Lý Du Lịch AI: Kết Nối Quy Nhơn – Gia Lai</h1>
-    <p>Tự động phân cụm lịch trình tối ưu theo thực tế địa lý giữa Biển Đảo &amp; Cao Nguyên</p>
-  </div>
-</header>
+  <!-- ============ 1. HERO HEADER ============ -->
+  <header class="hero">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <i data-lucide="waves" class="hero__icon hero__icon--left" aria-hidden="true"></i>
+    <i data-lucide="mountain" class="hero__icon hero__icon--right" aria-hidden="true"></i>
+    <div class="container hero__content">
+      <h1>Trợ Lý Du Lịch AI: Kết Nối Quy Nhơn – Gia Lai</h1>
+      <p>Tự động phân cụm lịch trình tối ưu theo thực tế địa lý giữa Biển Đảo &amp; Cao Nguyên</p>
+    </div>
+  </header>
 
-<main>
+  <main>
 
-  <!-- ============ 2. FORM NHẬP LIỆU ============ -->
-  <section class="planner-card container">
-    <div class="planner-grid">
-      <div class="field">
-        <label for="days"><i data-lucide="calendar-days" class="label-icon"></i> Số ngày trải nghiệm</label>
-        <div class="slider-row">
-          <input type="range" id="days" min="1" max="7" value="3">
-          <span id="days-value" class="days-badge">3</span>
+    <!-- ============ 2. FORM NHẬP LIỆU ============ -->
+    <section class="planner-card container">
+      <div class="planner-grid">
+
+        <!-- Số ngày -->
+        <div class="field">
+          <label for="days"><i data-lucide="calendar-days" class="label-icon"></i> Thời gian lưu trú (Ngày)</label>
+          <div class="duration-control">
+            <div class="stepper">
+              <button type="button" id="btn-minus" class="stepper-btn"><i data-lucide="minus"></i></button>
+              <input type="number" id="days" value="3" min="1" max="30">
+              <button type="button" id="btn-plus" class="stepper-btn"><i data-lucide="plus"></i></button>
+            </div>
+            <div class="preset-btns">
+              <button type="button" class="preset-btn" data-days="1">1 Ngày</button>
+              <button type="button" class="preset-btn active" data-days="3">3 Ngày 2 Đêm</button>
+              <button type="button" class="preset-btn" data-days="5">5 Ngày 4 Đêm</button>
+              <button type="button" class="preset-btn" data-days="7">7+ Ngày</button>
+            </div>
+          </div>
         </div>
-        <div class="slider-labels"><span>1 ngày</span><span>7 ngày</span></div>
-      </div>
 
-      <div class="field">
-        <label for="departure"><i data-lucide="navigation" class="label-icon"></i> Điểm khởi hành</label>
-        <div class="select-wrap">
-          <select id="departure">
-            <option>TP. Quy Nhơn</option>
-            <option>TP. Pleiku</option>
-            <option>Sân bay Phù Cát (UIH)</option>
-            <option>Sân bay Pleiku (PXU)</option>
-          </select>
-          <i data-lucide="chevron-down" class="chevron-icon"></i>
+        <!-- Điểm khởi hành (Combobox) -->
+        <div class="field" id="departure-container">
+          <label><i data-lucide="navigation" class="label-icon"></i> Điểm khởi hành</label>
+          <div class="combobox" id="departure-combobox">
+            <button type="button" class="combobox-trigger" id="departure-trigger">
+              <span id="departure-text">TP. Quy Nhơn</span>
+              <i data-lucide="chevron-down" id="departure-chevron" class="chevron-icon"></i>
+            </button>
+            <div class="combobox-dropdown" id="departure-dropdown" hidden>
+              <div class="combobox-search-row">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="departure-search" placeholder="Tìm kiếm khu vực...">
+                <button type="button" id="departure-clear" hidden><i data-lucide="x"></i></button>
+              </div>
+              <div class="combobox-list" id="departure-list">
+                <!-- Sẽ được render qua JS -->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="field field--tags">
-      <p class="field-label"><i data-lucide="heart" class="label-icon"></i> Bạn muốn trải nghiệm điều gì?</p>
-      <div class="tag-group" id="tag-group">
-        <button type="button" class="tag active" data-tag="bien">🌊 Biển đảo &amp; Lặn ngắm san hô</button>
-        <button type="button" class="tag" data-tag="caphe">☕ Cà phê &amp; Đồi chè</button>
-        <button type="button" class="tag active" data-tag="thac">⛰️ Thác nước &amp; Thiên nhiên</button>
-        <button type="button" class="tag" data-tag="vanhoa">🪕 Văn hóa Tây Nguyên &amp; Cồng chiêng</button>
-        <button type="button" class="tag" data-tag="amthuc">🍲 Ẩm thực bản địa (Bún rạm / Phở khô 2 tô)</button>
+      <!-- Alert khoảng cách (hiện bằng JS) -->
+      <div id="smart-distance-alert" class="smart-alert" hidden>
+        <i data-lucide="alert-triangle" class="alert-icon"></i>
+        <div>
+          <h4>Khoảng cách địa lý khá xa</h4>
+          <p>Lịch trình dưới 3 ngày nhưng bạn chọn trải nghiệm cả Biển (Bình Định) & Cao Nguyên (Gia Lai). Khoảng cách
+            giữa 2 nơi là ~160km qua QL19 (hơn 4h di chuyển). Hãy cân nhắc tăng số ngày hoặc tập trung vào một vùng!</p>
+        </div>
       </div>
-    </div>
 
-    <div class="cta-row">
-      <button type="button" id="generate-btn" class="cta-btn">
-        <i data-lucide="sparkles" class="cta-icon"></i>
-        <span>Tạo Lịch Trình Thông Minh</span>
-      </button>
-    </div>
-  </section>
+      <div class="field field--tags">
+        <p class="field-label"><i data-lucide="heart" class="label-icon"></i> Sở thích trải nghiệm</p>
+        <div class="tag-group" id="tag-group">
+          <button type="button" class="tag active" data-tag="bien">🌊 Biển đảo &amp; San hô</button>
+          <button type="button" class="tag" data-tag="thiennhien">⛰️ Thác &amp; Thiên nhiên</button>
+          <button type="button" class="tag active" data-tag="caphe">☕ Cà phê &amp; Đồi chè</button>
+          <button type="button" class="tag" data-tag="vanhoatn">🪕 Văn hóa Tây Nguyên</button>
+          <button type="button" class="tag" data-tag="vanhoacp">🏛️ Văn hóa Chăm Pa</button>
+        </div>
+      </div>
 
-  <!-- ============ 3. KẾT QUẢ — được script.js render vào đây ============ -->
-  <section id="result" class="container result" hidden></section>
+      <div class="cta-row">
+        <button type="button" id="generate-btn" class="cta-btn">
+          <i data-lucide="sparkles" class="cta-icon"></i>
+          <span>Tạo Lịch Trình Thông Minh</span>
+        </button>
+      </div>
+    </section>
 
-</main>
+    <!-- ============ 3. KẾT QUẢ — được script.js render vào đây ============ -->
+    <section id="result" class="container result" hidden></section>
 
-<footer class="site-footer">
-  <p>Song Hành — Dự án dự thi Gia Lai Youth HackAIthon 2026.</p>
-</footer>
+  </main>
 
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="js/script.js?v=1" defer></script>
+  <footer class="site-footer">
+    <p>Song Hành — Dự án dự thi Gia Lai Youth HackAIthon 2026.</p>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/script.js?v=1" defer></script>
 </body>
+
 </html>
