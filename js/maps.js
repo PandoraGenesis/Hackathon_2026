@@ -5,10 +5,8 @@
 
    3 bước:
      1) Toàn quốc  — 34 tỉnh/thành + 2 quần đảo Hoàng Sa, Trường Sa
-     2) Tỉnh/Thành — toàn bộ xã/phường/đặc khu của tỉnh đó
-        (từ 01/07/2025 Việt Nam bỏ cấp huyện, chỉ còn 2 cấp
-        Tỉnh → Xã/Phường, nên đây là cấp hành chính con trực
-        tiếp của tỉnh)
+     2) Tỉnh/Thành — toàn bộ xã/phường/đặc khu của tỉnh đó, tên
+        hiện thường trực (không cần hover)
      3) Xã/Phường/Đặc khu — bản đồ chi tiết (nền OpenStreetMap)
         khoanh vùng ranh giới khu vực đã chọn
 
@@ -34,21 +32,29 @@
   // để không làm lệch khung nhìn khi hiển thị Đà Nẵng / Khánh Hòa.
   var ISLAND_CODES = { '20333': '48', '22736': '56' };
 
-  // Khung nhìn cố định cho đất liền + các đảo gần bờ (Phú Quốc, Cát Bà...),
-  // không tự fitBounds theo dữ liệu để tránh bị "kéo dạt" ra khơi xa vì
-  // hình học của Đà Nẵng / Khánh Hòa đã gộp sẵn Hoàng Sa / Trường Sa.
-  var MAINLAND_BOUNDS = [[8.0, 102.0], [23.5, 109.6]];
+  // Khung nhìn đất liền tính thẳng từ dữ liệu thật (sau khi đã bỏ các
+  // mảnh đảo Hoàng Sa / Trường Sa gộp trong Đà Nẵng, Khánh Hòa), cộng
+  // thêm biên nhỏ. Không dùng fitBounds tự động theo layer vì sẽ bị
+  // kéo dạt nếu lỡ còn sót toạ độ xa.
+  var MAINLAND_BOUNDS = [[6.9, 101.6], [23.7, 110.4]];
+
+  // Padding bất đối xứng khi fit khung nhìn toàn quốc: chừa thêm chỗ ở
+  // góc phải-dưới (nơi đặt 2 ô Hoàng Sa/Trường Sa) để bản đồ đất liền
+  // không bị lọt thỏm lệch trái, mà cân đối với toàn bộ bố cục khung.
+  var COUNTRY_FIT_OPTIONS = {
+    paddingTopLeft: [30, 16],
+    paddingBottomRight: [150, 40]
+  };
 
   var OSM_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   var OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
 
-  // Bảng màu ấm, nhiều sắc để phân biệt các mảng liền kề — cùng tông với
-  // logo/điểm nhấn đỏ - cam đất của trang, nhưng đủ đa dạng cho bản đồ
-  // phân vùng (choropleth).
+  // Bảng màu tươi, nhiều sắc để phân biệt các mảng liền kề — độ bão hòa
+  // cao hơn bản trước để nhìn rực rỡ, sinh động hơn trên nền kem ngà.
   var PALETTE = [
-    '#c1373a', '#e07a5f', '#f2b134', '#81a684', '#3d6b73',
-    '#e5989b', '#bc6c25', '#6b9080', '#d4a373', '#8d6b94',
-    '#ee9b7a', '#588157', '#b5546a', '#5f7a70', '#dda15e', '#4a6fa5'
+    '#e63946', '#f4a300', '#2a9d8f', '#e76f51', '#3a86ff',
+    '#ff6b6b', '#06d6a0', '#ffb703', '#8338ec', '#43aa8b',
+    '#fb8500', '#4cc9f0', '#f15bb5', '#588157', '#ee9b00', '#5e60ce'
   ];
 
   var els = {};
@@ -101,7 +107,7 @@
 
   function colorForCode(code, light) {
     var base = PALETTE[Math.abs(hashCode(String(code))) % PALETTE.length];
-    return light ? lighten(base, 0.28) : base;
+    return light ? lighten(base, 0.22) : base;
   }
 
   function formatArea(km2) {
@@ -214,6 +220,7 @@
       maxZoom: 18
     });
     map.attributionControl.setPrefix(false);
+    map.on('zoomend', updateLabelScale);
     mapInited = true;
   }
 
@@ -221,6 +228,16 @@
     if (activeLayer) { map.removeLayer(activeLayer); activeLayer = null; }
     if (boundaryLayer) { map.removeLayer(boundaryLayer); boundaryLayer = null; }
     if (tileLayer) { map.removeLayer(tileLayer); tileLayer = null; }
+  }
+
+  // Cỡ chữ nhãn tên tỉnh/xã co giãn theo mức zoom hiện tại, để lúc xem
+  // toàn quốc (zoom thấp, nhiều tỉnh nhỏ chen nhau) chữ đủ nhỏ để không
+  // đè lên nhau, còn lúc zoom vào gần thì chữ lớn dần cho dễ đọc.
+  function updateLabelScale() {
+    if (!map) return;
+    var z = map.getZoom();
+    var size = Math.max(8, Math.min(15, Math.round(z * 1.15)));
+    els.mapEl.style.setProperty('--vnmap-label-size', size + 'px');
   }
 
   /* ---------------------- Bước 1: Toàn quốc ---------------------- */
@@ -243,9 +260,9 @@
         style: function (feature) {
           return {
             color: '#fffaf0',
-            weight: 1.2,
+            weight: 1.3,
             fillColor: colorForCode(feature.properties.code),
-            fillOpacity: 0.88
+            fillOpacity: 0.92
           };
         },
         onEachFeature: function (feature, layer) {
@@ -255,15 +272,16 @@
             direction: 'center',
             className: 'vnmap-label'
           });
-          layer.on('mouseover', function () { layer.setStyle({ weight: 2.4 }); });
-          layer.on('mouseout', function () { layer.setStyle({ weight: 1.2 }); });
+          layer.on('mouseover', function () { layer.setStyle({ weight: 2.6 }); layer.bringToFront(); });
+          layer.on('mouseout', function () { layer.setStyle({ weight: 1.3 }); });
           layer.on('click', function () {
-            renderProvince(p.code, p.name);
+            renderProvince(p.code, p.name, p);
           });
         }
       }).addTo(map);
 
-      map.fitBounds(MAINLAND_BOUNDS);
+      map.fitBounds(MAINLAND_BOUNDS, COUNTRY_FIT_OPTIONS);
+      updateLabelScale();
       renderIslandInsets(results[1], null);
       renderBreadcrumb();
       setLoading(false);
@@ -272,7 +290,7 @@
 
   /* ---------------------- Bước 2: Tỉnh / Thành phố ---------------------- */
 
-  function renderProvince(code, name) {
+  function renderProvince(code, name, ownProps) {
     state.level = 'province';
     state.provinceCode = code;
     state.provinceName = name;
@@ -280,12 +298,22 @@
     state.wardName = null;
 
     setLoading(true, 'Đang tải xã, phường của ' + name + '…');
-    hideInfo();
     renderBreadcrumb();
 
-    Promise.all([loadWards(code), loadIslands()]).then(function (results) {
+    // Nếu chưa có sẵn properties của chính tỉnh này (vd. vào từ ô tìm
+    // kiếm thay vì bấm trực tiếp trên bản đồ), tra trong danh sách tỉnh
+    // đã cache để lấy diện tích / mã bưu chính hiển thị ở panel thông tin.
+    var ownFeaturePromise = ownProps
+      ? Promise.resolve(ownProps)
+      : loadProvinces().then(function (data) {
+          var f = data.features.find(function (x) { return x.properties.code === code; });
+          return f ? f.properties : null;
+        });
+
+    Promise.all([loadWards(code), loadIslands(), ownFeaturePromise]).then(function (results) {
       var wardsData = results[0];
       var islandsData = results[1];
+      var provinceProps = results[2];
 
       // Với Đà Nẵng (48) / Khánh Hòa (56): tách riêng đặc khu hải đảo
       // ra khỏi lớp chính để không làm khung nhìn bị kéo dạt ra biển xa.
@@ -304,17 +332,18 @@
             color: '#fffaf0',
             weight: 1,
             fillColor: colorForCode(feature.properties.code, true),
-            fillOpacity: 0.85
+            fillOpacity: 0.88
           };
         },
         onEachFeature: function (feature, layer) {
           var p = feature.properties;
+          // Hiện tên ngay trên bản đồ, thường trực — không cần hover.
           layer.bindTooltip(p.name, {
+            permanent: true,
             direction: 'center',
-            sticky: true,
             className: 'vnmap-label vnmap-label--ward'
           });
-          layer.on('mouseover', function () { layer.setStyle({ weight: 2.2 }); });
+          layer.on('mouseover', function () { layer.setStyle({ weight: 2.4 }); layer.bringToFront(); });
           layer.on('mouseout', function () { layer.setStyle({ weight: 1 }); });
           layer.on('click', function () {
             renderWardDetail(p.code, p.fullName || p.name, code, name);
@@ -322,13 +351,18 @@
         }
       }).addTo(map);
 
-      map.fitBounds(activeLayer.getBounds(), { padding: [16, 16] });
+      map.fitBounds(activeLayer.getBounds(), { padding: [18, 18] });
+      updateLabelScale();
 
       // Nếu tỉnh này có đặc khu hải đảo, hiện lại đúng 1 ô nhỏ tương ứng
       renderIslandInsets(islandsData, islandFeature ? code : null);
 
+      // Panel thông tin về chính tỉnh đang xem (giống panel ở cấp xã)
+      if (provinceProps) showInfo(provinceProps, 'Việt Nam');
+      else hideInfo();
+
       setLoading(false);
-    }).catch(function (err) { showFetchError(err, function () { renderProvince(code, name); }); });
+    }).catch(function (err) { showFetchError(err, function () { renderProvince(code, name, ownProps); }); });
   }
 
   /* ---------------------- Bước 3: Xã / Phường / Đặc khu chi tiết ---------------------- */
@@ -366,16 +400,16 @@
       if (feature) {
         boundaryLayer = L.geoJSON(feature, {
           style: {
-            color: '#c1373a',
+            color: '#e63946',
             weight: 3,
-            fillColor: '#c1373a',
+            fillColor: '#e63946',
             fillOpacity: 0.12
           }
         }).addTo(map);
         map.fitBounds(boundaryLayer.getBounds(), { padding: [24, 24], maxZoom: 14 });
       }
 
-      showInfo(feature);
+      showInfo(feature ? feature.properties : null, provinceName);
       setLoading(false);
     }).catch(function (err) {
       showFetchError(err, function () { renderWardDetail(code, name, provinceCode, provinceName); });
@@ -393,7 +427,7 @@
     var lats = pts.map(function (p) { return p[1]; });
     var minLon = Math.min.apply(null, lons), maxLon = Math.max.apply(null, lons);
     var minLat = Math.min.apply(null, lats), maxLat = Math.max.apply(null, lats);
-    var pad = size * 0.12;
+    var pad = size * 0.14;
     var span = Math.max(maxLon - minLon, maxLat - minLat) || 1;
     var scale = (size - pad * 2) / span;
 
@@ -409,10 +443,10 @@
       ring.forEach(function (pt) { cx += pt[0]; cy += pt[1]; });
       cx /= ring.length; cy /= ring.length;
       var xy = toXY(cx, cy);
-      return '<circle cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="1.6" fill="#c1373a" />';
+      return '<circle cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="2.1" fill="#0077b6" />';
     }).join('');
 
-    return dots;
+    return '<rect x="0" y="0" width="' + size + '" height="' + size + '" fill="#eaf4fb" rx="10" />' + dots;
   }
 
   function renderIslandInsets(islandsData, onlyForProvince) {
@@ -429,13 +463,19 @@
 
     ['hoang-sa', 'truong-sa'].forEach(function (slug) {
       var card = els.islands.querySelector('[data-island="' + slug + '"]');
-      var feature = islandsData.features.find(function (f) { return f.properties.codeName === slug; });
+      // codeName trong dữ liệu dùng gạch dưới (hoang_sa) — chuẩn hoá về
+      // gạch ngang để so khớp với data-island trong HTML.
+      var feature = islandsData.features.find(function (f) {
+        return f.properties.codeName.replace(/_/g, '-') === slug;
+      });
       var isVisible = feature && visibleFeatures.indexOf(feature) !== -1;
       card.hidden = !isVisible;
       if (!isVisible) return;
 
       var svgEl = card.querySelector('svg');
       svgEl.innerHTML = svgFromMultiPolygon(feature.geometry, 100);
+      var areaEl = card.querySelector('.vnmap-island-area');
+      if (areaEl) areaEl.textContent = '~' + formatArea(feature.properties.areaKm2);
       card.onclick = function () {
         renderWardDetail(feature.properties.code, feature.properties.fullName, feature.properties.provinceCode, feature.properties.provinceName);
       };
@@ -479,17 +519,16 @@
     els.backBtn.hidden = state.level === 'country';
   }
 
-  function showInfo(feature) {
-    if (!feature) { hideInfo(); return; }
-    var p = feature.properties;
-    var eyebrow = state.provinceName ? state.provinceName : 'Việt Nam';
+  function showInfo(props, eyebrow) {
+    if (!props) { hideInfo(); return; }
     var metaLines = [];
-    if (p.areaKm2) metaLines.push('<strong>Diện tích:</strong> ' + formatArea(p.areaKm2));
-    if (p.postalCode) metaLines.push('<strong>Mã bưu chính:</strong> ' + p.postalCode);
+    if (props.areaKm2) metaLines.push('<strong>Diện tích:</strong> ' + formatArea(props.areaKm2));
+    var postal = props.postalCode || props.postalCodePrefix;
+    if (postal) metaLines.push('<strong>Mã bưu chính:</strong> ' + postal);
 
     els.infoBody.innerHTML =
       '<p class="vnmap-info-eyebrow">' + eyebrow + '</p>' +
-      '<h3 class="vnmap-info-name">' + (p.fullName || p.name) + '</h3>' +
+      '<h3 class="vnmap-info-name">' + (props.fullName || props.name) + '</h3>' +
       '<p class="vnmap-info-meta">' + metaLines.join('<br>') + '</p>';
     els.info.hidden = false;
   }
@@ -636,9 +675,6 @@
       setTimeout(function () { map.invalidateSize(); }, 60);
     }
 
-    // Khởi tạo bản đồ khi tab "Maps" được nhấn (panel lúc đó mới có
-    // kích thước thật để Leaflet đo đúng). Không phụ thuộc vào cách
-    // js/nav.js chuyển tab — chỉ lắng nghe thêm sự kiện click riêng.
     var mapsTab = document.querySelector('.sh-tab[data-panel="panel-maps"]');
     if (mapsTab) {
       mapsTab.addEventListener('click', activate);

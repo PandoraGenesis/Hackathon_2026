@@ -259,7 +259,7 @@
 
 .vnmap-map {
   width: 100%;
-  height: clamp(420px, 62vw, 640px);
+  height: clamp(480px, 70vw, 720px);
   background: #f3ede0;
 }
 
@@ -272,15 +272,18 @@
   color: var(--vnmap-ink);
 }
 
-/* Nhãn tên tỉnh / xã hiển thị thường trực trên bản đồ */
+/* Nhãn tên tỉnh / xã hiển thị thường trực trên bản đồ — cỡ chữ co giãn
+   theo mức zoom hiện tại (biến --vnmap-label-size do JS cập nhật) để
+   luôn gọn trong ranh giới thay vì tràn ra ngoài. */
 .vnmap-label {
   background: transparent;
   border: none;
   box-shadow: none;
   font-weight: 700;
-  font-size: 11px;
+  font-size: var(--vnmap-label-size, 10px);
+  letter-spacing: -0.01em;
   color: #2a221a;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9), 0 0 6px rgba(255, 255, 255, 0.75);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9), 0 0 6px rgba(255, 255, 255, 0.78);
   white-space: nowrap;
   pointer-events: none;
 }
@@ -290,7 +293,6 @@
 }
 
 .vnmap-label--ward {
-  font-size: 10.5px;
   font-weight: 600;
 }
 
@@ -354,56 +356,78 @@
   z-index: 700;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
+  padding: 8px 8px 6px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(3px);
+  border-radius: 14px;
 }
 
-.vnmap-island-card[hidden] {
-  display: none;
+.vnmap-islands-heading {
+  margin: 0 2px 1px;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0077b6;
 }
 
 .vnmap-island-card {
   display: flex;
   align-items: center;
-  gap: 8px;
-  border: 1px solid var(--vnmap-line);
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(2px);
+  gap: 9px;
+  border: 1.5px solid #bfe3f5;
+  background: rgba(255, 255, 255, 0.97);
   border-radius: 12px;
-  padding: 6px 10px 6px 6px;
+  padding: 6px 12px 6px 6px;
   cursor: pointer;
   font: inherit;
   text-align: left;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .vnmap-island-card:hover {
-  border-color: var(--vnmap-accent);
-  background: var(--vnmap-accent-soft);
+  border-color: #0077b6;
+  background: #eaf6fc;
   transform: translateY(-1px);
+  box-shadow: 0 6px 14px -8px rgba(0, 119, 182, 0.45);
 }
 
 .vnmap-island-svg {
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   flex: none;
-  background: #f1ece1;
-  border-radius: 8px;
+  border-radius: 9px;
+}
+
+.vnmap-island-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .vnmap-island-label {
-  font-size: 10.5px;
-  line-height: 1.35;
+  font-size: 11.5px;
+  font-weight: 800;
   color: var(--vnmap-ink);
-  font-weight: 700;
+  line-height: 1.25;
 }
 
-.vnmap-island-label em {
-  display: block;
-  font-style: normal;
+.vnmap-island-sub {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #0077b6;
+  line-height: 1.3;
+}
+
+.vnmap-island-area {
+  font-size: 9px;
   font-weight: 500;
   color: var(--vnmap-muted);
-  font-size: 9.5px;
-  margin-top: 1px;
+}
+
+.vnmap-island-card[hidden] {
+  display: none;
 }
 
 .vnmap-islands[hidden] {
@@ -499,7 +523,11 @@
     justify-content: center;
   }
 
-  .vnmap-island-label {
+  .vnmap-islands-heading {
+    display: none;
+  }
+
+  .vnmap-island-text {
     display: none;
   }
 
