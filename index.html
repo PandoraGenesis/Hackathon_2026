@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VNFinder — Người bạn đồng hành khám phá Gia Lai</title>
+  <title>VNFinder - Người bạn đồng hành khám phá Việt Nam</title>
   <meta name="description"
-    content="VNFinder — trợ lý du lịch AI đồng hành cùng bạn khám phá Gia Lai, từ cao nguyên Pleiku đến biển Quy Nhơn.">
-  <link rel="icon"
-    href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%231D6E85%22/%3E%3C/svg%3E">
+    content="VNFinder - trợ lý du lịch AI đồng hành cùng bạn khám phá Việt Nam, từ địa đầu Hà Giang đến mũi Cà Mau.">
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
+  <link rel="apple-touch-icon" href="assets/img/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -26,15 +26,15 @@
   <nav class="sh-nav">
     <div class="sh-nav__inner">
       <div class="sh-nav__brand">
-        <span class="sh-nav__brand-mark" aria-hidden="true"></span>
+        <img src="assets/img/logo.png" alt="VNFinder" class="sh-nav__brand-mark">
         <span class="sh-nav__brand-text">VNFINDER</span>
       </div>
       <div class="sh-nav__tabs" role="tablist">
-        <button type="button" class="sh-tab" data-panel="panel-gioi-thieu" aria-selected="true">Giới thiệu</button>
-        <button type="button" class="sh-tab" data-panel="panel-maps" aria-selected="false">Maps</button>
-        <button type="button" class="sh-tab" data-panel="panel-lich-trinh" aria-selected="false">Lịch trình</button>
-        <button type="button" class="sh-tab" data-panel="panel-guide" aria-selected="false">Guide</button>
-        <button type="button" class="sh-tab" data-panel="panel-checkin" aria-selected="false">Check-in</button>
+        <button type="button" class="sh-tab" data-panel="panel-gioi-thieu" aria-selected="true"><i data-lucide="home" class="sh-tab__icon" aria-hidden="true"></i>About</button>
+        <button type="button" class="sh-tab" data-panel="panel-maps" aria-selected="false"><i data-lucide="map" class="sh-tab__icon" aria-hidden="true"></i>Maps</button>
+        <button type="button" class="sh-tab" data-panel="panel-lich-trinh" aria-selected="false"><i data-lucide="calendar-days" class="sh-tab__icon" aria-hidden="true"></i>Itinerary</button>
+        <button type="button" class="sh-tab" data-panel="panel-guide" aria-selected="false"><i data-lucide="compass" class="sh-tab__icon" aria-hidden="true"></i>Guide</button>
+        <button type="button" class="sh-tab" data-panel="panel-checkin" aria-selected="false"><i data-lucide="map-pin" class="sh-tab__icon" aria-hidden="true"></i>Check-in</button>
       </div>
     </div>
   </nav>
@@ -47,11 +47,11 @@
     <section id="panel-gioi-thieu" class="sh-panel">
 
       <div class="sh-hero">
-        <img class="sh-hero__img" src="assets/img/bien-ho-hero.jpg" alt="Biển Hồ T'Nưng nhìn từ trên cao lúc bình minh">
+        <img class="sh-hero__img" src="assets/img/Hồ Gươm.jpg" alt="Hồ Gươm và Tháp Rùa, Hà Nội">
         <div class="sh-hero__scrim" aria-hidden="true"></div>
         <div class="sh-hero__content">
           <h1 class="sh-hero__title">VNFINDER</h1>
-          <p class="sh-hero__caption">Người bạn đồng hành cùng bạn khám phá Gia Lai — từ mây núi cao nguyên đến sóng biển Quy Nhơn.</p>
+          <p class="sh-hero__caption">Người bạn đồng hành cùng bạn khám phá Việt&nbsp;Nam - từ địa đầu Hà&nbsp;Giang đến mũi Cà&nbsp;Mau.</p>
         </div>
         <div class="sh-hero__scroll">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
@@ -63,260 +63,174 @@
         <div class="sh-container">
 
           <div class="sh-journey__intro">
-            <p>Một tỉnh, hai vùng đất — cao nguyên Pleiku và biển Quy Nhơn nay chung một hành trình. Cùng VNFinder đi hết chặng đường ấy, từ núi lửa và cồng chiêng đến tháp Chăm và sóng biển.</p>
+            <p>Một đất nước hình chữ S, ba miền, muôn vàn sắc thái. Cùng&nbsp;VNFinder đi từ vịnh đá vôi phía Bắc, qua những cố đô và phố cổ miền Trung, đến ruộng vườn sông nước miền Nam.</p>
           </div>
 
           <div class="sh-blocks">
 
-            <!-- Khối 1 — Vị trí & địa hình -->
+            <!-- Khối 1 — Tổng quan đất nước -->
             <article class="sh-block">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
-                  <span class="sh-block__label">Địa lý tự nhiên</span>
-                  <h3 class="sh-block__heading">Từ cao nguyên đến biển cả</h3>
-                  <p>Gia Lai hôm nay trải dài từ dãy Trường Sơn xuống tận bờ Biển Đông: phía tây giáp tỉnh Ratanakiri của Campuchia qua đường biên giới hơn 80 km, phía nam nối Đắk Lắk, phía bắc giáp Quảng Ngãi. Chính sự tiếp giáp hiếm có này khiến địa hình biến đổi liên tục — phía tây là cao nguyên Pleiku và Kon Hà Nừng rộng lớn, nơi đỉnh Kon Ka Kinh vươn cao 1.748 mét giữa rừng già; phía đông là dải đồng bằng hẹp chạy theo các con sông Côn, Lại Giang, Hà Thanh, đổ ra những đầm phá Thị Nại, Đề Gi, Trà Ổ trước khi hòa vào biển.</p>
-                  <p>Bờ biển phía đông vẽ nên hàng loạt cửa biển, cồn cát và đảo nhỏ như Cù Lao Xanh, Hòn Khô — một Gia Lai vừa có mây núi, vừa có sóng nước.</p>
+                  <span class="sh-block__label">Tổng quan Việt Nam</span>
+                  <h3 class="sh-block__heading">Một dải đất hình chữ S</h3>
+                  <p>Việt Nam trải dài hình chữ S từ biên giới phía Bắc giáp Trung Quốc xuống tới bán đảo Cà Mau, ôm theo hơn 3.260 km bờ biển dọc Biển Đông. Đất nước có khoảng 100 triệu dân, thuộc nhóm đông dân nhất thế giới, với thủ đô Hà Nội ở phía Bắc và Thành phố Hồ Chí Minh, đô thị lớn nhất nước, ở phía Nam.</p>
+                  <p>Người Việt nói tiếng Việt, ngôn ngữ thuộc hệ Nam Á với hệ thống thanh điệu phức tạp, và cùng chung sống với 54 dân tộc anh em, trong đó người Kinh chiếm khoảng 86% dân số.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polyline points="4,46 18,26 28,38 40,18 60,46"/>
-                      <line x1="4" y1="50" x2="60" y2="50"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Kon Hà Nừng – Đầm Thị Nại<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo" src="assets/img/Bản đồ hình chữ S.jpg" alt="Bản đồ hình chữ S của Việt Nam">
+                  <div class="sh-block__caption">Bản đồ hình chữ S</div>
                 </div>
               </div>
             </article>
 
-            <!-- Khối 2 — Khí hậu & tài nguyên -->
+            <!-- Khối 2 — Miền Bắc -->
             <article class="sh-block sh-block--reverse">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
-                  <span class="sh-block__label">Khí hậu & tài nguyên</span>
-                  <h3 class="sh-block__heading">Hai mùa, hai nhịp điệu</h3>
-                  <p>Khí hậu nơi đây chia thành mùa mưa và mùa khô rõ rệt, nhưng mỗi vùng lại mang một nhịp điệu riêng. Trên cao nguyên, nhiệt độ quanh năm mát mẻ 20–25°C với lượng mưa dồi dào 2.200–2.500 mm mỗi năm; xuống tới duyên hải, khí hậu nóng hơn, trung bình khoảng 27°C, và là nơi đón những cơn bão cuối năm từ tháng 9 đến tháng 11.</p>
-                  <p>Đất đỏ bazan phủ gần nửa diện tích phía tây tạo nên những đồi cà phê, cao su, hồ tiêu bạt ngàn, trong khi rừng vẫn che phủ tới 47% diện tích, giữ cho Vườn quốc gia Kon Ka Kinh một hệ sinh thái gần như nguyên vẹn.</p>
+                  <span class="sh-block__label">Điểm đến · Miền Bắc</span>
+                  <h3 class="sh-block__heading">Núi non, di sản và ruộng bậc thang</h3>
+                  <p>Hạ Long là hình ảnh dễ nhận ra nhất của Việt Nam: gần 2.000 đảo đá vôi nhô lên từ mặt nước ngọc bích, nơi du khách có thể du thuyền, chèo kayak hoặc ngủ đêm trên thuyền buồm truyền thống. Cách đó không xa, Hà Nội giữ nhịp sống nghìn năm qua Phố Cổ 36 phố phường, Hồ Hoàn Kiếm, Lăng Chủ tịch Hồ Chí Minh và những buổi múa rối nước.</p>
+                  <p>Lên phía Tây Bắc, Sa Pa được xem là trái tim miền núi với đỉnh Fansipan cao 3.143 mét (nóc nhà Đông Dương) bao quanh bởi bản làng dân tộc và ruộng bậc thang trải tầng. Còn Ninh Bình, với Tam Cốc và Tràng An, được ví như một "Vịnh Hạ Long trên cạn" giữa những hang động và dòng sông len qua núi đá vôi.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polygon points="16,42 24,24 32,42"/>
-                      <line x1="24" y1="42" x2="24" y2="48"/>
-                      <polygon points="32,46 42,20 52,46"/>
-                      <line x1="42" y1="46" x2="42" y2="52"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Vườn quốc gia Kon Ka Kinh<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo" src="assets/img/Vịnh Hạ Long.jpg" alt="Vịnh Hạ Long với các đảo đá vôi">
+                  <div class="sh-block__caption">Vịnh Hạ Long</div>
                 </div>
               </div>
             </article>
 
-            <!-- Khối 3 — Dân cư & các dân tộc -->
-            <article class="sh-block">
-              <span class="sh-block__dot" aria-hidden="true"></span>
-              <div class="sh-block__grid">
-                <div class="sh-block__text">
-                  <span class="sh-block__label">Dân cư & các dân tộc</span>
-                  <h3 class="sh-block__heading">47 dân tộc, một mái nhà chung</h3>
-                  <p>Hơn 3,5 triệu người đang sống trên mảnh đất hợp nhất này. Ở phía tây, người Jrai và Bahnar chiếm gần một nửa dân số, gìn giữ những nếp nhà rông, nhà mồ và pho sử thi truyền miệng qua bao thế hệ. Xuống phía đông, cộng đồng người Kinh chiếm đa số, đan xen với người Bahnar ở K'riêm, Vĩnh Thạnh, người H'rê và Chăm H'roi ở An Lão, Vân Canh — những tộc người mang theo lễ hội cầu ngư, hát bội và võ Tây Sơn vào đời sống ven biển.</p>
-                  <p>Hai vùng văn hóa khác biệt ấy, giờ nằm chung trong một tỉnh, tạo nên một Gia Lai đa sắc màu hiếm nơi nào có được.</p>
-                </div>
-                <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polygon points="32,8 52,40 12,40"/>
-                      <line x1="20" y1="40" x2="20" y2="54"/>
-                      <line x1="44" y1="40" x2="44" y2="54"/>
-                      <line x1="12" y1="54" x2="52" y2="54"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Làng văn hoá Jrai – Bahnar<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Khối 4 — Điểm đến cao nguyên -->
-            <article class="sh-block">
-              <span class="sh-block__dot" aria-hidden="true"></span>
-              <div class="sh-block__grid">
-                <div class="sh-block__text">
-                  <span class="sh-block__label">Điểm đến · Cao nguyên</span>
-                  <h3 class="sh-block__heading">Pleiku và những ngọn núi lửa đã tắt</h3>
-                  <p>Đi từ Pleiku, Biển Hồ — hay hồ T'Nưng — là điểm dừng đầu tiên không thể bỏ qua: miệng núi lửa cổ triệu năm tuổi nay là mặt nước xanh biếc phẳng lặng, được xem như đôi mắt của phố núi. Cách đó không xa, núi lửa Chư Đăng Ya vẫn giữ nguyên hình dáng miệng núi rõ nét, và vào tháng 11 cả sườn núi bừng lên sắc vàng của hoa dã quỳ.</p>
-                  <p>Muốn tìm cảm giác hoang sơ hơn, có thể ngược lên Vườn quốc gia Kon Ka Kinh hay Khu bảo tồn Kon Chư Răng để trekking giữa rừng nguyên sinh, hoặc dừng chân ở thác Phú Cường, thác Giáng Tiên nghe nước đổ trên nền nham thạch cổ. Ghé qua những làng Mơ Hra-Đáp, Ia Nueng, Kép, du khách có thể ngồi trong nhà rông, xem dệt thổ cẩm và nếm cơm lam giữa tiếng cồng chiêng.</p>
-                </div>
-                <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <circle cx="48" cy="14" r="6"/>
-                      <polygon points="20,48 32,20 44,48"/>
-                      <path d="M28 30 q4 -6 8 0"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Núi lửa Chư Đăng Ya<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Khối 5 — Điểm đến duyên hải -->
-            <article class="sh-block sh-block--reverse sh-block--coast">
-              <span class="sh-block__dot" aria-hidden="true"></span>
-              <div class="sh-block__grid">
-                <div class="sh-block__text">
-                  <span class="sh-block__label">Điểm đến · Duyên hải</span>
-                  <h3 class="sh-block__heading">Quy Nhơn và những bãi biển còn thưa vắng</h3>
-                  <p>Về phía biển, Quy Nhơn là trung tâm của mọi hành trình: những bãi cát dài, sạch và còn thưa vắng níu chân du khách ở Eo Gió, Kỳ Co, Ghềnh Ráng hay đảo nhỏ Cù Lao Xanh, Hòn Khô. Trên các sườn đồi ven biển vẫn còn nguyên vẹn hệ thống tháp Chăm cổ — tháp Dương Long cao nhất Việt Nam, tháp Cánh Tiên, Phú Lốc, Bánh Ít — dấu tích của kinh đô Vijaya một thời.</p>
-                  <p>Không xa đó, khu di tích Tây Sơn và Bảo tàng Quang Trung kể lại câu chuyện về ba anh em nhà Tây Sơn, còn những làng chài Nhơn Hải, Nhơn Châu, An Toàn vẫn giữ nhịp sống ra khơi, mời khách cùng lặn ngắm san hô hay thưởng thức hải sản đánh bắt trong ngày.</p>
-                </div>
-                <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M18 44 C18 26 46 26 46 44"/>
-                      <path d="M6 50 q6 -6 12 0 t12 0 t12 0 t12 0"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Eo Gió – Kỳ Co<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Khối 6 — Văn hoá cồng chiêng -->
+            <!-- Khối 3 — Miền Trung -->
             <article class="sh-block sh-block--culture">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
-                  <span class="sh-block__label">Văn hoá Tây Nguyên</span>
-                  <h3 class="sh-block__heading">Không gian cồng chiêng vẫn còn sống</h3>
-                  <p>Không gian văn hóa Cồng chiêng Tây Nguyên được UNESCO công nhận là di sản văn hóa phi vật thể đại diện của nhân loại từ năm 2005, và ở Gia Lai, di sản ấy vẫn sống trong đời sống thường ngày của người Jrai, Bahnar — từ lễ mừng lúa mới, lễ mừng nhà rông mới đến những đêm hội cồng chiêng, múa xoang.</p>
-                  <p>Nhà rông vẫn là trái tim của mỗi buôn làng, và tỉnh đang hỗ trợ khôi phục những nhà rông xuống cấp để giữ lại không gian ấy cho thế hệ sau. Cuối năm 2026, Festival Quốc tế Cồng chiêng sẽ diễn ra tại Pleiku và Biển Hồ, quy tụ khoảng 45 đoàn nghệ nhân trong nước và quốc tế.</p>
+                  <span class="sh-block__label">Điểm đến · Miền Trung</span>
+                  <h3 class="sh-block__heading">Phố cổ, cố đô và hang động kỳ vĩ</h3>
+                  <p>Hội An giữ nguyên vẹn dáng vẻ một thương cảng cổ được UNESCO công nhận, với những dãy đèn lồng rực rỡ mỗi tối, lớp học nấu ăn và những tiệm may đo trong ngày. Huế mang không khí trầm mặc của cố đô triều Nguyễn, nơi Kinh thành và các lăng tẩm hoàng gia soi bóng xuống hồ nước và vườn cảnh.</p>
+                  <p>Đà Nẵng, thành phố biển đáng sống nhất Việt Nam, nằm cạnh Bà Nà Hills với cây Cầu Vàng nổi tiếng nâng trên đôi bàn tay đá khổng lồ. Và nếu muốn khám phá thế giới ngầm, Phong Nha – Kẻ Bàng sở hữu hệ thống hang động ngoạn mục, trong đó có Sơn Đoòng, hang động lớn nhất thế giới.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <circle cx="32" cy="28" r="18"/>
-                      <circle cx="32" cy="28" r="9"/>
-                      <line x1="32" y1="46" x2="32" y2="56"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Không gian cồng chiêng<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo" src="assets/img/Phố cổ Hội An.jpg" alt="Phố cổ Hội An về đêm với đèn lồng">
+                  <div class="sh-block__caption">Phố cổ Hội An</div>
                 </div>
               </div>
             </article>
 
-            <!-- Khối 7 — Champa & võ cổ truyền -->
+            <!-- Khối 4 — Miền Nam -->
+            <article class="sh-block sh-block--reverse sh-block--coast">
+              <span class="sh-block__dot" aria-hidden="true"></span>
+              <div class="sh-block__grid">
+                <div class="sh-block__text">
+                  <span class="sh-block__label">Điểm đến · Miền Nam</span>
+                  <h3 class="sh-block__heading">Sông nước, phồn hoa và biển đảo</h3>
+                  <p>Thành phố Hồ Chí Minh là trung tâm kinh tế sôi động, nơi những toà nhà chọc trời như Bitexco đứng cạnh các công trình thuộc địa Pháp như Nhà thờ Đức Bà và Bưu điện Trung tâm. Xuôi về đồng bằng sông Cửu Long, Cần Thơ là "vựa lúa" của cả nước với những khu chợ nổi, vườn trái cây trĩu quả và đời sống gắn liền với sông nước.</p>
+                  <p>Ngoài khơi, Phú Quốc là hòn đảo nhiệt đới với bãi biển đẹp, phù hợp cho những chuyến đi gia đình hay đơn giản là để tìm một khoảng lặng bên biển.</p>
+                </div>
+                <div class="sh-block__visual">
+                  <img class="sh-block__photo" src="assets/img/Chợ nổi Cần Thơ.jpg" alt="Chợ nổi Cần Thơ trên sông">
+                  <div class="sh-block__caption">Chợ nổi Cần Thơ</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Khối 5 — Lễ hội -->
+            <article class="sh-block sh-block--culture">
+              <span class="sh-block__dot" aria-hidden="true"></span>
+              <div class="sh-block__grid">
+                <div class="sh-block__text">
+                  <span class="sh-block__label">Lễ hội bốn mùa</span>
+                  <h3 class="sh-block__heading">Một lịch lễ hội dày đặc quanh năm</h3>
+                  <p>Việt Nam có một trong những lịch lễ hội phong phú nhất Đông Nam Á, kết hợp giữa truyền thống cổ xưa, di sản cung đình và phong tục dân gian sống động. Lớn nhất trong số đó là Tết Nguyên Đán, diễn ra vào tháng 1 hoặc tháng 2 âm lịch, đánh dấu năm mới với tục cúng ông bà, lì xì, múa lân và những buổi sum họp gia đình.</p>
+                  <p>Ở miền Trung, Lễ hội Huế tôn vinh di sản cố đô qua các buổi biểu diễn nghệ thuật cung đình và diễu hành, trong khi Đà Nẵng thường niên tổ chức Lễ hội pháo hoa quốc tế bên sông Hàn, thu hút du khách từ khắp nơi đổ về.</p>
+                </div>
+                <div class="sh-block__visual">
+                  <img class="sh-block__photo" src="assets/img/Tết Nguyên Đán.jpg" alt="Phố Tết Nguyên Đán trang trí rực rỡ">
+                  <div class="sh-block__caption">Tết Nguyên Đán</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Khối 6 — Văn hoá -->
             <article class="sh-block sh-block--reverse sh-block--culture">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
-                  <span class="sh-block__label">Văn hoá Champa & võ cổ truyền</span>
-                  <h3 class="sh-block__heading">Đất võ trời văn</h3>
-                  <p>Vùng đất phía đông từng là cố đô Vijaya (Đồ Bàn) của vương quốc Champa, để lại một hệ thống tháp gạch cổ cùng nghệ thuật điêu khắc đá và gốm Chăm vẫn đứng vững qua hàng thế kỷ. Cũng chính nơi đây, phong trào Tây Sơn đã khởi phát và sản sinh ra một nền võ cổ truyền được mệnh danh "đất võ trời văn" — với các môn phái Tây Sơn quyền, An Thái, Thuận Truyền.</p>
-                  <p>Liên hoan Quốc tế Võ cổ truyền Việt Nam sẽ chọn Gia Lai làm nơi tổ chức trong năm 2026. Nghệ thuật hát bội, bài chòi và nhạc võ Tây Sơn vẫn vang lên trong các lễ hội làng xã ven biển, song hành cùng lễ hội Kate của người Chăm H'roi.</p>
+                  <span class="sh-block__label">Văn hoá Việt Nam</span>
+                  <h3 class="sh-block__heading">Nếp nhà, cộng đồng và nghệ thuật dân gian</h3>
+                  <p>Văn hóa Việt Nam là sự hòa quyện giữa ảnh hưởng của Nho giáo, Phật giáo, Đạo giáo và tín ngưỡng dân gian bản địa, cùng dấu ấn của các triều đại phong kiến và thời kỳ thuộc địa Pháp. Thờ cúng ông bà tổ tiên vẫn giữ vị trí trung tâm trong đời sống tâm linh, còn các lễ hội và sinh hoạt làng xã tiếp tục gắn kết cộng đồng qua nhiều thế hệ.</p>
+                  <p>Những loại hình nghệ thuật dân gian như múa rối nước, hát chèo, hát xoan hay ca trù đã được UNESCO ghi danh là di sản văn hóa phi vật thể, còn tà áo dài vẫn là biểu tượng vượt thời gian, thường xuất hiện trong các dịp lễ Tết và sự kiện quan trọng.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M18 50 L18 26 Q18 16 24 16 Q30 16 30 26 L30 50 Z"/>
-                      <path d="M34 50 L34 20 Q34 8 40 8 Q46 8 46 20 L46 50 Z"/>
-                      <line x1="10" y1="50" x2="54" y2="50"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Tháp Dương Long<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo sh-block__photo--top" src="assets/img/Áo dài truyền thống.jpg" alt="Thiếu nữ mặc áo dài truyền thống">
+                  <div class="sh-block__caption">Áo dài truyền thống</div>
                 </div>
               </div>
             </article>
 
-            <!-- Khối 8 — Ẩm thực Tây Nguyên -->
+            <!-- Khối 7 — Ẩm thực biểu tượng -->
             <article class="sh-block">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
-                  <span class="sh-block__label">Ẩm thực · Cao nguyên</span>
-                  <h3 class="sh-block__heading">Cơm lam, gà nướng, rượu cần</h3>
-                  <p>Trên cao nguyên, một bữa ăn trọn vẹn thường xoay quanh bộ ba cơm lam – gà nướng – rượu cần: cơm nếp nương ủ trong ống tre nướng than, gà ta ướp muối, ớt, sả, lá é nướng nguyên con, và rượu cần lên men uống chung bằng cần tre trong những dịp lễ hội.</p>
-                  <p>Bên cạnh đó là những món dân dã gắn với rừng và suối — lá mì xào ba chỉ, lòng gà cà đắng gói lá chuối, bò nướng trộn mật, lẩu cá lóc lá é — cùng hai đặc sản phố núi được nhắc đến nhiều nhất: phở khô Pleiku sợi dai trộn thịt bò, hành phi, và bún cua ủ với vị chua lên men rất riêng của cua đồng.</p>
+                  <span class="sh-block__label">Ẩm thực · Món ăn biểu tượng</span>
+                  <h3 class="sh-block__heading">Phở, bún chả và bánh mì</h3>
+                  <p>Ẩm thực Việt Nam được xem là một trong những nền ẩm thực phong phú và lành mạnh nhất thế giới, cân bằng giữa vị chua, cay, mặn, ngọt, đắng cùng rất nhiều rau thơm tươi. Phở vẫn là món ăn biểu tượng nhất: bánh phở trong nước dùng thịt bò hoặc gà, ăn kèm rau thơm, giá và chanh, đặc biệt phổ biến ở Hà Nội với giá chỉ khoảng 30.000–70.000 đồng một tô.</p>
+                  <p>Bún chả, đặc sản Hà Nội với thịt lợn nướng than hoa ăn kèm bún và nước chấm chua ngọt, từng được cựu Tổng thống Mỹ Barack Obama và đầu bếp Anthony Bourdain thưởng thức ngay trên phố. Còn bánh mì đã trở thành món ăn đường phố Việt Nam được biết đến khắp thế giới: ổ bánh vỏ giòn nhân đầy thịt nguội, pate, trứng và rau thơm.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M14 34 Q32 34 50 34 Q48 48 32 48 Q16 48 14 34 Z"/>
-                      <line x1="20" y1="34" x2="20" y2="20"/>
-                      <path d="M40 26 q3 -4 0 -8"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Cơm lam – gà nướng<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo" src="assets/img/Phở Hà Nội.jpg" alt="Một tô phở Hà Nội">
+                  <div class="sh-block__caption">Phở Hà Nội</div>
                 </div>
               </div>
             </article>
 
-            <!-- Khối 9 — Ẩm thực duyên hải -->
+            <!-- Khối 8 — Đặc sản vùng miền -->
             <article class="sh-block sh-block--reverse sh-block--coast">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
-                  <span class="sh-block__label">Ẩm thực · Duyên hải</span>
-                  <h3 class="sh-block__heading">Vị mặn mòi của biển</h3>
-                  <p>Xuống đến biển, khẩu vị chuyển hẳn sang vị mặn mòi của hải sản. Buổi sáng ở Quy Nhơn thường bắt đầu bằng bánh hỏi ăn kèm thịt nướng, hoặc một tô cháo lòng nóng hổi; đến trưa là bún chả cá nấu từ cá mối, cá thu tươi cùng chả cá chiên hay hấp. Cá ngừ đại dương, tôm hùm, mực, ghẹ, sò huyết được các quán ven biển Nhơn Hải, Eo Gió chế biến ngay trong ngày đánh bắt.</p>
-                  <p>Món ngọt có bánh ít lá gai nhân đậu xanh gói trong lá gai thơm bùi, bánh tráng nước dừa giòn tan, và để tráng miệng đúng chất Bình Định xưa, không thể thiếu một chén rượu Bàu Đá nồng nàn.</p>
+                  <span class="sh-block__label">Ẩm thực · Đặc sản vùng miền</span>
+                  <h3 class="sh-block__heading">Mỗi vùng miền một hương vị riêng</h3>
+                  <p>Đi dọc đất nước, mỗi vùng miền mang một hương vị riêng: Cao Lầu ở Hội An với sợi mì gạo dai đặc trưng, Cơm tấm Sài Gòn với sườn nướng, bì và chả trứng, hay Bánh xèo giòn rụm nhân tôm thịt ăn kèm rổ rau sống đầy ắp. Ở Hà Nội, một ly cà phê trứng, cà phê đen phủ lớp kem trứng đánh bông, là cách người Hà Nội bắt đầu một buổi sáng chậm rãi.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M10 32 C20 20 44 20 54 32 C44 44 20 44 10 32 Z"/>
-                      <path d="M10 32 L2 24 L2 40 Z"/>
-                      <circle cx="42" cy="28" r="1.6" fill="currentColor" stroke="none"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Bún chả cá Quy Nhơn<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo" src="assets/img/Cà phê trứng.jpg" alt="Ly cà phê trứng Hà Nội">
+                  <div class="sh-block__caption">Cà phê trứng</div>
                 </div>
               </div>
             </article>
 
-            <!-- Khối 10 — Trải nghiệm & sự kiện mới -->
+            <!-- Khối 9 — Ẩm thực đường phố -->
             <article class="sh-block">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
-                  <span class="sh-block__label">Trải nghiệm mới · 2025–2026</span>
-                  <h3 class="sh-block__heading">Những lối khám phá vừa mở</h3>
-                  <p>Buổi tối, phố ẩm thực Phùng Hưng và Nguyễn Thiện Thuật ở Pleiku sáng đèn với các món đặc sản cao nguyên và ẩm thực đường phố; ban ngày, du khách có thể chọn về những làng du lịch cộng đồng như Mơ Hra-Đáp, Nhơn Lý, Nhơn Hải, Vĩnh An hay làng rau Thuận Nghĩa để cùng thu hoạch cà phê, dệt thổ cẩm hoặc ra khơi đánh bắt hải sản với ngư dân.</p>
-                  <p>Những điểm sinh thái mới như thác Giáng Tiên, Kon Chư Răng, Chư Nghé cũng vừa được đưa vào khai thác. Trong năm 2026, tỉnh còn tổ chức chuỗi sự kiện lớn: Festival Cồng chiêng quốc tế, Liên hoan Võ cổ truyền, giải chạy VnExpress Marathon và lễ hội Hoa dã quỳ.</p>
+                  <span class="sh-block__label">Ẩm thực đường phố</span>
+                  <h3 class="sh-block__heading">Một Việt Nam khác trên vỉa hè</h3>
+                  <p>Ẩm thực đường phố là phần không thể thiếu trong đời sống Việt Nam, với những gánh hàng và quán vỉa hè phục vụ từ sáng sớm đến tận đêm khuya. Phở, bún chả, bánh mì, bánh tráng nướng hay một ly chè mát lạnh đều được bán rộng rãi với mức giá rất phải chăng, đôi khi chỉ vài chục nghìn đồng cho một bữa no.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M6 16 Q32 4 58 16"/>
-                      <circle cx="18" cy="26" r="6"/>
-                      <circle cx="32" cy="32" r="6"/>
-                      <circle cx="46" cy="24" r="6"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">Phố ẩm thực đêm Phùng Hưng<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo" src="assets/img/Gánh hàng rong.jpg" alt="Gánh hàng rong bán trái cây trên phố">
+                  <div class="sh-block__caption">Gánh hàng rong</div>
                 </div>
               </div>
             </article>
 
-            <!-- Khối 11 — Lưu ý khi du lịch -->
-            <article class="sh-block sh-block--reverse sh-block--coast">
+            <!-- Khối 10 — Lưu ý khi đi -->
+            <article class="sh-block sh-block--reverse">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
                   <span class="sh-block__label">Trước khi lên đường</span>
-                  <h3 class="sh-block__heading">Đi khi nào, đi bằng cách nào</h3>
-                  <p>Vì Gia Lai trải dài từ núi xuống biển, thời điểm đẹp nhất cũng khác nhau theo từng vùng: cao nguyên đẹp nhất vào mùa khô tháng 11 đến tháng 4, đặc biệt cuối năm khi hoa dã quỳ nở rộ; duyên hải lại thuận lợi nhất từ tháng 3 đến tháng 9, nên tránh mùa bão tháng 9–11.</p>
-                  <p>Di chuyển giữa hai vùng chủ yếu qua Quốc lộ 19 nối Quy Nhơn – Pleiku – cửa khẩu Lệ Thanh, hoặc bằng đường hàng không qua sân bay Phù Cát và sân bay Pleiku. Toàn tỉnh hiện có khoảng 1.257 cơ sở lưu trú với hơn 23.200 phòng — đây cũng chính là dữ liệu nền mà VNFinder dùng để gợi ý lịch trình phù hợp với từng chặng đi của bạn, ngay ở mục Lịch trình.</p>
+                  <h3 class="sh-block__heading">Đi khi nào là đẹp nhất</h3>
+                  <p>Nếu đang lên kế hoạch cho một chuyến đi, thời điểm lý tưởng nhất để khám phá Việt Nam thường là từ tháng 10 đến tháng 4 năm sau, khi thời tiết mát mẻ và ít mưa trên cả ba miền. Từ đây, VNFinder có thể giúp bạn đi sâu hơn vào từng khía cạnh: lịch trình chi tiết, món ăn cụ thể hay văn hóa từng vùng miền, ngay ở mục Itinerary.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <div class="sh-block__badge">
-                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M6 50 Q20 20 32 34 T58 14" stroke-dasharray="1 7"/>
-                      <circle cx="52" cy="14" r="5"/>
-                    </svg>
-                  </div>
-                  <div class="sh-block__caption">QL19: Quy Nhơn – Pleiku<span>Minh hoạ vùng địa hình, không phải ảnh chụp thật</span></div>
+                  <img class="sh-block__photo sh-block__photo--top" src="assets/img/Tháng 10 – Tháng 4.jpg" alt="Những khung cảnh tiêu biểu của Việt Nam">
+                  <div class="sh-block__caption">Tháng 10 – Tháng 4</div>
                 </div>
               </div>
             </article>
@@ -440,7 +354,7 @@
   </main>
 
   <footer class="sh-footer">
-    <p>VNFinder — Dự án dự thi Gia Lai Youth HackAIthon 2026.</p>
+    <p>VNFinder - Dự án dự thi Gia Lai Youth HackAIthon 2026.</p>
   </footer>
 
   <script src="https://unpkg.com/lucide@latest"></script>
