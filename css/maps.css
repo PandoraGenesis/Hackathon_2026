@@ -1,0 +1,504 @@
+/* ============================================================
+   MAPS — bản đồ Việt Nam tương tác 3 cấp (Toàn quốc → Tỉnh/Thành
+   → Xã/Phường/Đặc khu). Namespace riêng "vnmap-*" để không đụng
+   tới css/style.css hay css/intro.css đã có sẵn trong dự án.
+
+   Bảng màu lấy theo tông chủ đạo của trang: nền kem ngà, đỏ làm
+   điểm nhấn (theo logo VNFinder), cam đất làm điểm nhấn phụ.
+   ============================================================ */
+
+.vnmap-panel {
+  --vnmap-ink: #21302f;
+  --vnmap-muted: #74807a;
+  --vnmap-line: #ece1cd;
+  --vnmap-accent: #c1373a;
+  --vnmap-accent-dark: #a32d30;
+  --vnmap-accent-ink: #ffffff;
+  --vnmap-accent-soft: #f6e3c4;
+  --vnmap-surface: #ffffff;
+  --vnmap-bg: #faf6ec;
+
+  padding: clamp(20px, 4vw, 48px) clamp(16px, 5vw, 64px) 64px;
+  background: var(--vnmap-bg);
+  color: var(--vnmap-ink);
+  font-family: 'Sarabun', 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+.vnmap-header {
+  max-width: 900px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+.vnmap-title {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+  color: var(--vnmap-ink);
+}
+
+.vnmap-subtitle {
+  margin: 0;
+  color: var(--vnmap-muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+/* ---------- Ô tìm kiếm tỉnh / xã theo tên ---------- */
+
+.vnmap-search {
+  position: relative;
+  max-width: 420px;
+  margin: 18px auto 0;
+}
+
+.vnmap-search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--vnmap-surface);
+  border: 1px solid var(--vnmap-line);
+  border-radius: 999px;
+  padding: 9px 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vnmap-search-field:focus-within {
+  border-color: var(--vnmap-accent);
+  box-shadow: 0 0 0 3px rgba(193, 55, 58, 0.12);
+}
+
+.vnmap-search-field svg {
+  width: 17px;
+  height: 17px;
+  color: var(--vnmap-muted);
+  flex: none;
+}
+
+.vnmap-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--vnmap-ink);
+  min-width: 0;
+}
+
+.vnmap-search-input::placeholder {
+  color: #a7ada7;
+}
+
+.vnmap-search-clear {
+  border: none;
+  background: #f1ece1;
+  color: var(--vnmap-muted);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+}
+
+.vnmap-search-clear[hidden] { display: none; }
+.vnmap-search-clear svg { width: 12px; height: 12px; }
+
+.vnmap-search-results {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--vnmap-surface);
+  border: 1px solid var(--vnmap-line);
+  border-radius: 14px;
+  box-shadow: 0 16px 32px -18px rgba(33, 48, 47, 0.35);
+  padding: 6px;
+}
+
+.vnmap-search-results[hidden] { display: none; }
+
+.vnmap-search-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  color: var(--vnmap-ink);
+}
+
+.vnmap-search-item:hover,
+.vnmap-search-item.is-active {
+  background: var(--vnmap-accent-soft);
+}
+
+.vnmap-search-item-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.vnmap-search-item-meta {
+  font-size: 0.78rem;
+  color: var(--vnmap-muted);
+}
+
+.vnmap-search-empty {
+  padding: 14px 10px;
+  text-align: center;
+  color: var(--vnmap-muted);
+  font-size: 0.86rem;
+}
+
+/* ---------- Thanh điều hướng: breadcrumb + nút quay lại ---------- */
+
+.vnmap-toolbar {
+  max-width: 1080px;
+  margin: 18px auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vnmap-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 0.92rem;
+}
+
+.vnmap-crumb {
+  border: none;
+  background: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--vnmap-muted);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.vnmap-crumb:hover {
+  background: var(--vnmap-accent-soft);
+  color: var(--vnmap-ink);
+}
+
+.vnmap-crumb.is-active {
+  background: var(--vnmap-accent);
+  color: var(--vnmap-accent-ink);
+}
+
+.vnmap-crumb:disabled {
+  cursor: default;
+}
+
+.vnmap-crumb-sep {
+  color: #c9beac;
+  font-size: 0.85rem;
+}
+
+.vnmap-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--vnmap-line);
+  background: var(--vnmap-surface);
+  color: var(--vnmap-ink);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.vnmap-back:hover {
+  border-color: var(--vnmap-accent);
+  background: var(--vnmap-accent-soft);
+}
+
+.vnmap-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Khung bản đồ chính ---------- */
+
+.vnmap-stage {
+  position: relative;
+  max-width: 1080px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--vnmap-line);
+  background: var(--vnmap-surface);
+  box-shadow: 0 18px 40px -24px rgba(33, 48, 47, 0.3);
+}
+
+.vnmap-map {
+  width: 100%;
+  height: clamp(420px, 62vw, 640px);
+  background: #f3ede0;
+}
+
+.vnmap-map .leaflet-container {
+  background: #f3ede0;
+  font-family: 'Sarabun', sans-serif;
+}
+
+.vnmap-map .leaflet-control-zoom a {
+  color: var(--vnmap-ink);
+}
+
+/* Nhãn tên tỉnh / xã hiển thị thường trực trên bản đồ */
+.vnmap-label {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-weight: 700;
+  font-size: 11px;
+  color: #2a221a;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9), 0 0 6px rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.vnmap-label::before {
+  display: none;
+}
+
+.vnmap-label--ward {
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+/* ---------- Trạng thái tải dữ liệu ---------- */
+
+.vnmap-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(250, 246, 236, 0.92);
+  color: var(--vnmap-muted);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-align: center;
+  padding: 24px;
+}
+
+.vnmap-loading.is-error .vnmap-spinner { display: none; }
+
+.vnmap-loading-retry {
+  margin-top: 4px;
+  border: 1px solid var(--vnmap-accent);
+  background: var(--vnmap-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 7px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.vnmap-spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid #e7dcc4;
+  border-top-color: var(--vnmap-accent);
+  animation: vnmap-spin 0.8s linear infinite;
+}
+
+@keyframes vnmap-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Ô nhỏ Hoàng Sa / Trường Sa (giống bản đồ tham khảo) --- */
+
+.vnmap-islands {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 700;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vnmap-island-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--vnmap-line);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(2px);
+  border-radius: 12px;
+  padding: 6px 10px 6px 6px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.vnmap-island-card:hover {
+  border-color: var(--vnmap-accent);
+  background: var(--vnmap-accent-soft);
+  transform: translateY(-1px);
+}
+
+.vnmap-island-svg {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  background: #f1ece1;
+  border-radius: 8px;
+}
+
+.vnmap-island-label {
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--vnmap-ink);
+  font-weight: 700;
+}
+
+.vnmap-island-label em {
+  display: block;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--vnmap-muted);
+  font-size: 9.5px;
+  margin-top: 1px;
+}
+
+.vnmap-islands[hidden] {
+  display: none;
+}
+
+/* ---------- Panel thông tin khu vực đang chọn (cấp chi tiết) ---------- */
+
+.vnmap-info {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 800;
+  max-width: min(320px, calc(100% - 140px));
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid var(--vnmap-line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 12px 24px -16px rgba(33, 48, 47, 0.35);
+}
+
+.vnmap-info[hidden] {
+  display: none;
+}
+
+.vnmap-info-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #f1ece1;
+  color: var(--vnmap-muted);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.vnmap-info-close svg {
+  width: 14px;
+  height: 14px;
+}
+
+.vnmap-info-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--vnmap-accent);
+  margin: 0 0 2px;
+}
+
+.vnmap-info-name {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+  padding-right: 20px;
+}
+
+.vnmap-info-meta {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--vnmap-muted);
+  line-height: 1.6;
+}
+
+.vnmap-info-meta strong {
+  color: var(--vnmap-ink);
+}
+
+/* ---------- Chú thích ngắn dưới bản đồ ---------- */
+
+.vnmap-hint {
+  max-width: 1080px;
+  margin: 12px auto 0;
+  text-align: center;
+  color: var(--vnmap-muted);
+  font-size: 0.85rem;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+  .vnmap-islands {
+    flex-direction: row;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    justify-content: center;
+  }
+
+  .vnmap-island-label {
+    display: none;
+  }
+
+  .vnmap-island-card {
+    padding: 4px;
+  }
+
+  .vnmap-info {
+    max-width: calc(100% - 24px);
+    left: 12px;
+    right: 12px;
+    bottom: 68px;
+  }
+}

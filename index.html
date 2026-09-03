@@ -18,6 +18,11 @@
   <link rel="stylesheet" href="css/style.css?v=1">
   <!-- intro.css: khung trang mới (nav, hero, khối nội dung Giới thiệu) -->
   <link rel="stylesheet" href="css/intro.css?v=1">
+  <!-- Leaflet: thư viện bản đồ tương tác dùng cho tab Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <!-- maps.css: giao diện bản đồ Việt Nam tương tác 3 cấp -->
+  <link rel="stylesheet" href="css/maps.css?v=1">
 </head>
 
 <body class="sh-app">
@@ -241,9 +246,70 @@
     </section>
 
     <!-- ============================================================
-         2. MAPS — để trống
+         2. MAPS — bản đồ Việt Nam tương tác 3 bước
+         Toàn quốc → Tỉnh/Thành (xã, phường, đặc khu) → Chi tiết khu vực
+         Logic đầy đủ nằm ở js/maps.js, giao diện ở css/maps.css,
+         dữ liệu ranh giới ở data/maps/*.
          ============================================================ -->
-    <section id="panel-maps" class="sh-panel sh-empty-panel" hidden></section>
+    <section id="panel-maps" class="sh-panel vnmap-panel" hidden>
+
+      <div class="vnmap-header">
+        <h2 class="vnmap-title">Bản đồ Việt Nam</h2>
+        <p class="vnmap-subtitle">Nhấp vào một tỉnh, thành để xem toàn bộ xã, phường, đặc khu — rồi nhấp tiếp để xem bản đồ chi tiết khu vực đó.</p>
+
+        <div class="vnmap-search" id="vnmap-search">
+          <div class="vnmap-search-field">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input type="text" id="vnmap-search-input" class="vnmap-search-input"
+              placeholder="Tìm tỉnh, xã, phường theo tên…" autocomplete="off" aria-label="Tìm tỉnh, xã, phường theo tên">
+            <button type="button" class="vnmap-search-clear" id="vnmap-search-clear" hidden aria-label="Xóa tìm kiếm">
+              <i data-lucide="x" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="vnmap-search-results" id="vnmap-search-results" hidden></div>
+        </div>
+      </div>
+
+      <div class="vnmap-toolbar">
+        <nav class="vnmap-breadcrumb" id="vnmap-breadcrumb" aria-label="Điều hướng bản đồ">
+          <button type="button" class="vnmap-crumb is-active">Toàn quốc</button>
+        </nav>
+        <button type="button" class="vnmap-back" id="vnmap-back" hidden>
+          <i data-lucide="arrow-left" aria-hidden="true"></i> Quay lại
+        </button>
+      </div>
+
+      <div class="vnmap-stage">
+        <div id="vnmap-map" class="vnmap-map"></div>
+
+        <div class="vnmap-loading" id="vnmap-loading">
+          <div class="vnmap-spinner" aria-hidden="true"></div>
+          <span>Đang tải bản đồ…</span>
+          <button type="button" class="vnmap-loading-retry" id="vnmap-loading-retry" hidden>Thử lại</button>
+        </div>
+
+        <div class="vnmap-islands" id="vnmap-islands" hidden>
+          <button type="button" class="vnmap-island-card" data-island="hoang-sa">
+            <svg class="vnmap-island-svg" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            <span class="vnmap-island-label">Quần đảo Hoàng Sa<br><em>Đặc khu Hoàng Sa – Đà Nẵng</em></span>
+          </button>
+          <button type="button" class="vnmap-island-card" data-island="truong-sa">
+            <svg class="vnmap-island-svg" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            <span class="vnmap-island-label">Quần đảo Trường Sa<br><em>Đặc khu Trường Sa – Khánh Hòa</em></span>
+          </button>
+        </div>
+
+        <div class="vnmap-info" id="vnmap-info" hidden>
+          <button type="button" class="vnmap-info-close" id="vnmap-info-close" aria-label="Đóng">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+          <div class="vnmap-info-body" id="vnmap-info-body"></div>
+        </div>
+      </div>
+
+      <p class="vnmap-hint">Dữ liệu ranh giới hành chính theo cơ cấu 34 tỉnh/thành · xã/phường/đặc khu áp dụng từ 01/07/2025.</p>
+
+    </section>
 
     <!-- ============================================================
          3. LỊCH TRÌNH — nguyên trạng từ repo PandoraGenesis/Hackathon_2026
@@ -360,6 +426,11 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="js/script.js?v=1" defer></script>
   <script src="js/nav.js?v=1" defer></script>
+  <!-- Leaflet + maps.js: phải nạp sau nav.js theo thứ tự này để js/maps.js
+       tự gắn sự kiện vào tab Maps khi DOM đã có nav -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/maps.js?v=1" defer></script>
 </body>
 
 </html>
