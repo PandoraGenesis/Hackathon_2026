@@ -150,41 +150,57 @@
 
   /* ---------------------- Nạp dữ liệu (có cache) ---------------------- */
 
+  // Cache theo PROMISE (không chỉ theo kết quả) để nếu tải trước (prefetch
+  // lúc hover tab) và tải thật (lúc click) xảy ra gần nhau, chỉ có đúng 1
+  // request được gửi đi — request thứ hai dùng lại promise đang chạy dở.
   function loadProvinces() {
-    if (cache.provinces) return Promise.resolve(cache.provinces);
-    return fetchJSON(DATA.provinces).then(function (data) {
-      cache.provinces = data;
-      return data;
-    });
+    if (!cache.provinces) {
+      cache.provinces = fetchJSON(DATA.provinces).catch(function (err) {
+        cache.provinces = null; // cho phép thử lại nếu lỗi
+        throw err;
+      });
+    }
+    return cache.provinces;
   }
 
   function loadIslands() {
-    if (cache.islands) return Promise.resolve(cache.islands);
-    return fetchJSON(DATA.islands).then(function (data) {
-      cache.islands = data;
-      return data;
-    });
+    if (!cache.islands) {
+      cache.islands = fetchJSON(DATA.islands).catch(function (err) {
+        cache.islands = null;
+        throw err;
+      });
+    }
+    return cache.islands;
   }
 
   function loadWards(provinceCode) {
-    if (cache.wardsByProvince[provinceCode]) {
-      return Promise.resolve(cache.wardsByProvince[provinceCode]);
+    if (!cache.wardsByProvince[provinceCode]) {
+      cache.wardsByProvince[provinceCode] = fetchJSON(DATA.wardsDir + provinceCode + '.geojson').catch(function (err) {
+        delete cache.wardsByProvince[provinceCode];
+        throw err;
+      });
     }
-    return fetchJSON(DATA.wardsDir + provinceCode + '.geojson').then(function (data) {
-      cache.wardsByProvince[provinceCode] = data;
-      return data;
-    });
+    return cache.wardsByProvince[provinceCode];
   }
 
   function loadSearchIndex() {
-    if (cache.searchIndex) return Promise.resolve(cache.searchIndex);
-    return fetchJSON(DATA.searchIndex).then(function (data) {
-      cache.searchIndex = data.map(function (e) {
-        e._key = normalize(e.name);
-        return e;
+    if (!cache.searchIndex) {
+      cache.searchIndex = fetchJSON(DATA.searchIndex).then(function (data) {
+        return data.map(function (e) {
+          e._key = normalize(e.name);
+          return e;
+        });
+      }).catch(function (err) {
+        cache.searchIndex = null;
+        throw err;
       });
-      return cache.searchIndex;
-    });
+    }
+    return cache.searchIndex;
+  }
+
+  function prefetchCountryData() {
+    loadProvinces().catch(function () {});
+    loadIslands().catch(function () {});
   }
 
   /* ---------------------- Khởi tạo bản đồ Leaflet ---------------------- */
@@ -626,11 +642,24 @@
     var mapsTab = document.querySelector('.sh-tab[data-panel="panel-maps"]');
     if (mapsTab) {
       mapsTab.addEventListener('click', activate);
+      // Tải trước dữ liệu 34 tỉnh + đảo ngay khi rê chuột/chạm vào tab
+      // Maps — thường xảy ra trước lúc bấm vài trăm mili-giây, nên khi
+      // click thật thì dữ liệu đã có sẵn (hoặc đang tải dở, dùng chung).
+      ['mouseenter', 'focus', 'touchstart'].forEach(function (evt) {
+        mapsTab.addEventListener(evt, prefetchCountryData, { once: true, passive: true });
+      });
       // Nếu tab Maps đã được chọn sẵn khi tải trang (vd. đến từ URL/hash)
       if (mapsTab.getAttribute('aria-selected') === 'true') activate();
     } else {
       // Không tìm thấy nav — vẫn khởi tạo để bản đồ dùng được độc lập
       activate();
+    }
+
+    // Dự phòng: nếu người dùng chưa từng hover/chạm tab Maps trước khi
+    // bấm (vd. gõ phím Tab để chuyển focus, hoặc vào thẳng bằng #panel-maps),
+    // vẫn tải trước lúc trình duyệt rảnh, không cạnh tranh với render trang.
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(prefetchCountryData, { timeout: 2000 });
     }
   }
 

@@ -214,6 +214,10 @@
   font-size: 0.85rem;
 }
 
+.vnmap-back[hidden] {
+  display: none;
+}
+
 .vnmap-back {
   display: inline-flex;
   align-items: center;
@@ -309,6 +313,10 @@
   padding: 24px;
 }
 
+.vnmap-loading[hidden] {
+  display: none;
+}
+
 .vnmap-loading.is-error .vnmap-spinner { display: none; }
 
 .vnmap-loading-retry {
@@ -347,6 +355,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.vnmap-island-card[hidden] {
+  display: none;
 }
 
 .vnmap-island-card {
