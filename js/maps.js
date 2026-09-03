@@ -57,10 +57,32 @@
     '#fb8500', '#4cc9f0', '#f15bb5', '#588157', '#ee9b00', '#5e60ce'
   ];
 
+  // Các đảo nhỏ ven bờ — hình dạng đã có sẵn trong provinces.geojson
+  // (là một phần MultiPolygon của tỉnh chủ quản) nhưng không có nhãn
+  // riêng vì mỗi tỉnh chỉ có 1 tooltip đặt ở trọng tâm. Thêm nhãn điểm
+  // riêng cho các đảo được biết đến nhiều, giống bản đồ tham chiếu.
+  var SMALL_ISLANDS = [
+    { name: 'Đ. Cô Tô', lat: 21.03, lon: 107.77 },
+    { name: 'Đ. Cát Bà', lat: 20.80, lon: 107.05 },
+    { name: 'Đ. Bạch Long Vĩ', lat: 20.13, lon: 107.72 },
+    { name: 'Đ. Cồn Cỏ', lat: 17.17, lon: 107.33 },
+    { name: 'Đ. Lý Sơn', lat: 15.38, lon: 109.13 },
+    { name: 'Đ. Phú Quý', lat: 10.51, lon: 108.93 },
+    { name: 'Đ. Côn Sơn', lat: 8.69, lon: 106.60 },
+    { name: 'Đảo Phú Quốc', lat: 10.22, lon: 103.97 }
+  ];
+
+  // Vĩ độ đại diện thật của 2 quần đảo — dùng để canh ô chú thích
+  // Hoàng Sa / Trường Sa ngang đúng tầm vĩ độ của chúng trên bản đồ
+  // (kinh độ bỏ qua, ô luôn ghim sát mép phải khung bản đồ).
+  var HOANG_SA_LAT = 16.5;
+  var TRUONG_SA_LAT = 9.3;
+
   var els = {};
   var map = null;
   var mapInited = false;
   var activeLayer = null;   // layer GeoJSON đang hiển thị (tỉnh hoặc xã)
+  var smallIslandLayer = null; // nhãn các đảo nhỏ ven bờ, chỉ ở cấp Toàn quốc
   var tileLayer = null;     // chỉ tồn tại ở cấp chi tiết (bước 3)
   var boundaryLayer = null; // viền khu vực chi tiết ở cấp chi tiết
   var lastAction = null;    // hàm để gọi lại khi nhấn "Thử lại"
@@ -221,6 +243,7 @@
     });
     map.attributionControl.setPrefix(false);
     map.on('zoomend', updateLabelScale);
+    map.on('zoomend moveend', positionIslandCards);
     mapInited = true;
   }
 
@@ -228,6 +251,60 @@
     if (activeLayer) { map.removeLayer(activeLayer); activeLayer = null; }
     if (boundaryLayer) { map.removeLayer(boundaryLayer); boundaryLayer = null; }
     if (tileLayer) { map.removeLayer(tileLayer); tileLayer = null; }
+    if (smallIslandLayer) { map.removeLayer(smallIslandLayer); smallIslandLayer = null; }
+  }
+
+  // Vẽ nhãn các đảo nhỏ ven bờ (chỉ hiện ở cấp Toàn quốc)
+  function renderSmallIslandLabels() {
+    var group = L.layerGroup();
+    SMALL_ISLANDS.forEach(function (isl) {
+      var marker = L.circleMarker([isl.lat, isl.lon], {
+        radius: 2.2,
+        color: '#023e8a',
+        weight: 1,
+        fillColor: '#3a86ff',
+        fillOpacity: 0.95,
+        interactive: false
+      });
+      marker.bindTooltip(isl.name, {
+        permanent: true,
+        direction: 'right',
+        offset: [3, 0],
+        className: 'vnmap-label vnmap-islet-label'
+      });
+      group.addLayer(marker);
+    });
+    smallIslandLayer = group.addTo(map);
+  }
+
+  // Canh 2 ô chú thích Hoàng Sa / Trường Sa: ở cấp Toàn quốc, ghim theo
+  // đúng vĩ độ thật của từng quần đảo (quy chiếu qua map.latLngToContainerPoint)
+  // để chúng nằm ngang tầm Đà Nẵng / Khánh Hòa, giống bố cục bản đồ tham
+  // chiếu, thay vì dồn chung 1 góc. Ở cấp tỉnh (chỉ 1 ô liên quan) thì
+  // ghim cố định góc dưới-phải cho đơn giản.
+  function positionIslandCards() {
+    if (!map || els.islands.hidden) return;
+    var hsCard = els.islands.querySelector('[data-island="hoang-sa"]');
+    var tsCard = els.islands.querySelector('[data-island="truong-sa"]');
+    var mapH = map.getSize().y;
+    var half = 40;
+
+    if (state.level === 'country') {
+      [[hsCard, HOANG_SA_LAT], [tsCard, TRUONG_SA_LAT]].forEach(function (pair) {
+        var card = pair[0];
+        if (!card || card.hidden) return;
+        var y = map.latLngToContainerPoint([pair[1], 108]).y;
+        y = Math.max(half, Math.min(mapH - half, y));
+        card.style.top = y + 'px';
+        card.style.bottom = 'auto';
+      });
+    } else {
+      [hsCard, tsCard].forEach(function (card) {
+        if (!card) return;
+        card.style.top = 'auto';
+        card.style.bottom = '14px';
+      });
+    }
   }
 
   // Cỡ chữ nhãn tên tỉnh/xã co giãn theo mức zoom hiện tại, để lúc xem
@@ -255,6 +332,7 @@
     Promise.all([loadProvinces(), loadIslands()]).then(function (results) {
       var provincesData = results[0];
       clearLayers();
+      map.invalidateSize();
 
       activeLayer = L.geoJSON(provincesData, {
         style: function (feature) {
@@ -282,7 +360,9 @@
 
       map.fitBounds(MAINLAND_BOUNDS, COUNTRY_FIT_OPTIONS);
       updateLabelScale();
+      renderSmallIslandLabels();
       renderIslandInsets(results[1], null);
+      positionIslandCards();
       renderBreadcrumb();
       setLoading(false);
     }).catch(function (err) { showFetchError(err, renderCountry); });
@@ -325,6 +405,7 @@
       });
 
       clearLayers();
+      map.invalidateSize();
 
       activeLayer = L.geoJSON({ type: 'FeatureCollection', features: mainFeatures }, {
         style: function (feature) {
@@ -356,6 +437,7 @@
 
       // Nếu tỉnh này có đặc khu hải đảo, hiện lại đúng 1 ô nhỏ tương ứng
       renderIslandInsets(islandsData, islandFeature ? code : null);
+      positionIslandCards();
 
       // Panel thông tin về chính tỉnh đang xem (giống panel ở cấp xã)
       if (provinceProps) showInfo(provinceProps, 'Việt Nam');
@@ -391,6 +473,7 @@
 
     findFeature().then(function (feature) {
       clearLayers();
+      map.invalidateSize();
 
       tileLayer = L.tileLayer(OSM_TILE_URL, {
         maxZoom: 18,

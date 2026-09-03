@@ -349,53 +349,58 @@
 
 /* ---------- Ô nhỏ Hoàng Sa / Trường Sa (giống bản đồ tham khảo) --- */
 
+/* Lớp phủ toàn khung bản đồ, trong suốt — chỉ dùng làm hệ quy chiếu để
+   2 ô đảo tự định vị độc lập theo vĩ độ (do JS tính và gán "top"). */
 .vnmap-islands {
   position: absolute;
-  right: 12px;
-  bottom: 12px;
+  inset: 0;
   z-index: 700;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  padding: 8px 8px 6px;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(3px);
-  border-radius: 14px;
-}
-
-.vnmap-islands-heading {
-  margin: 0 2px 1px;
-  font-size: 9.5px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #0077b6;
+  pointer-events: none;
 }
 
 .vnmap-island-card {
+  position: absolute;
+  right: 12px;
   display: flex;
   align-items: center;
   gap: 9px;
   border: 1.5px solid #bfe3f5;
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.96);
   border-radius: 12px;
   padding: 6px 12px 6px 6px;
   cursor: pointer;
   font: inherit;
   text-align: left;
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  pointer-events: auto;
+  transform: translateY(-50%);
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, top 0.2s ease;
+  box-shadow: 0 6px 16px -10px rgba(33, 48, 47, 0.35);
 }
+
+/* Vị trí mặc định trước khi JS tính lại theo vĩ độ thật — tránh
+   2 ô chồng lên nhau trong tích tắc đầu khi bản đồ chưa kịp đo. */
+.vnmap-island-card[data-island="hoang-sa"] { top: 38%; }
+.vnmap-island-card[data-island="truong-sa"] { top: 70%; }
 
 .vnmap-island-card:hover {
   border-color: #0077b6;
   background: #eaf6fc;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px -8px rgba(0, 119, 182, 0.45);
+  box-shadow: 0 8px 18px -8px rgba(0, 119, 182, 0.45);
+}
+
+.vnmap-island-eyebrow {
+  font-size: 8.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0077b6;
+  display: block;
+  margin-bottom: 1px;
 }
 
 .vnmap-island-svg {
-  width: 50px;
-  height: 50px;
+  width: 46px;
+  height: 46px;
   flex: none;
   border-radius: 9px;
 }
@@ -403,7 +408,7 @@
 .vnmap-island-text {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0;
 }
 
 .vnmap-island-label {
@@ -416,7 +421,7 @@
 .vnmap-island-sub {
   font-size: 9.5px;
   font-weight: 600;
-  color: #0077b6;
+  color: var(--vnmap-muted);
   line-height: 1.3;
 }
 
@@ -433,6 +438,16 @@
 .vnmap-islands[hidden] {
   display: none;
 }
+
+/* Nhãn các đảo nhỏ ven bờ (Cát Bà, Lý Sơn, Phú Quốc...) — nhỏ, không
+   co giãn theo zoom như nhãn tỉnh/xã, để luôn là chi tiết phụ tinh tế. */
+.vnmap-islet-label {
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  color: #023e8a;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 4px rgba(255, 255, 255, 0.85);
+}
+
 
 /* ---------- Panel thông tin khu vực đang chọn (cấp chi tiết) ---------- */
 
@@ -515,24 +530,19 @@
 /* ---------- Responsive ---------- */
 
 @media (max-width: 640px) {
-  .vnmap-islands {
-    flex-direction: row;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    justify-content: center;
+  .vnmap-island-card {
+    top: auto !important;
+    bottom: 12px !important;
+    transform: none;
+    padding: 4px;
   }
 
-  .vnmap-islands-heading {
-    display: none;
-  }
+  .vnmap-island-card[data-island="hoang-sa"] { right: 62px; }
+  .vnmap-island-card[data-island="truong-sa"] { right: 12px; }
 
+  .vnmap-island-eyebrow,
   .vnmap-island-text {
     display: none;
-  }
-
-  .vnmap-island-card {
-    padding: 4px;
   }
 
   .vnmap-info {
