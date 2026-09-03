@@ -11,22 +11,22 @@
 
 /* ---------- 1. TOKEN MÀU & KIỂU CHỮ ---------- */
 body.sh-app {
-  --vn-ink: #142c2a;
-  --vn-ink-soft: #24413d;
-  --vn-paper: #f3f5ec;
-  --vn-paper-deep: #e9ecdf;
-  --vn-text: #1b2e2c;
-  --vn-text-muted: #5b6b63;
-  --vn-coral: #f0623c;
-  --vn-coral-dark: #cf4a26;
-  --vn-gold: #d9a441;
-  --vn-gold-dark: #b3822c;
-  --vn-jade: #1f7a5c;
-  --vn-jade-dark: #175f47;
-  --vn-line: rgba(20, 44, 42, 0.12);
-  --vn-shadow: 0 20px 45px -22px rgba(20, 44, 42, 0.45);
+  --vn-ink: #0f172a;
+  --vn-ink-soft: #1e293b;
+  --vn-paper: #f8f9fa;
+  --vn-paper-deep: #eef0f3;
+  --vn-text: #334155;
+  --vn-text-muted: #64748b;
+  --vn-primary: #0066ff;
+  --vn-primary-dark: #0052cc;
+  --vn-coral: #ff5722;
+  --vn-gold: #f59e0b;
+  --vn-jade: #10b981;
+  --vn-line: rgba(0, 0, 0, 0.08);
+  --vn-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  --vn-shadow-hover: 0 20px 40px rgba(0,0,0,0.12);
   --font-display: "Be Vietnam Pro", sans-serif;
-  --font-body: "Sarabun", sans-serif;
+  --font-body: "Be Vietnam Pro", sans-serif;
 
   background: var(--vn-paper);
   color: var(--vn-text);
@@ -38,7 +38,7 @@ body.sh-app {
   min-height: 100vh;
 }
 
-body.sh-app > main {
+body.sh-app>main {
   flex: 1;
 }
 
@@ -146,7 +146,7 @@ body.sh-app :focus-visible {
 }
 
 .sh-tab[aria-selected="true"] {
-  background: var(--vn-coral);
+  background: var(--vn-primary);
   color: #fff;
 }
 
@@ -229,9 +229,8 @@ body.sh-app :focus-visible {
 
 .sh-hero__scroll {
   position: absolute;
-  left: 50%;
+  right: 48px;
   bottom: 132px;
-  transform: translateX(-50%);
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -260,302 +259,633 @@ body.sh-app :focus-visible {
   }
 }
 
-/* ---------- 4. HERO DOCK — thẻ tóm tắt 3 miền, nổi đè lên phần nội dung ---------- */
-.sh-hero__dock {
+/* ---------- 4. HERO DOCK -> BOOKING BAR ---------- */
+.ora-booking-wrapper {
   position: relative;
   z-index: 2;
-  max-width: 1180px;
-  margin: -64px auto 0;
+  max-width: 1100px;
+  margin: -48px auto 0;
   padding: 0 clamp(20px, 4vw, 48px);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
 }
 
-.sh-dock-link {
+.ora-booking-bar {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 20px 18px;
+  align-items: stretch;
   background: #fff;
-  border-radius: 18px;
-  text-decoration: none;
-  color: var(--vn-text);
+  border-radius: 12px;
   box-shadow: var(--vn-shadow);
-  border-bottom: 3px solid transparent;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
 }
 
-.sh-dock-link:hover {
-  transform: translateY(-3px);
-}
-
-.sh-dock-link--bac {
-  border-color: var(--vn-coral);
-}
-
-.sh-dock-link--trung {
-  border-color: var(--vn-gold);
-}
-
-.sh-dock-link--nam {
-  border-color: var(--vn-jade);
-}
-
-.sh-dock-link__icon {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.ora-booking-item {
+  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #fff;
+  gap: 16px;
+  padding: 24px;
+  text-decoration: none;
+  color: var(--vn-text);
+  transition: background-color 0.2s ease;
 }
 
-.sh-dock-link--bac .sh-dock-link__icon {
-  background: var(--vn-coral);
+.ora-booking-item:hover {
+  background-color: var(--vn-paper-deep);
 }
 
-.sh-dock-link--trung .sh-dock-link__icon {
-  background: var(--vn-gold);
+.ora-booking-icon {
+  color: var(--vn-primary);
 }
 
-.sh-dock-link--nam .sh-dock-link__icon {
-  background: var(--vn-jade);
+.ora-booking-icon svg {
+  width: 24px;
+  height: 24px;
 }
 
-.sh-dock-link__icon svg {
-  width: 19px;
-  height: 19px;
+.ora-booking-text {
+  display: flex;
+  flex-direction: column;
 }
 
-.sh-dock-link__eyebrow {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 600;
+.ora-booking-label {
+  font-size: 0.85rem;
+  font-weight: 700;
   color: var(--vn-text-muted);
-  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
 }
 
-.sh-dock-link__title {
-  display: block;
+.ora-booking-val {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.02rem;
-  margin-bottom: 3px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.sh-dock-link__desc {
-  display: block;
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: var(--vn-text-muted);
+.ora-booking-divider {
+  width: 1px;
+  background-color: var(--vn-line);
+  margin: 16px 0;
+}
+
+.ora-booking-btn {
+  background: var(--vn-primary);
+  color: #fff;
+  border: none;
+  padding: 0 40px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ora-booking-btn:hover {
+  background: var(--vn-primary-dark);
 }
 
 @media (max-width: 820px) {
-  .sh-hero__dock {
-    grid-template-columns: 1fr;
-    margin-top: -48px;
+  .ora-booking-bar {
+    flex-direction: column;
   }
-
+  .ora-booking-divider {
+    width: auto;
+    height: 1px;
+    margin: 0 24px;
+  }
+  .ora-booking-btn {
+    padding: 24px;
+  }
   .sh-hero__scroll {
     display: none;
   }
 }
 
-/* ---------- 5. ĐOẠN MỞ ĐẦU HÀNH TRÌNH ---------- */
-.sh-journey {
-  padding-top: clamp(64px, 9vw, 108px);
-  padding-bottom: 40px;
+/* ---------- 5. SHARED SECTION STYLES ---------- */
+.ora-section {
+  padding: clamp(60px, 8vw, 100px) 0;
 }
 
-.sh-journey__intro {
-  max-width: 800px;
-  margin: 0 auto clamp(48px, 7vw, 88px);
+.ora-bg-light {
+  background-color: #f8f9fa;
+}
+
+.ora-section-header {
+  margin-bottom: clamp(40px, 6vw, 60px);
+}
+
+.ora-section-header.text-center {
+  text-align: center;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ora-section-header.with-filter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.ora-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--vn-ink);
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+.ora-section-subtitle {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--vn-text-muted);
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* ---------- 6. FEATURES ---------- */
+.ora-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 32px;
+}
+
+.ora-feature-item {
   text-align: center;
 }
 
-.sh-journey__intro p {
-  font-size: clamp(1.15rem, 2vw, 1.4rem);
-  line-height: 1.6;
-  font-weight: 500;
-  color: var(--vn-ink-soft);
-  margin: 0;
-}
-
-/* ---------- 6. CÁC KHỐI NỘI DUNG — trục hành trình dọc + thẻ xen kẽ ---------- */
-.sh-blocks {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(56px, 8vw, 96px);
-}
-
-.sh-blocks::before {
-  content: "";
-  position: absolute;
-  left: 7px;
-  top: 10px;
-  bottom: 10px;
-  width: 2px;
-  background: repeating-linear-gradient(to bottom,
-      var(--vn-line) 0,
-      var(--vn-line) 6px,
-      transparent 6px,
-      transparent 12px);
-}
-
-@media (max-width: 720px) {
-  .sh-blocks::before {
-    display: none;
-  }
-}
-
-.sh-block {
-  position: relative;
-  padding-left: 34px;
-}
-
-@media (max-width: 720px) {
-  .sh-block {
-    padding-left: 0;
-  }
-}
-
-.sh-block__dot {
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 16px;
-  height: 16px;
+.ora-feature-icon {
+  width: 64px;
+  height: 64px;
+  background-color: #e6f0ff; /* light blue */
+  color: var(--vn-primary);
   border-radius: 50%;
-  background: var(--vn-coral);
-  border: 3px solid var(--vn-paper);
-  box-shadow: 0 0 0 2px var(--vn-coral);
-}
-
-.sh-block--culture .sh-block__dot {
-  background: var(--vn-gold);
-  box-shadow: 0 0 0 2px var(--vn-gold);
-}
-
-.sh-block--coast .sh-block__dot {
-  background: var(--vn-jade);
-  box-shadow: 0 0 0 2px var(--vn-jade);
-}
-
-@media (max-width: 720px) {
-  .sh-block__dot {
-    display: none;
-  }
-}
-
-.sh-block__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(28px, 4vw, 56px);
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.sh-block--reverse .sh-block__grid {
-  direction: rtl;
+.ora-feature-icon svg {
+  width: 28px;
+  height: 28px;
 }
 
-.sh-block--reverse .sh-block__grid>* {
-  direction: ltr;
+.ora-feature-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--vn-ink);
+  margin: 0 0 12px;
+}
+
+.ora-feature-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--vn-text-muted);
+  margin: 0;
+  text-wrap: balance;
 }
 
 @media (max-width: 900px) {
-  .sh-block__grid {
+  .ora-features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .ora-features {
     grid-template-columns: 1fr;
   }
-
-  .sh-block--reverse .sh-block__grid {
-    direction: ltr;
-  }
-
-  .sh-block__visual {
-    order: -1;
-  }
 }
 
-.sh-block__label {
-  display: inline-block;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--vn-coral-dark);
-  background: rgba(240, 98, 60, 0.1);
-  padding: 5px 12px;
-  border-radius: 999px;
-  margin-bottom: 14px;
+/* ---------- 7. FILTER BAR ---------- */
+.ora-filter-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.sh-block--culture .sh-block__label {
-  color: var(--vn-gold-dark);
-  background: rgba(217, 164, 65, 0.14);
-}
-
-.sh-block--coast .sh-block__label {
-  color: var(--vn-jade-dark);
-  background: rgba(31, 122, 92, 0.12);
-}
-
-.sh-block__heading {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-  line-height: 1.2;
-  color: var(--vn-ink);
-  margin: 0 0 14px;
-}
-
-.sh-block__text p {
-  font-size: 1rem;
-  line-height: 1.75;
+.ora-filter-btn {
+  background: transparent;
+  border: 1px solid var(--vn-line);
   color: var(--vn-text-muted);
-  margin: 0 0 14px;
-  max-width: 56ch;
-}
-
-.sh-block__text p:last-child {
-  margin-bottom: 0;
-}
-
-.sh-block__visual {
-  position: relative;
-}
-
-.sh-block__photo {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 22px;
-  box-shadow: var(--vn-shadow);
-}
-
-.sh-block__photo--top {
-  object-position: top;
-}
-
-.sh-block__photo--contain {
-  object-fit: contain;
-  background-color: #fff;
-}
-
-.sh-block__caption {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  background: rgba(20, 44, 42, 0.82);
-  backdrop-filter: blur(6px);
-  color: var(--vn-paper);
-  font-size: 0.78rem;
+  font-family: var(--font-body);
   font-weight: 600;
-  padding: 7px 14px;
-  border-radius: 999px;
+  font-size: 0.95rem;
+  padding: 10px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ora-filter-btn:hover {
+  border-color: var(--vn-primary);
+  color: var(--vn-primary);
+}
+
+.ora-filter-btn.active {
+  background: var(--vn-primary);
+  border-color: var(--vn-primary);
+  color: #fff;
+}
+
+/* ---------- 8. BENTO GRID ---------- */
+.ora-bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 280px;
+  gap: 24px;
+}
+
+.ora-bento-item {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--vn-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.ora-bento-item:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--vn-shadow-hover);
+}
+
+.bento-large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.bento-wide {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.bento-small {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.ora-bento-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.ora-bento-item:hover .ora-bento-img {
+  transform: scale(1.05);
+}
+
+.ora-bento-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+}
+
+.ora-bento-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px;
+  color: #fff;
+}
+
+.bento-small .ora-bento-content {
+  padding: 24px;
+}
+
+.ora-bento-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.ora-bento-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.bento-small .ora-bento-title {
+  font-size: 1.2rem;
+}
+
+.ora-bento-desc {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.85);
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .ora-bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .ora-bento {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 240px;
+  }
+  .bento-large, .bento-wide, .bento-small {
+    grid-column: span 1;
+  }
+  .bento-large {
+    grid-row: span 2;
+  }
+}
+
+/* ---------- 9. EXPERIENCES ---------- */
+.ora-experiences {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.ora-exp-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 480px;
+  box-shadow: var(--vn-shadow);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.ora-exp-card:hover {
+  transform: translateY(-8px);
+}
+
+.ora-exp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.ora-exp-card:hover .ora-exp-img {
+  transform: scale(1.08);
+}
+
+.ora-exp-content {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px;
+  color: #fff;
+}
+
+.ora-exp-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+.ora-exp-desc {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.85);
+  margin: 0;
+}
+
+.ora-exp-link {
+  display: inline-block;
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+  text-decoration: none;
+  border-bottom: 2px solid var(--vn-primary);
+  padding-bottom: 4px;
+  align-self: flex-start;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.ora-exp-card:hover .ora-exp-link {
+  color: var(--vn-primary);
+}
+
+@media (max-width: 900px) {
+  .ora-experiences {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .ora-experiences {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- 10. CTA SECTION ---------- */
+.ora-cta {
+  position: relative;
+  padding: clamp(80px, 10vw, 120px) 24px;
+  text-align: center;
+  color: #fff;
+  margin-top: 40px;
+}
+
+.ora-cta-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ora-cta-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ora-cta-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.ora-cta-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ora-cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900;
+  margin: 0 0 24px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.ora-cta-desc {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  margin: 0 0 40px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ora-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--vn-primary);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 40px;
+  transition: background-color 0.2s ease;
+}
+
+.ora-btn-primary:hover {
+  background: var(--vn-primary-dark);
+}
+
+.ora-btn-large {
+  font-size: 1.1rem;
+  padding: 16px 40px;
+}
+
+/* ---------- 6. DESTINATION CARDS (Ora Style) ---------- */
+.ora-dest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.ora-tour-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--vn-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.ora-tour-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--vn-shadow-hover);
+}
+
+.ora-tour-card__image-wrapper {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+
+.ora-tour-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.ora-tour-card:hover .ora-tour-card__image {
+  transform: scale(1.08);
+}
+
+.ora-tour-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--vn-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 1;
+}
+
+.badge-coral { background: var(--vn-coral); }
+.badge-gold { background: var(--vn-gold); }
+.badge-jade { background: var(--vn-jade); }
+.badge-purple { background: #8b5cf6; }
+.badge-red { background: #ef4444; }
+
+.ora-tour-card__content {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ora-tour-card__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--vn-ink);
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.ora-tour-card__desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--vn-text-muted);
+  margin: 0;
+  flex: 1;
+}
+
+.ora-tour-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--vn-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.ora-tour-card__link:hover {
+  color: var(--vn-primary-dark);
+}
+
+.ora-tour-card__link svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.ora-tour-card__link:hover svg {
+  transform: translateX(4px);
+}
+
+/* Responsive Grid */
+@media (max-width: 992px) {
+  .ora-dest-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ora-dest-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- 7. HAI TAB CÒN TRỐNG — trạng thái "sắp ra mắt" ---------- */
@@ -591,4 +921,87 @@ body.sh-app :focus-visible {
 
 .sh-footer p {
   margin: 0;
+}
+
+/* ---------- 6.5. REGION INTRO CARDS ---------- */
+.ora-region-intro {
+  display: none;
+  grid-column: span 2;
+  background: #0f172a;
+  border-radius: 20px;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.ora-region-intro.active {
+  display: block;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.ora-region-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transition: transform 0.6s ease;
+}
+
+.ora-region-intro:hover .ora-region-bg {
+  transform: scale(1.05);
+}
+
+.ora-region-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top left, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%);
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.ora-region-intro:hover .ora-region-overlay {
+  opacity: 0.85; /* Sáng lên khi hover */
+}
+
+.ora-region-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  text-align: right;
+  height: 100%;
+}
+
+.ora-intro-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Thêm shadow để nổi bật trên nền ảnh */
+}
+
+.ora-intro-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Thêm shadow để nổi bật trên nền ảnh */
+}
+
+@media (max-width: 640px) {
+  .ora-region-intro {
+    grid-column: span 1;
+  }
+  .ora-region-content {
+    padding: 24px;
+  }
 }

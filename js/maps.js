@@ -32,18 +32,15 @@
   // để không làm lệch khung nhìn khi hiển thị Đà Nẵng / Khánh Hòa.
   var ISLAND_CODES = { '20333': '48', '22736': '56' };
 
-  // Khung nhìn đất liền tính thẳng từ dữ liệu thật (sau khi đã bỏ các
-  // mảnh đảo Hoàng Sa / Trường Sa gộp trong Đà Nẵng, Khánh Hòa), cộng
-  // thêm biên nhỏ. Không dùng fitBounds tự động theo layer vì sẽ bị
-  // kéo dạt nếu lỡ còn sót toạ độ xa.
-  var MAINLAND_BOUNDS = [[6.9, 101.6], [23.7, 110.4]];
+  // Khung nhìn đất liền sát hơn với tọa độ thật (Cà Mau ~8.5, Hà Giang ~23.4, Lai Châu ~102.1, Khánh Hòa ~109.5)
+  // để bản đồ tự fit to hơn trong khung chứa.
+  var MAINLAND_BOUNDS = [[8.4, 102.1], [23.5, 109.6]];
 
-  // Padding bất đối xứng khi fit khung nhìn toàn quốc: chừa thêm chỗ ở
-  // góc phải-dưới (nơi đặt 2 ô Hoàng Sa/Trường Sa) để bản đồ đất liền
-  // không bị lọt thỏm lệch trái, mà cân đối với toàn bộ bố cục khung.
+  // Padding khi fit khung nhìn toàn quốc: chừa thêm chỗ bên phải (right: 120px) 
+  // để không bị các thẻ Hoàng Sa / Trường Sa che khuất.
   var COUNTRY_FIT_OPTIONS = {
-    paddingTopLeft: [30, 16],
-    paddingBottomRight: [150, 40]
+    paddingTopLeft: [10, 10],      // [left, top]
+    paddingBottomRight: [120, 10]  // [right, bottom]
   };
 
   var OSM_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -227,8 +224,8 @@
   }
 
   function prefetchCountryData() {
-    loadProvinces().catch(function () {});
-    loadIslands().catch(function () {});
+    loadProvinces().catch(function () { });
+    loadIslands().catch(function () { });
   }
 
   /* ---------------------- Khởi tạo bản đồ Leaflet ---------------------- */
@@ -386,9 +383,9 @@
     var ownFeaturePromise = ownProps
       ? Promise.resolve(ownProps)
       : loadProvinces().then(function (data) {
-          var f = data.features.find(function (x) { return x.properties.code === code; });
-          return f ? f.properties : null;
-        });
+        var f = data.features.find(function (x) { return x.properties.code === code; });
+        return f ? f.properties : null;
+      });
 
     Promise.all([loadWards(code), loadIslands(), ownFeaturePromise]).then(function (results) {
       var wardsData = results[0];

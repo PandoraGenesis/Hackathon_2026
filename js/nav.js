@@ -34,9 +34,9 @@
   });
 
   // Mở đúng tab theo hash trên URL (nếu có), mặc định là Giới thiệu
-  var initialId = window.location.hash ? window.location.hash.slice(1) : 'panel-gioi-thieu';
+  var initialId = window.location.hash ? window.location.hash.slice(1) : 'panel-home';
   if (!document.getElementById(initialId)) {
-    initialId = 'panel-gioi-thieu';
+    initialId = 'panel-home';
   }
   activate(initialId, false);
 
