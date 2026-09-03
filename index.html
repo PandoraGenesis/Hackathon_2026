@@ -27,7 +27,7 @@
 
 <body class="sh-app">
 
-  <!-- ============ ĐIỀU HƯỚNG 5 MỤC ============ -->
+  <!-- ============ ĐIỀU HƯỚNG 6 MỤC ============ -->
   <nav class="sh-nav">
     <div class="sh-nav__inner">
       <div class="sh-nav__brand">
@@ -35,11 +35,18 @@
         <span class="sh-nav__brand-text">VNFINDER</span>
       </div>
       <div class="sh-nav__tabs" role="tablist">
-        <button type="button" class="sh-tab" data-panel="panel-gioi-thieu" aria-selected="true"><i data-lucide="home" class="sh-tab__icon" aria-hidden="true"></i>About</button>
-        <button type="button" class="sh-tab" data-panel="panel-maps" aria-selected="false"><i data-lucide="map" class="sh-tab__icon" aria-hidden="true"></i>Maps</button>
-        <button type="button" class="sh-tab" data-panel="panel-lich-trinh" aria-selected="false"><i data-lucide="calendar-days" class="sh-tab__icon" aria-hidden="true"></i>Itinerary</button>
-        <button type="button" class="sh-tab" data-panel="panel-guide" aria-selected="false"><i data-lucide="compass" class="sh-tab__icon" aria-hidden="true"></i>Guide</button>
-        <button type="button" class="sh-tab" data-panel="panel-checkin" aria-selected="false"><i data-lucide="map-pin" class="sh-tab__icon" aria-hidden="true"></i>Check-in</button>
+        <button type="button" class="sh-tab" data-panel="panel-home" aria-selected="true"><i data-lucide="home"
+            class="sh-tab__icon" aria-hidden="true"></i>Home</button>
+        <button type="button" class="sh-tab" data-panel="panel-about" aria-selected="false"><i data-lucide="info"
+            class="sh-tab__icon" aria-hidden="true"></i>About</button>
+        <button type="button" class="sh-tab" data-panel="panel-maps" aria-selected="false"><i data-lucide="map"
+            class="sh-tab__icon" aria-hidden="true"></i>Maps</button>
+        <button type="button" class="sh-tab" data-panel="panel-lich-trinh" aria-selected="false"><i
+            data-lucide="calendar-days" class="sh-tab__icon" aria-hidden="true"></i>Itinerary</button>
+        <button type="button" class="sh-tab" data-panel="panel-guide" aria-selected="false"><i data-lucide="compass"
+            class="sh-tab__icon" aria-hidden="true"></i>Guide</button>
+        <button type="button" class="sh-tab" data-panel="panel-checkin" aria-selected="false"><i data-lucide="map-pin"
+            class="sh-tab__icon" aria-hidden="true"></i>Check-in</button>
       </div>
     </div>
   </nav>
@@ -47,28 +54,61 @@
   <main>
 
     <!-- ============================================================
-         1. GIỚI THIỆU
+         1. HOME
          ============================================================ -->
-    <section id="panel-gioi-thieu" class="sh-panel">
+    <section id="panel-home" class="sh-panel">
 
       <div class="sh-hero">
         <img class="sh-hero__img" src="assets/img/Hồ Gươm.jpg" alt="Hồ Gươm và Tháp Rùa, Hà Nội">
         <div class="sh-hero__scrim" aria-hidden="true"></div>
         <div class="sh-hero__content">
           <h1 class="sh-hero__title">VNFINDER</h1>
-          <p class="sh-hero__caption">Người bạn đồng hành cùng bạn khám phá Việt&nbsp;Nam - từ địa đầu Hà&nbsp;Giang đến mũi Cà&nbsp;Mau.</p>
+          <p class="sh-hero__caption">Người bạn đồng hành cùng bạn khám phá Việt&nbsp;Nam - từ địa đầu Hà&nbsp;Giang đến
+            mũi Cà&nbsp;Mau.</p>
         </div>
         <div class="sh-hero__scroll">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 5v14M6 13l6 6 6-6" />
+          </svg>
           <span>Lướt xuống để khám phá</span>
         </div>
       </div>
+
+      <nav class="sh-hero__dock" aria-label="Đi nhanh tới từng miền">
+        <a href="#block-mien-bac" class="sh-dock-link sh-dock-link--bac">
+          <span class="sh-dock-link__icon"><i data-lucide="mountain-snow" aria-hidden="true"></i></span>
+          <span>
+            <span class="sh-dock-link__eyebrow">Miền Bắc</span>
+            <span class="sh-dock-link__title">Núi non &amp; di sản</span>
+            <span class="sh-dock-link__desc">Hạ Long, Hà Nội, Sa Pa, Ninh Bình</span>
+          </span>
+        </a>
+        <a href="#block-mien-trung" class="sh-dock-link sh-dock-link--trung">
+          <span class="sh-dock-link__icon"><i data-lucide="landmark" aria-hidden="true"></i></span>
+          <span>
+            <span class="sh-dock-link__eyebrow">Miền Trung</span>
+            <span class="sh-dock-link__title">Phố cổ &amp; cố đô</span>
+            <span class="sh-dock-link__desc">Hội An, Huế, Đà Nẵng, Phong Nha</span>
+          </span>
+        </a>
+        <a href="#block-mien-nam" class="sh-dock-link sh-dock-link--nam">
+          <span class="sh-dock-link__icon"><i data-lucide="tree-palm" aria-hidden="true"></i></span>
+          <span>
+            <span class="sh-dock-link__eyebrow">Miền Nam</span>
+            <span class="sh-dock-link__title">Sông nước &amp; biển đảo</span>
+            <span class="sh-dock-link__desc">TP.HCM, Cần Thơ, Phú Quốc</span>
+          </span>
+        </a>
+      </nav>
 
       <div class="sh-journey">
         <div class="sh-container">
 
           <div class="sh-journey__intro">
-            <p>Một đất nước hình chữ S, ba miền, muôn vàn sắc thái. Cùng&nbsp;VNFinder đi từ vịnh đá vôi phía Bắc, qua những cố đô và phố cổ miền Trung, đến ruộng vườn sông nước miền Nam.</p>
+            <p>Một đất nước hình chữ S, ba miền, muôn vàn sắc thái.<br>
+              Cùng VNFinder đi từ vịnh đá vôi phía Bắc, qua những cố đô<br>
+              và phố cổ miền Trung, đến ruộng vườn sông nước miền Nam.</p>
           </div>
 
           <div class="sh-blocks">
@@ -80,25 +120,36 @@
                 <div class="sh-block__text">
                   <span class="sh-block__label">Tổng quan Việt Nam</span>
                   <h3 class="sh-block__heading">Một dải đất hình chữ S</h3>
-                  <p>Việt Nam trải dài hình chữ S từ biên giới phía Bắc giáp Trung Quốc xuống tới bán đảo Cà Mau, ôm theo hơn 3.260 km bờ biển dọc Biển Đông. Đất nước có khoảng 100 triệu dân, thuộc nhóm đông dân nhất thế giới, với thủ đô Hà Nội ở phía Bắc và Thành phố Hồ Chí Minh, đô thị lớn nhất nước, ở phía Nam.</p>
-                  <p>Người Việt nói tiếng Việt, ngôn ngữ thuộc hệ Nam Á với hệ thống thanh điệu phức tạp, và cùng chung sống với 54 dân tộc anh em, trong đó người Kinh chiếm khoảng 86% dân số.</p>
+                  <p>Việt Nam trải dài hình chữ S từ biên giới phía Bắc giáp Trung Quốc xuống tới bán đảo Cà Mau, ôm
+                    theo hơn 3.260 km bờ biển dọc Biển Đông. Đất nước có khoảng 100 triệu dân, thuộc nhóm đông dân nhất
+                    thế giới, với thủ đô Hà Nội ở phía Bắc và Thành phố Hồ Chí Minh, đô thị lớn nhất nước, ở phía Nam.
+                  </p>
+                  <p>Người Việt nói tiếng Việt, ngôn ngữ thuộc hệ Nam Á với hệ thống thanh điệu phức tạp, và cùng chung
+                    sống với 54 dân tộc anh em, trong đó người Kinh chiếm khoảng 86% dân số.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <img class="sh-block__photo" src="assets/img/Bản đồ hình chữ S.jpg" alt="Bản đồ hình chữ S của Việt Nam">
+                  <img class="sh-block__photo sh-block__photo--contain" src="assets/img/Bản đồ hình chữ S.jpg"
+                    alt="Bản đồ hình chữ S của Việt Nam">
                   <div class="sh-block__caption">Bản đồ hình chữ S</div>
                 </div>
               </div>
             </article>
 
             <!-- Khối 2 — Miền Bắc -->
-            <article class="sh-block sh-block--reverse">
+            <article class="sh-block sh-block--reverse" id="block-mien-bac">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
                   <span class="sh-block__label">Điểm đến · Miền Bắc</span>
                   <h3 class="sh-block__heading">Núi non, di sản và ruộng bậc thang</h3>
-                  <p>Hạ Long là hình ảnh dễ nhận ra nhất của Việt Nam: gần 2.000 đảo đá vôi nhô lên từ mặt nước ngọc bích, nơi du khách có thể du thuyền, chèo kayak hoặc ngủ đêm trên thuyền buồm truyền thống. Cách đó không xa, Hà Nội giữ nhịp sống nghìn năm qua Phố Cổ 36 phố phường, Hồ Hoàn Kiếm, Lăng Chủ tịch Hồ Chí Minh và những buổi múa rối nước.</p>
-                  <p>Lên phía Tây Bắc, Sa Pa được xem là trái tim miền núi với đỉnh Fansipan cao 3.143 mét (nóc nhà Đông Dương) bao quanh bởi bản làng dân tộc và ruộng bậc thang trải tầng. Còn Ninh Bình, với Tam Cốc và Tràng An, được ví như một "Vịnh Hạ Long trên cạn" giữa những hang động và dòng sông len qua núi đá vôi.</p>
+                  <p>Hạ Long là hình ảnh dễ nhận ra nhất của Việt Nam: gần 2.000 đảo đá vôi nhô lên từ mặt nước ngọc
+                    bích, nơi du khách có thể du thuyền, chèo kayak hoặc ngủ đêm trên thuyền buồm truyền thống. Cách đó
+                    không xa, Hà Nội giữ nhịp sống nghìn năm qua Phố Cổ 36 phố phường, Hồ Hoàn Kiếm, Lăng Chủ tịch Hồ
+                    Chí Minh và những buổi múa rối nước.</p>
+                  <p>Lên phía Tây Bắc, Sa Pa được xem là trái tim miền núi với đỉnh Fansipan cao 3.143 mét (nóc nhà Đông
+                    Dương) bao quanh bởi bản làng dân tộc và ruộng bậc thang trải tầng. Còn Ninh Bình, với Tam Cốc và
+                    Tràng An, được ví như một "Vịnh Hạ Long trên cạn" giữa những hang động và dòng sông len qua núi đá
+                    vôi.</p>
                 </div>
                 <div class="sh-block__visual">
                   <img class="sh-block__photo" src="assets/img/Vịnh Hạ Long.jpg" alt="Vịnh Hạ Long với các đảo đá vôi">
@@ -108,31 +159,40 @@
             </article>
 
             <!-- Khối 3 — Miền Trung -->
-            <article class="sh-block sh-block--culture">
+            <article class="sh-block sh-block--culture" id="block-mien-trung">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
                   <span class="sh-block__label">Điểm đến · Miền Trung</span>
                   <h3 class="sh-block__heading">Phố cổ, cố đô và hang động kỳ vĩ</h3>
-                  <p>Hội An giữ nguyên vẹn dáng vẻ một thương cảng cổ được UNESCO công nhận, với những dãy đèn lồng rực rỡ mỗi tối, lớp học nấu ăn và những tiệm may đo trong ngày. Huế mang không khí trầm mặc của cố đô triều Nguyễn, nơi Kinh thành và các lăng tẩm hoàng gia soi bóng xuống hồ nước và vườn cảnh.</p>
-                  <p>Đà Nẵng, thành phố biển đáng sống nhất Việt Nam, nằm cạnh Bà Nà Hills với cây Cầu Vàng nổi tiếng nâng trên đôi bàn tay đá khổng lồ. Và nếu muốn khám phá thế giới ngầm, Phong Nha – Kẻ Bàng sở hữu hệ thống hang động ngoạn mục, trong đó có Sơn Đoòng, hang động lớn nhất thế giới.</p>
+                  <p>Hội An giữ nguyên vẹn dáng vẻ một thương cảng cổ được UNESCO công nhận, với những dãy đèn lồng rực
+                    rỡ mỗi tối, lớp học nấu ăn và những tiệm may đo trong ngày. Huế mang không khí trầm mặc của cố đô
+                    triều Nguyễn, nơi Kinh thành và các lăng tẩm hoàng gia soi bóng xuống hồ nước và vườn cảnh.</p>
+                  <p>Đà Nẵng, thành phố biển đáng sống nhất Việt Nam, nằm cạnh Bà Nà Hills với cây Cầu Vàng nổi tiếng
+                    nâng trên đôi bàn tay đá khổng lồ. Và nếu muốn khám phá thế giới ngầm, Phong Nha – Kẻ Bàng sở hữu hệ
+                    thống hang động ngoạn mục, trong đó có Sơn Đoòng, hang động lớn nhất thế giới.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <img class="sh-block__photo" src="assets/img/Phố cổ Hội An.jpg" alt="Phố cổ Hội An về đêm với đèn lồng">
+                  <img class="sh-block__photo" src="assets/img/Phố cổ Hội An.jpg"
+                    alt="Phố cổ Hội An về đêm với đèn lồng">
                   <div class="sh-block__caption">Phố cổ Hội An</div>
                 </div>
               </div>
             </article>
 
             <!-- Khối 4 — Miền Nam -->
-            <article class="sh-block sh-block--reverse sh-block--coast">
+            <article class="sh-block sh-block--reverse sh-block--coast" id="block-mien-nam">
               <span class="sh-block__dot" aria-hidden="true"></span>
               <div class="sh-block__grid">
                 <div class="sh-block__text">
                   <span class="sh-block__label">Điểm đến · Miền Nam</span>
                   <h3 class="sh-block__heading">Sông nước, phồn hoa và biển đảo</h3>
-                  <p>Thành phố Hồ Chí Minh là trung tâm kinh tế sôi động, nơi những toà nhà chọc trời như Bitexco đứng cạnh các công trình thuộc địa Pháp như Nhà thờ Đức Bà và Bưu điện Trung tâm. Xuôi về đồng bằng sông Cửu Long, Cần Thơ là "vựa lúa" của cả nước với những khu chợ nổi, vườn trái cây trĩu quả và đời sống gắn liền với sông nước.</p>
-                  <p>Ngoài khơi, Phú Quốc là hòn đảo nhiệt đới với bãi biển đẹp, phù hợp cho những chuyến đi gia đình hay đơn giản là để tìm một khoảng lặng bên biển.</p>
+                  <p>Thành phố Hồ Chí Minh là trung tâm kinh tế sôi động, nơi những toà nhà chọc trời như Bitexco đứng
+                    cạnh các công trình thuộc địa Pháp như Nhà thờ Đức Bà và Bưu điện Trung tâm. Xuôi về đồng bằng sông
+                    Cửu Long, Cần Thơ là "vựa lúa" của cả nước với những khu chợ nổi, vườn trái cây trĩu quả và đời sống
+                    gắn liền với sông nước.</p>
+                  <p>Ngoài khơi, Phú Quốc là hòn đảo nhiệt đới với bãi biển đẹp, phù hợp cho những chuyến đi gia đình
+                    hay đơn giản là để tìm một khoảng lặng bên biển.</p>
                 </div>
                 <div class="sh-block__visual">
                   <img class="sh-block__photo" src="assets/img/Chợ nổi Cần Thơ.jpg" alt="Chợ nổi Cần Thơ trên sông">
@@ -148,11 +208,17 @@
                 <div class="sh-block__text">
                   <span class="sh-block__label">Lễ hội bốn mùa</span>
                   <h3 class="sh-block__heading">Một lịch lễ hội dày đặc quanh năm</h3>
-                  <p>Việt Nam có một trong những lịch lễ hội phong phú nhất Đông Nam Á, kết hợp giữa truyền thống cổ xưa, di sản cung đình và phong tục dân gian sống động. Lớn nhất trong số đó là Tết Nguyên Đán, diễn ra vào tháng 1 hoặc tháng 2 âm lịch, đánh dấu năm mới với tục cúng ông bà, lì xì, múa lân và những buổi sum họp gia đình.</p>
-                  <p>Ở miền Trung, Lễ hội Huế tôn vinh di sản cố đô qua các buổi biểu diễn nghệ thuật cung đình và diễu hành, trong khi Đà Nẵng thường niên tổ chức Lễ hội pháo hoa quốc tế bên sông Hàn, thu hút du khách từ khắp nơi đổ về.</p>
+                  <p>Việt Nam có một trong những lịch lễ hội phong phú nhất Đông Nam Á, kết hợp giữa truyền thống cổ
+                    xưa, di sản cung đình và phong tục dân gian sống động. Lớn nhất trong số đó là Tết Nguyên Đán, diễn
+                    ra vào tháng 1 hoặc tháng 2 âm lịch, đánh dấu năm mới với tục cúng ông bà, lì xì, múa lân và những
+                    buổi sum họp gia đình.</p>
+                  <p>Ở miền Trung, Lễ hội Huế tôn vinh di sản cố đô qua các buổi biểu diễn nghệ thuật cung đình và diễu
+                    hành, trong khi Đà Nẵng thường niên tổ chức Lễ hội pháo hoa quốc tế bên sông Hàn, thu hút du khách
+                    từ khắp nơi đổ về.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <img class="sh-block__photo" src="assets/img/Tết Nguyên Đán.jpg" alt="Phố Tết Nguyên Đán trang trí rực rỡ">
+                  <img class="sh-block__photo" src="assets/img/Tết Nguyên Đán.jpg"
+                    alt="Phố Tết Nguyên Đán trang trí rực rỡ">
                   <div class="sh-block__caption">Tết Nguyên Đán</div>
                 </div>
               </div>
@@ -165,11 +231,17 @@
                 <div class="sh-block__text">
                   <span class="sh-block__label">Văn hoá Việt Nam</span>
                   <h3 class="sh-block__heading">Nếp nhà, cộng đồng và nghệ thuật dân gian</h3>
-                  <p>Văn hóa Việt Nam là sự hòa quyện giữa ảnh hưởng của Nho giáo, Phật giáo, Đạo giáo và tín ngưỡng dân gian bản địa, cùng dấu ấn của các triều đại phong kiến và thời kỳ thuộc địa Pháp. Thờ cúng ông bà tổ tiên vẫn giữ vị trí trung tâm trong đời sống tâm linh, còn các lễ hội và sinh hoạt làng xã tiếp tục gắn kết cộng đồng qua nhiều thế hệ.</p>
-                  <p>Những loại hình nghệ thuật dân gian như múa rối nước, hát chèo, hát xoan hay ca trù đã được UNESCO ghi danh là di sản văn hóa phi vật thể, còn tà áo dài vẫn là biểu tượng vượt thời gian, thường xuất hiện trong các dịp lễ Tết và sự kiện quan trọng.</p>
+                  <p>Văn hóa Việt Nam là sự hòa quyện giữa ảnh hưởng của Nho giáo, Phật giáo, Đạo giáo và tín ngưỡng dân
+                    gian bản địa, cùng dấu ấn của các triều đại phong kiến và thời kỳ thuộc địa Pháp. Thờ cúng ông bà tổ
+                    tiên vẫn giữ vị trí trung tâm trong đời sống tâm linh, còn các lễ hội và sinh hoạt làng xã tiếp tục
+                    gắn kết cộng đồng qua nhiều thế hệ.</p>
+                  <p>Những loại hình nghệ thuật dân gian như múa rối nước, hát chèo, hát xoan hay ca trù đã được UNESCO
+                    ghi danh là di sản văn hóa phi vật thể, còn tà áo dài vẫn là biểu tượng vượt thời gian, thường xuất
+                    hiện trong các dịp lễ Tết và sự kiện quan trọng.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <img class="sh-block__photo sh-block__photo--top" src="assets/img/Áo dài truyền thống.jpg" alt="Thiếu nữ mặc áo dài truyền thống">
+                  <img class="sh-block__photo" src="assets/img/Áo dài truyền thống.jpg"
+                    alt="Thiếu nữ mặc áo dài truyền thống">
                   <div class="sh-block__caption">Áo dài truyền thống</div>
                 </div>
               </div>
@@ -182,8 +254,14 @@
                 <div class="sh-block__text">
                   <span class="sh-block__label">Ẩm thực · Món ăn biểu tượng</span>
                   <h3 class="sh-block__heading">Phở, bún chả và bánh mì</h3>
-                  <p>Ẩm thực Việt Nam được xem là một trong những nền ẩm thực phong phú và lành mạnh nhất thế giới, cân bằng giữa vị chua, cay, mặn, ngọt, đắng cùng rất nhiều rau thơm tươi. Phở vẫn là món ăn biểu tượng nhất: bánh phở trong nước dùng thịt bò hoặc gà, ăn kèm rau thơm, giá và chanh, đặc biệt phổ biến ở Hà Nội với giá chỉ khoảng 30.000–70.000 đồng một tô.</p>
-                  <p>Bún chả, đặc sản Hà Nội với thịt lợn nướng than hoa ăn kèm bún và nước chấm chua ngọt, từng được cựu Tổng thống Mỹ Barack Obama và đầu bếp Anthony Bourdain thưởng thức ngay trên phố. Còn bánh mì đã trở thành món ăn đường phố Việt Nam được biết đến khắp thế giới: ổ bánh vỏ giòn nhân đầy thịt nguội, pate, trứng và rau thơm.</p>
+                  <p>Ẩm thực Việt Nam được xem là một trong những nền ẩm thực phong phú và lành mạnh nhất thế giới, cân
+                    bằng giữa vị chua, cay, mặn, ngọt, đắng cùng rất nhiều rau thơm tươi. Phở vẫn là món ăn biểu tượng
+                    nhất: bánh phở trong nước dùng thịt bò hoặc gà, ăn kèm rau thơm, giá và chanh, đặc biệt phổ biến ở
+                    Hà Nội với giá chỉ khoảng 30.000–70.000 đồng một tô.</p>
+                  <p>Bún chả, đặc sản Hà Nội với thịt lợn nướng than hoa ăn kèm bún và nước chấm chua ngọt, từng được
+                    cựu Tổng thống Mỹ Barack Obama và đầu bếp Anthony Bourdain thưởng thức ngay trên phố. Còn bánh mì đã
+                    trở thành món ăn đường phố Việt Nam được biết đến khắp thế giới: ổ bánh vỏ giòn nhân đầy thịt nguội,
+                    pate, trứng và rau thơm.</p>
                 </div>
                 <div class="sh-block__visual">
                   <img class="sh-block__photo" src="assets/img/Phở Hà Nội.jpg" alt="Một tô phở Hà Nội">
@@ -199,7 +277,10 @@
                 <div class="sh-block__text">
                   <span class="sh-block__label">Ẩm thực · Đặc sản vùng miền</span>
                   <h3 class="sh-block__heading">Mỗi vùng miền một hương vị riêng</h3>
-                  <p>Đi dọc đất nước, mỗi vùng miền mang một hương vị riêng: Cao Lầu ở Hội An với sợi mì gạo dai đặc trưng, Cơm tấm Sài Gòn với sườn nướng, bì và chả trứng, hay Bánh xèo giòn rụm nhân tôm thịt ăn kèm rổ rau sống đầy ắp. Ở Hà Nội, một ly cà phê trứng, cà phê đen phủ lớp kem trứng đánh bông, là cách người Hà Nội bắt đầu một buổi sáng chậm rãi.</p>
+                  <p>Đi dọc đất nước, mỗi vùng miền mang một hương vị riêng: Cao Lầu ở Hội An với sợi mì gạo dai đặc
+                    trưng, Cơm tấm Sài Gòn với sườn nướng, bì và chả trứng, hay Bánh xèo giòn rụm nhân tôm thịt ăn kèm
+                    rổ rau sống đầy ắp. Ở Hà Nội, một ly cà phê trứng, cà phê đen phủ lớp kem trứng đánh bông, là cách
+                    người Hà Nội bắt đầu một buổi sáng chậm rãi.</p>
                 </div>
                 <div class="sh-block__visual">
                   <img class="sh-block__photo" src="assets/img/Cà phê trứng.jpg" alt="Ly cà phê trứng Hà Nội">
@@ -215,10 +296,14 @@
                 <div class="sh-block__text">
                   <span class="sh-block__label">Ẩm thực đường phố</span>
                   <h3 class="sh-block__heading">Một Việt Nam khác trên vỉa hè</h3>
-                  <p>Ẩm thực đường phố là phần không thể thiếu trong đời sống Việt Nam, với những gánh hàng và quán vỉa hè phục vụ từ sáng sớm đến tận đêm khuya. Phở, bún chả, bánh mì, bánh tráng nướng hay một ly chè mát lạnh đều được bán rộng rãi với mức giá rất phải chăng, đôi khi chỉ vài chục nghìn đồng cho một bữa no.</p>
+                  <p>Ẩm thực đường phố là phần không thể thiếu trong đời sống Việt Nam, với những gánh hàng và quán vỉa
+                    hè phục vụ từ sáng sớm đến tận đêm khuya. Phở, bún chả, bánh mì, bánh tráng nướng hay một ly chè mát
+                    lạnh đều được bán rộng rãi với mức giá rất phải chăng, đôi khi chỉ vài chục nghìn đồng cho một bữa
+                    no.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <img class="sh-block__photo" src="assets/img/Gánh hàng rong.jpg" alt="Gánh hàng rong bán trái cây trên phố">
+                  <img class="sh-block__photo" src="assets/img/Gánh hàng rong.jpg"
+                    alt="Gánh hàng rong bán trái cây trên phố">
                   <div class="sh-block__caption">Gánh hàng rong</div>
                 </div>
               </div>
@@ -231,10 +316,14 @@
                 <div class="sh-block__text">
                   <span class="sh-block__label">Trước khi lên đường</span>
                   <h3 class="sh-block__heading">Đi khi nào là đẹp nhất</h3>
-                  <p>Nếu đang lên kế hoạch cho một chuyến đi, thời điểm lý tưởng nhất để khám phá Việt Nam thường là từ tháng 10 đến tháng 4 năm sau, khi thời tiết mát mẻ và ít mưa trên cả ba miền. Từ đây, VNFinder có thể giúp bạn đi sâu hơn vào từng khía cạnh: lịch trình chi tiết, món ăn cụ thể hay văn hóa từng vùng miền, ngay ở mục Itinerary.</p>
+                  <p>Nếu đang lên kế hoạch cho một chuyến đi, thời điểm lý tưởng nhất để khám phá Việt Nam thường là từ
+                    tháng 10 đến tháng 4 năm sau, khi thời tiết mát mẻ và ít mưa trên cả ba miền. Từ đây, VNFinder có
+                    thể giúp bạn đi sâu hơn vào từng khía cạnh: lịch trình chi tiết, món ăn cụ thể hay văn hóa từng vùng
+                    miền, ngay ở mục Itinerary.</p>
                 </div>
                 <div class="sh-block__visual">
-                  <img class="sh-block__photo sh-block__photo--top" src="assets/img/Tháng 10 – Tháng 4.jpg" alt="Những khung cảnh tiêu biểu của Việt Nam">
+                  <img class="sh-block__photo sh-block__photo--top" src="assets/img/Tháng 10 – Tháng 4.jpg"
+                    alt="Những khung cảnh tiêu biểu của Việt Nam">
                   <div class="sh-block__caption">Tháng 10 – Tháng 4</div>
                 </div>
               </div>
@@ -255,13 +344,14 @@
 
       <div class="vnmap-header">
         <h2 class="vnmap-title">Bản đồ Việt Nam</h2>
-        <p class="vnmap-subtitle">Nhấp vào một tỉnh, thành để xem toàn bộ xã, phường, đặc khu — rồi nhấp tiếp để xem bản đồ chi tiết khu vực đó.</p>
-
+        <p class="vnmap-subtitle">Nhấp vào một tỉnh, thành để xem toàn bộ xã, phường, đặc khu — rồi nhấp tiếp để xem bản
+          đồ chi tiết khu vực đó.</p>
         <div class="vnmap-search" id="vnmap-search">
           <div class="vnmap-search-field">
             <i data-lucide="search" aria-hidden="true"></i>
             <input type="text" id="vnmap-search-input" class="vnmap-search-input"
-              placeholder="Tìm tỉnh, xã, phường theo tên…" autocomplete="off" aria-label="Tìm tỉnh, xã, phường theo tên">
+              placeholder="Tìm tỉnh, xã, phường theo tên…" autocomplete="off"
+              aria-label="Tìm tỉnh, xã, phường theo tên">
             <button type="button" class="vnmap-search-clear" id="vnmap-search-clear" hidden aria-label="Xóa tìm kiếm">
               <i data-lucide="x" aria-hidden="true"></i>
             </button>
@@ -317,7 +407,8 @@
         </div>
       </div>
 
-      <p class="vnmap-hint">Dữ liệu ranh giới hành chính theo cơ cấu 34 tỉnh/thành · xã/phường/đặc khu áp dụng từ 01/07/2025.</p>
+      <p class="vnmap-hint">Dữ liệu ranh giới hành chính theo cơ cấu 34 tỉnh/thành · xã/phường/đặc khu áp dụng từ
+        01/07/2025.</p>
 
     </section>
 
@@ -387,8 +478,10 @@
             <i data-lucide="alert-triangle" class="alert-icon"></i>
             <div>
               <h4>Khoảng cách địa lý khá xa</h4>
-              <p>Lịch trình dưới 3 ngày nhưng bạn chọn trải nghiệm cả Biển (Bình Định) & Cao Nguyên (Gia Lai). Khoảng cách
-                giữa 2 nơi là ~160km qua QL19 (hơn 4h di chuyển). Hãy cân nhắc tăng số ngày hoặc tập trung vào một vùng!</p>
+              <p>Lịch trình dưới 3 ngày nhưng bạn chọn trải nghiệm cả Biển (Bình Định) & Cao Nguyên (Gia Lai). Khoảng
+                cách
+                giữa 2 nơi là ~160km qua QL19 (hơn 4h di chuyển). Hãy cân nhắc tăng số ngày hoặc tập trung vào một vùng!
+              </p>
             </div>
           </div>
 
@@ -417,15 +510,22 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         4. GUIDE — để trống
-         ============================================================ -->
-    <section id="panel-guide" class="sh-panel sh-empty-panel" hidden></section>
+
 
     <!-- ============================================================
-         5. CHECK-IN — để trống
+         4. ABOUT — để trống
          ============================================================ -->
-    <section id="panel-checkin" class="sh-panel sh-empty-panel" hidden></section>
+    <section id="panel-about" class="sh-panel" hidden></section>
+
+    <!-- ============================================================
+         5. GUIDE — để trống
+         ============================================================ -->
+    <section id="panel-guide" class="sh-panel" hidden></section>
+
+    <!-- ============================================================
+         6. CHECK-IN — để trống
+         ============================================================ -->
+    <section id="panel-checkin" class="sh-panel" hidden></section>
 
   </main>
 

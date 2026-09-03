@@ -32,18 +32,34 @@
 
 .vnmap-title {
   font-family: 'Be Vietnam Pro', sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
-  margin: 0 0 8px;
-  letter-spacing: -0.01em;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  margin: 0 0 24px;
+  letter-spacing: -0.02em;
   color: var(--vnmap-ink);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 16px;
+}
+
+.vnmap-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 5px;
+  background: var(--vnmap-accent);
+  border-radius: 999px;
 }
 
 .vnmap-subtitle {
-  margin: 0;
+  margin: 0 auto;
+  max-width: 600px;
   color: var(--vnmap-muted);
-  font-size: 0.98rem;
-  line-height: 1.55;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
 /* ---------- Ô tìm kiếm tỉnh / xã theo tên ---------- */
@@ -106,8 +122,14 @@
   flex: none;
 }
 
-.vnmap-search-clear[hidden] { display: none; }
-.vnmap-search-clear svg { width: 12px; height: 12px; }
+.vnmap-search-clear[hidden] {
+  display: none;
+}
+
+.vnmap-search-clear svg {
+  width: 12px;
+  height: 12px;
+}
 
 .vnmap-search-results {
   position: absolute;
@@ -124,7 +146,9 @@
   padding: 6px;
 }
 
-.vnmap-search-results[hidden] { display: none; }
+.vnmap-search-results[hidden] {
+  display: none;
+}
 
 .vnmap-search-item {
   display: flex;
@@ -319,7 +343,9 @@
   display: none;
 }
 
-.vnmap-loading.is-error .vnmap-spinner { display: none; }
+.vnmap-loading.is-error .vnmap-spinner {
+  display: none;
+}
 
 .vnmap-loading-retry {
   margin-top: 4px;
@@ -344,7 +370,9 @@
 }
 
 @keyframes vnmap-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---------- Ô nhỏ Hoàng Sa / Trường Sa (giống bản đồ tham khảo) --- */
@@ -379,8 +407,13 @@
 
 /* Vị trí mặc định trước khi JS tính lại theo vĩ độ thật — tránh
    2 ô chồng lên nhau trong tích tắc đầu khi bản đồ chưa kịp đo. */
-.vnmap-island-card[data-island="hoang-sa"] { top: 38%; }
-.vnmap-island-card[data-island="truong-sa"] { top: 70%; }
+.vnmap-island-card[data-island="hoang-sa"] {
+  top: 38%;
+}
+
+.vnmap-island-card[data-island="truong-sa"] {
+  top: 70%;
+}
 
 .vnmap-island-card:hover {
   border-color: #0077b6;
@@ -537,8 +570,13 @@
     padding: 4px;
   }
 
-  .vnmap-island-card[data-island="hoang-sa"] { right: 62px; }
-  .vnmap-island-card[data-island="truong-sa"] { right: 12px; }
+  .vnmap-island-card[data-island="hoang-sa"] {
+    right: 62px;
+  }
+
+  .vnmap-island-card[data-island="truong-sa"] {
+    right: 12px;
+  }
 
   .vnmap-island-eyebrow,
   .vnmap-island-text {
