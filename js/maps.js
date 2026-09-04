@@ -124,6 +124,7 @@
   var mapInited = false;
   var activeLayer = null;   // layer GeoJSON đang hiển thị (tỉnh hoặc xã)
   var smallIslandLayer = null; // nhãn các đảo nhỏ ven bờ, chỉ ở cấp Toàn quốc
+  var archipelagoDotsLayer = null; // chấm tròn Hoàng Sa/Trường Sa trên bản đồ
   var tileLayer = null;     // chỉ tồn tại ở cấp chi tiết (bước 3)
   var boundaryLayer = null; // viền khu vực chi tiết ở cấp chi tiết
   var lastAction = null;    // hàm để gọi lại khi nhấn "Thử lại"
@@ -357,6 +358,7 @@
     if (boundaryLayer) { map.removeLayer(boundaryLayer); boundaryLayer = null; }
     if (tileLayer) { map.removeLayer(tileLayer); tileLayer = null; }
     if (smallIslandLayer) { map.removeLayer(smallIslandLayer); smallIslandLayer = null; }
+    if (archipelagoDotsLayer) { map.removeLayer(archipelagoDotsLayer); archipelagoDotsLayer = null; }
   }
 
   // Vẽ nhãn các đảo nhỏ ven bờ (chỉ hiện ở cấp Toàn quốc)
@@ -380,6 +382,61 @@
       group.addLayer(marker);
     });
     smallIslandLayer = group.addTo(map);
+  }
+
+  // Vẽ chấm tròn cho từng đảo nhỏ trong 2 quần đảo Hoàng Sa / Trường Sa
+  // trực tiếp lên bản đồ Leaflet (chỉ hiện ở cấp Toàn quốc).
+  // Dữ liệu đầu vào là FeatureCollection từ islands.geojson đã được load sẵn.
+  //
+  // Để tỉ lệ trông đúng so với đất liền: dùng radius rất nhỏ (1.2px) và
+  // lọc bỏ các polygon quá nhỏ (span toạ độ < MIN_SPAN độ kinh/vĩ) — chỉ
+  // giữ lại những hòn đảo nổi bật, tránh vẽ hàng trăm chấm chen chúc.
+  var ARCHIPELAGO_DOT_MIN_SPAN = 0.01; // ~ 1 km, lọc bỏ polygon sieu nhỏ
+
+  function renderArchipelagoDots(islandsData) {
+    if (!islandsData || !islandsData.features) return;
+    var group = L.layerGroup();
+
+    islandsData.features.forEach(function (feature) {
+      var slug = feature.properties.codeName; // 'hoang_sa' hoặc 'truong_sa'
+      var isHoangSa = slug === 'hoang_sa';
+      // Màu chấm: xanh biển cho Hoàng Sa, xanh ngọc cho Trường Sa
+      var dotColor = isHoangSa ? '#1565c0' : '#00796b';
+
+      var coords = feature.geometry.coordinates;
+      coords.forEach(function (poly) {
+        var ring = poly[0]; // vòng ngoài cùng
+        // Tính bounding box để lọc polygon quá nhỏ
+        var minLon = Infinity, maxLon = -Infinity;
+        var minLat = Infinity, maxLat = -Infinity;
+        var sumLon = 0, sumLat = 0;
+        ring.forEach(function (pt) {
+          if (pt[0] < minLon) minLon = pt[0];
+          if (pt[0] > maxLon) maxLon = pt[0];
+          if (pt[1] < minLat) minLat = pt[1];
+          if (pt[1] > maxLat) maxLat = pt[1];
+          sumLon += pt[0]; sumLat += pt[1];
+        });
+        // Bỏ qua đảo quá nhỏ — giữ tỉ lệ chấm vừa phải trên bản đồ toàn quốc
+        var span = Math.max(maxLon - minLon, maxLat - minLat);
+        if (span < ARCHIPELAGO_DOT_MIN_SPAN) return;
+
+        var cx = sumLon / ring.length;
+        var cy = sumLat / ring.length;
+
+        var dot = L.circleMarker([cy, cx], {
+          radius: 1.2,       // kích thước rất nhỏ để đúng tỉ lệ
+          color: dotColor,
+          weight: 0.5,
+          fillColor: dotColor,
+          fillOpacity: 0.9,
+          interactive: false
+        });
+        group.addLayer(dot);
+      });
+    });
+
+    archipelagoDotsLayer = group.addTo(map);
   }
 
   // Canh 2 ô chú thích Hoàng Sa / Trường Sa: ở cấp Toàn quốc, KHÔNG ghim
@@ -504,6 +561,7 @@
       refitCurrentView();
       updateLabelScale();
       renderSmallIslandLabels();
+      renderArchipelagoDots(results[1]);
       renderIslandInsets(results[1], null);
       positionIslandCards();
       renderBreadcrumb();
