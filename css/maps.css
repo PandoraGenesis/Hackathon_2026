@@ -402,19 +402,20 @@
   position: absolute;
   right: 12px;
   display: flex;
-  align-items: center;
-  gap: 9px;
-  border: 1.5px solid #bfe3f5;
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: 12px;
-  padding: 6px 12px 6px 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   font: inherit;
   text-align: left;
   pointer-events: auto;
   transform: translateY(-50%);
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, top 0.2s ease;
-  box-shadow: 0 6px 16px -10px rgba(33, 48, 47, 0.35);
+  transition: top 0.2s ease;
+  box-shadow: none;
 }
 
 /* Vị trí mặc định trước khi JS tính lại theo vĩ độ thật — tránh
@@ -427,53 +428,42 @@
   top: 70%;
 }
 
-.vnmap-island-card:hover {
-  border-color: #0077b6;
-  background: #eaf6fc;
-  box-shadow: 0 8px 18px -8px rgba(0, 119, 182, 0.45);
+.vnmap-island-card:hover .vnmap-island-label {
+  text-decoration: underline;
 }
 
+/* Ẩn icon SVG và eyebrow — chỉ hiển thị text label đơn giản */
 .vnmap-island-eyebrow {
-  font-size: 8.5px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #0077b6;
-  display: block;
-  margin-bottom: 1px;
+  display: none;
 }
 
 .vnmap-island-svg {
-  width: 46px;
-  height: 46px;
-  flex: none;
-  border-radius: 9px;
+  display: none;
 }
 
 .vnmap-island-text {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1px;
 }
 
 .vnmap-island-label {
-  font-size: 11.5px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 700;
   color: var(--vnmap-ink);
-  line-height: 1.25;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
 }
 
 .vnmap-island-sub {
-  font-size: 9.5px;
-  font-weight: 600;
-  color: var(--vnmap-muted);
+  font-size: 9px;
+  font-weight: 500;
+  color: #3a3a4a;
   line-height: 1.3;
 }
 
 .vnmap-island-area {
-  font-size: 9px;
-  font-weight: 500;
-  color: var(--vnmap-muted);
+  display: none;
 }
 
 .vnmap-island-card[hidden] {
@@ -579,19 +569,12 @@
     top: auto !important;
     bottom: 12px !important;
     transform: none;
-    padding: 5px;
-    /* Kích thước cố định (thay vì để nội dung tự quyết) để JS/CSS tính
-       khoảng cách giữa 2 thẻ một cách chắc chắn — không còn phụ thuộc vào
-       việc icon + padding cộng lại đúng bằng bao nhiêu. */
-    width: 44px;
-    height: 44px;
-    justify-content: center;
+    padding: 0;
+    width: auto;
+    height: auto;
+    justify-content: flex-start;
   }
 
-  /* Trước đây 2 thẻ cách nhau đúng 50px (62px - 12px) trong khi mỗi thẻ
-     rộng ~54px (icon 46px + padding 2×4px) → ĐÈ LÊN NHAU khoảng 4px.
-     Giờ thẻ đã cố định 44px, đặt cách nhau 56px (12px + 44px + 12px hở)
-     để chắc chắn không chạm nhau ở mọi trình duyệt. */
   .vnmap-island-card[data-island="hoang-sa"] {
     right: 68px;
   }
@@ -607,7 +590,7 @@
 
   .vnmap-island-eyebrow,
   .vnmap-island-text {
-    display: none;
+    display: flex;
   }
 
   .vnmap-info {
