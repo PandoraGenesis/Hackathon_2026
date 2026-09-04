@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="css/style.css?v=1">
   <!-- intro.css: khung trang mới (nav, hero, khối nội dung Giới thiệu) -->
   <link rel="stylesheet" href="css/intro.css?v=1">
+  <!-- guide.css: giao diện tab Cẩm nang (Bách khoa toàn thư + định vị địa danh) -->
+  <link rel="stylesheet" href="css/guide.css?v=1">
   <!-- Leaflet: thư viện bản đồ tương tác dùng cho tab Maps -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
@@ -1602,6 +1604,184 @@
     </section>
 
 
+    <!-- ============================================================
+         5. CẨM NANG — Bách khoa toàn thư Việt Nam
+         ============================================================ -->
+    <section id="panel-guide" class="sh-panel" hidden>
+
+      <div class="sh-container guide-wrap">
+
+        <div class="guide-topbar">
+          <h1 class="guide-title">BÁCH KHOA TOÀN THƯ VIỆT NAM</h1>
+        </div>
+
+        <hr class="guide-hr">
+
+        <div class="guide-searchbar">
+          <i data-lucide="search" class="guide-searchbar__icon" aria-hidden="true"></i>
+          <input type="search" id="guideSearchInput" class="guide-searchbar__input"
+            placeholder="Tìm kiếm địa danh, văn hóa, di sản…" autocomplete="off">
+        </div>
+
+        <!-- Banner mời bật định vị -->
+        <div class="guide-geo-banner" id="guideGeoBanner">
+          <div class="guide-geo-banner__text">
+            <i data-lucide="map-pin" aria-hidden="true"></i>
+            <span>Bật định vị để xem ngay bài giới thiệu về địa danh nơi bạn đang đứng.</span>
+          </div>
+          <button type="button" class="guide-geo-btn" id="guideGeoBtn">
+            <i data-lucide="locate-fixed" aria-hidden="true"></i>
+            Dùng vị trí của tôi
+          </button>
+        </div>
+        <p class="guide-geo-status" id="guideGeoStatus" hidden></p>
+
+        <!-- Bài viết theo vị trí hiện tại (ẩn mặc định) -->
+        <div class="guide-location-article" id="guideLocationArticle" hidden>
+          <button type="button" class="guide-back-btn" id="guideBackBtn">
+            <i data-lucide="arrow-left" aria-hidden="true"></i>
+            Quay lại danh sách Bạn có biết
+          </button>
+          <div class="guide-location-card" id="guideLocationCard">
+            <!-- Nội dung được JS (js/guide.js) chèn vào dựa trên định vị GPS -->
+          </div>
+        </div>
+
+        <!-- Lưới bài "Bạn có biết" -->
+        <div class="guide-grid" id="guideGrid">
+
+          <article class="guide-card" data-wiki-title="Tháp_Rùa" data-search="hồ gươm tháp rùa hà nội truyền thuyết">
+            <div class="guide-card__body">
+              <div class="guide-card__badge"><span class="guide-card__badge-mark">?</span>Bạn có biết</div>
+              <h3 class="guide-card__title">Hồ Gươm &amp; Tháp Rùa</h3>
+              <ul class="guide-card__list">
+                <li>…Tháp Rùa được xây trên một gò đất chỉ rộng khoảng 350m² giữa lòng Hồ Gươm, do ông Nguyễn Ngọc
+                  Kim (tục gọi Bá hộ Kim) xin phép xây dựng vào năm 1886?</li>
+                <li>…tháp ban đầu từng mang tên "Tháp Bá hộ Kim", về sau mới được đổi thành Tháp Rùa, gắn với
+                  truyền thuyết vua Lê Lợi trả gươm thần cho Rùa Vàng?</li>
+                <li>…từ nền gò Rùa lên tới đỉnh tháp cao khoảng 8,8m, với lối kiến trúc pha trộn mái cong kiểu Việt
+                  cùng các vòm cửa mang phong cách châu Âu?</li>
+                <li>…vào những ngày hè, rùa vẫn thường bò lên gò đất quanh tháp để phơi nắng, càng khiến nơi đây
+                  thêm phần huyền bí trong lòng người Hà Nội?</li>
+              </ul>
+            </div>
+            <div class="guide-card__media">
+              <img class="guide-card__img" data-wiki-img alt="Hồ Gươm và Tháp Rùa, Hà Nội" loading="lazy">
+            </div>
+          </article>
+
+          <article class="guide-card" data-wiki-title="Hoàng_thành_Thăng_Long"
+            data-search="hoàng thành thăng long hà nội di sản unesco">
+            <div class="guide-card__body">
+              <div class="guide-card__badge"><span class="guide-card__badge-mark">?</span>Bạn có biết</div>
+              <h3 class="guide-card__title">Hoàng thành Thăng Long</h3>
+              <ul class="guide-card__list">
+                <li>…Hoàng thành Thăng Long được UNESCO công nhận là Di sản Văn hóa Thế giới vào năm 2010, đúng
+                  dịp kỷ niệm 1000 năm Thăng Long - Hà Nội?</li>
+                <li>…đây là di sản thế giới thứ 10 của Việt Nam, được ghi danh nhờ minh chứng cho hơn 1.300 năm
+                  lịch sử liên tục làm trung tâm quyền lực của các triều đại?</li>
+                <li>…khu di tích được phát lộ tình cờ vào năm 2002, khi chuẩn bị xây dựng Nhà Quốc hội mới, hé lộ
+                  hàng triệu hiện vật khảo cổ xếp chồng qua nhiều thời kỳ?</li>
+                <li>…nơi đây từng là kinh đô của Đại Việt kể từ khi vua Lý Thái Tổ dời đô từ Hoa Lư về Thăng Long
+                  vào năm 1010?</li>
+              </ul>
+            </div>
+            <div class="guide-card__media">
+              <img class="guide-card__img" data-wiki-img alt="Hoàng thành Thăng Long, Hà Nội" loading="lazy">
+            </div>
+          </article>
+
+          <article class="guide-card" data-wiki-title="Cầu_Vàng_(Đà_Nẵng)"
+            data-search="cầu vàng bà nà hills đà nẵng">
+            <div class="guide-card__body">
+              <div class="guide-card__badge"><span class="guide-card__badge-mark">?</span>Bạn có biết</div>
+              <h3 class="guide-card__title">Cầu Vàng, Bà Nà Hills</h3>
+              <ul class="guide-card__list">
+                <li>…Cầu Vàng chỉ mất chưa đầy một năm thi công và chính thức khánh thành vào tháng 6 năm 2018?
+                </li>
+                <li>…cây cầu dài khoảng 150m, nằm ở độ cao hơn 1.400m so với mực nước biển, trên đỉnh núi Bà Nà?
+                </li>
+                <li>…điểm đặc biệt nhất của công trình là hai "bàn tay" khổng lồ bằng đá phủ rêu phong, như đang
+                  nâng đỡ dải lụa vàng giữa không trung?</li>
+                <li>…chỉ vài năm sau khánh thành, Cầu Vàng đã liên tiếp được World Travel Awards vinh danh là
+                  cây cầu du lịch mang tính biểu tượng hàng đầu thế giới?</li>
+              </ul>
+            </div>
+            <div class="guide-card__media">
+              <img class="guide-card__img" data-wiki-img alt="Cầu Vàng, Bà Nà Hills, Đà Nẵng" loading="lazy">
+            </div>
+          </article>
+
+          <article class="guide-card" data-wiki-title="Vịnh_Hạ_Long" data-search="vịnh hạ long quảng ninh di sản">
+            <div class="guide-card__body">
+              <div class="guide-card__badge"><span class="guide-card__badge-mark">?</span>Bạn có biết</div>
+              <h3 class="guide-card__title">Vịnh Hạ Long</h3>
+              <ul class="guide-card__list">
+                <li>…Vịnh Hạ Long là một trong số ít di sản Việt Nam được UNESCO công nhận hai lần: năm 1994 về
+                  cảnh quan và năm 2000 về giá trị địa chất - địa mạo?</li>
+                <li>…vịnh có tới gần 2.000 hòn đảo lớn nhỏ, nhưng chưa đến một nửa trong số đó được đặt tên
+                  chính thức?</li>
+                <li>…năm 2023, ranh giới di sản được UNESCO mở rộng, gộp chung với quần đảo Cát Bà thành một di
+                  sản liên tỉnh?</li>
+                <li>…tên gọi "Hạ Long" mang nghĩa "nơi rồng đáp xuống", gắn với truyền thuyết rồng mẹ cùng đàn
+                  rồng con xuống giúp người Việt đánh giặc?</li>
+              </ul>
+            </div>
+            <div class="guide-card__media">
+              <img class="guide-card__img is-loaded" data-wiki-img src="assets/img/guide/vinh-ha-long.jpg"
+                alt="Vịnh Hạ Long, Quảng Ninh" loading="lazy">
+            </div>
+          </article>
+
+          <article class="guide-card" data-wiki-title="Hội_An" data-search="phố cổ hội an quảng nam đèn lồng">
+            <div class="guide-card__body">
+              <div class="guide-card__badge"><span class="guide-card__badge-mark">?</span>Bạn có biết</div>
+              <h3 class="guide-card__title">Phố cổ Hội An</h3>
+              <ul class="guide-card__list">
+                <li>…Đô thị cổ Hội An được UNESCO công nhận là Di sản Văn hóa Thế giới vào năm 1999, nhờ giữ gần
+                  như nguyên vẹn diện mạo một thương cảng cổ của Đông Nam Á?</li>
+                <li>…vào đêm 14 âm lịch hằng tháng, cả phố cổ tắt đèn điện, chỉ thắp sáng bằng hàng nghìn chiếc
+                  đèn lồng trong "Đêm phố cổ"?</li>
+                <li>…Chùa Cầu, biểu tượng của Hội An, do cộng đồng thương nhân Nhật Bản góp sức xây dựng từ đầu
+                  thế kỷ 17 để nối hai bờ một con lạch nhỏ?</li>
+                <li>…nơi đây từng là một trong những thương cảng sầm uất bậc nhất Đông Nam Á, nơi thuyền buôn
+                  Nhật Bản, Trung Hoa, Hà Lan… cùng cập bến giao thương?</li>
+              </ul>
+            </div>
+            <div class="guide-card__media">
+              <img class="guide-card__img" data-wiki-img alt="Phố cổ Hội An, Quảng Nam" loading="lazy">
+            </div>
+          </article>
+
+          <article class="guide-card" data-wiki-title="Địa_đạo_Củ_Chi"
+            data-search="địa đạo củ chi thành phố hồ chí minh kháng chiến">
+            <div class="guide-card__body">
+              <div class="guide-card__badge"><span class="guide-card__badge-mark">?</span>Bạn có biết</div>
+              <h3 class="guide-card__title">Địa đạo Củ Chi</h3>
+              <ul class="guide-card__list">
+                <li>…hệ thống địa đạo Củ Chi dài tới khoảng 250km, được đào liên tục suốt 22 năm, từ 1946 đến
+                  1968?</li>
+                <li>…địa đạo có 3 tầng sâu khác nhau, tầng sâu nhất xuống tới 8-10m, đủ sức chống chịu nhiều
+                  loại bom hạng nặng?</li>
+                <li>…bên trong lòng đất từng có đầy đủ bếp, kho chứa, bệnh xá và cả phòng họp, hình thành một
+                  "thành phố" thu nhỏ dưới mặt đất?</li>
+                <li>…chính từ hệ thống địa đạo này, quân Giải phóng đã bất ngờ xuất phát tấn công vào trung tâm
+                  Sài Gòn trong Chiến dịch Tết Mậu Thân 1968?</li>
+              </ul>
+            </div>
+            <div class="guide-card__media">
+              <img class="guide-card__img" data-wiki-img alt="Địa đạo Củ Chi, Thành phố Hồ Chí Minh" loading="lazy">
+            </div>
+          </article>
+
+        </div>
+
+        <p class="guide-empty" id="guideEmptyState" hidden>Không tìm thấy bài viết phù hợp.</p>
+
+      </div>
+    </section>
+
+
   </main>
 
   <footer class="sh-footer">
@@ -1621,6 +1801,8 @@
   <script src="js/script.js?v=1" defer></script>
   <script src="js/nav.js?v=1" defer></script>
   <script src="js/i18n.js?v=1" defer></script>
+  <!-- guide.js: tab Cẩm nang — tìm kiếm, định vị GPS và dữ liệu lấy trực tiếp từ Wikipedia -->
+  <script src="js/guide.js?v=1" defer></script>
   <!-- Leaflet + maps.js: phải nạp sau nav.js theo thứ tự này để js/maps.js
        tự gắn sự kiện vào tab Maps khi DOM đã có nav -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

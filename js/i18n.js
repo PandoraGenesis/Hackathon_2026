@@ -1,4 +1,53 @@
 const dict = {
+  /* ---------- Tab Cẩm nang (Bách khoa toàn thư Việt Nam) ---------- */
+  "BÁCH KHOA TOÀN THƯ VIỆT NAM": "VIETNAM ENCYCLOPEDIA",
+  "Tìm kiếm địa danh, văn hóa, di sản…": "Search for landmarks, culture, heritage…",
+  "Bật định vị để xem ngay bài giới thiệu về địa danh nơi bạn đang đứng.": "Turn on location to instantly see an introduction to the landmark where you're standing.",
+  "Dùng vị trí của tôi": "Use my location",
+  "Quay lại danh sách Bạn có biết": "Back to Did You Know list",
+  "Không tìm thấy bài viết phù hợp.": "No matching articles found.",
+  "Bạn có biết": "Did you know",
+  "Trình duyệt của bạn không hỗ trợ định vị.": "Your browser doesn't support geolocation.",
+  "Đang xin quyền truy cập vị trí thiết bị…": "Requesting access to your device location…",
+  "Đang tìm địa danh gần vị trí của bạn…": "Looking for landmarks near your location…",
+  "Chưa tìm thấy địa danh nào trong bán kính 10km quanh vị trí hiện tại.": "No landmark found within 10km of your current location.",
+  "Không thể kết nối tới Wikipedia để tra cứu địa danh. Vui lòng thử lại sau.": "Couldn't connect to Wikipedia to look up this landmark. Please try again later.",
+  "Không thể lấy vị trí của bạn. Vui lòng thử lại.": "Couldn't get your location. Please try again.",
+  "Bạn đã từ chối quyền truy cập vị trí. Hãy bật lại quyền định vị trong trình duyệt để dùng tính năng này.": "You've denied location access. Please re-enable location permission in your browser to use this feature.",
+
+  "Hồ Gươm & Tháp Rùa": "Hoàn Kiếm Lake & Turtle Tower",
+  "…Tháp Rùa được xây trên một gò đất chỉ rộng khoảng 350m² giữa lòng Hồ Gươm, do ông Nguyễn Ngọc Kim (tục gọi Bá hộ Kim) xin phép xây dựng vào năm 1886?": "…Turtle Tower was built on a tiny islet of only about 350m² in the middle of Hoàn Kiếm Lake, after a local man named Nguyễn Ngọc Kim (known as Bá hộ Kim) was granted permission to build it in 1886?",
+  "…tháp ban đầu từng mang tên \"Tháp Bá hộ Kim\", về sau mới được đổi thành Tháp Rùa, gắn với truyền thuyết vua Lê Lợi trả gươm thần cho Rùa Vàng?": "…the tower was originally called \"Bá hộ Kim's Tower\" and was only later renamed Turtle Tower, after the legend of King Lê Lợi returning his magic sword to the Golden Turtle?",
+  "…từ nền gò Rùa lên tới đỉnh tháp cao khoảng 8,8m, với lối kiến trúc pha trộn mái cong kiểu Việt cùng các vòm cửa mang phong cách châu Âu?": "…from the base of the islet to its top, the tower stands about 8.8m tall, blending curved Vietnamese-style roofs with European-style arched doorways?",
+  "…vào những ngày hè, rùa vẫn thường bò lên gò đất quanh tháp để phơi nắng, càng khiến nơi đây thêm phần huyền bí trong lòng người Hà Nội?": "…on summer days, turtles are still sometimes seen climbing onto the islet to sun themselves, adding to the site's mystique for Hanoi locals?",
+
+  "…Hoàng thành Thăng Long được UNESCO công nhận là Di sản Văn hóa Thế giới vào năm 2010, đúng dịp kỷ niệm 1000 năm Thăng Long - Hà Nội?": "…the Thăng Long Imperial Citadel was recognized by UNESCO as a World Heritage Site in 2010, exactly in time for Hanoi's 1,000th anniversary?",
+  "…đây là di sản thế giới thứ 10 của Việt Nam, được ghi danh nhờ minh chứng cho hơn 1.300 năm lịch sử liên tục làm trung tâm quyền lực của các triều đại?": "…it is Vietnam's 10th UNESCO World Heritage Site, listed for showing over 1,300 years of continuous history as the seat of power for successive dynasties?",
+  "…khu di tích được phát lộ tình cờ vào năm 2002, khi chuẩn bị xây dựng Nhà Quốc hội mới, hé lộ hàng triệu hiện vật khảo cổ xếp chồng qua nhiều thời kỳ?": "…the site was uncovered by chance in 2002 during preparations to build the new National Assembly building, revealing millions of artifacts layered across many eras?",
+  "…nơi đây từng là kinh đô của Đại Việt kể từ khi vua Lý Thái Tổ dời đô từ Hoa Lư về Thăng Long vào năm 1010?": "…the site served as the capital of Đại Việt ever since King Lý Thái Tổ moved the capital from Hoa Lư to Thăng Long in 1010?",
+
+  "Cầu Vàng, Bà Nà Hills": "Golden Bridge, Bà Nà Hills",
+  "…Cầu Vàng chỉ mất chưa đầy một năm thi công và chính thức khánh thành vào tháng 6 năm 2018?": "…the Golden Bridge took less than a year to build and officially opened in June 2018?",
+  "…cây cầu dài khoảng 150m, nằm ở độ cao hơn 1.400m so với mực nước biển, trên đỉnh núi Bà Nà?": "…the bridge stretches about 150m and sits over 1,400m above sea level, atop Bà Nà mountain?",
+  "…điểm đặc biệt nhất của công trình là hai \"bàn tay\" khổng lồ bằng đá phủ rêu phong, như đang nâng đỡ dải lụa vàng giữa không trung?": "…its most striking feature is a pair of giant moss-covered stone \"hands\" that appear to be holding up a golden silk ribbon in mid-air?",
+  "…chỉ vài năm sau khánh thành, Cầu Vàng đã liên tiếp được World Travel Awards vinh danh là cây cầu du lịch mang tính biểu tượng hàng đầu thế giới?": "…within just a few years of opening, the Golden Bridge was repeatedly named the World's Leading Tourism Landmark Bridge by the World Travel Awards?",
+
+  "…Vịnh Hạ Long là một trong số ít di sản Việt Nam được UNESCO công nhận hai lần: năm 1994 về cảnh quan và năm 2000 về giá trị địa chất - địa mạo?": "…Ha Long Bay is one of the few Vietnamese heritage sites recognized twice by UNESCO — in 1994 for its scenery and in 2000 for its geology and landforms?",
+  "…vịnh có tới gần 2.000 hòn đảo lớn nhỏ, nhưng chưa đến một nửa trong số đó được đặt tên chính thức?": "…the bay holds nearly 2,000 islands and islets, yet fewer than half of them have an official name?",
+  "…năm 2023, ranh giới di sản được UNESCO mở rộng, gộp chung với quần đảo Cát Bà thành một di sản liên tỉnh?": "…in 2023, UNESCO expanded the heritage site's boundary to merge it with the Cát Bà Archipelago into one cross-province site?",
+  "…tên gọi \"Hạ Long\" mang nghĩa \"nơi rồng đáp xuống\", gắn với truyền thuyết rồng mẹ cùng đàn rồng con xuống giúp người Việt đánh giặc?": "…the name \"Hạ Long\" means \"where the dragon descends,\" tied to a legend of a mother dragon and her children landing here to help the Vietnamese fight invaders?",
+
+  "Phố cổ Hội An": "Hội An Ancient Town",
+  "…Đô thị cổ Hội An được UNESCO công nhận là Di sản Văn hóa Thế giới vào năm 1999, nhờ giữ gần như nguyên vẹn diện mạo một thương cảng cổ của Đông Nam Á?": "…the Ancient Town of Hội An was recognized by UNESCO as a World Heritage Site in 1999, for preserving the near-intact appearance of an old Southeast Asian trading port?",
+  "…vào đêm 14 âm lịch hằng tháng, cả phố cổ tắt đèn điện, chỉ thắp sáng bằng hàng nghìn chiếc đèn lồng trong \"Đêm phố cổ\"?": "…on the 14th night of every lunar month, the whole old town switches off its electric lights and glows with thousands of lanterns instead, for \"Ancient Town Night\"?",
+  "…Chùa Cầu, biểu tượng của Hội An, do cộng đồng thương nhân Nhật Bản góp sức xây dựng từ đầu thế kỷ 17 để nối hai bờ một con lạch nhỏ?": "…the Japanese Covered Bridge, Hội An's icon, was built by the local Japanese merchant community in the early 17th century to link the two banks of a small stream?",
+  "…nơi đây từng là một trong những thương cảng sầm uất bậc nhất Đông Nam Á, nơi thuyền buôn Nhật Bản, Trung Hoa, Hà Lan… cùng cập bến giao thương?": "…the town was once one of Southeast Asia's busiest trading ports, where Japanese, Chinese, Dutch, and other merchant ships all came to trade?",
+
+  "…hệ thống địa đạo Củ Chi dài tới khoảng 250km, được đào liên tục suốt 22 năm, từ 1946 đến 1968?": "…the Củ Chi tunnel network stretches about 250km, dug continuously over 22 years, from 1946 to 1968?",
+  "…địa đạo có 3 tầng sâu khác nhau, tầng sâu nhất xuống tới 8-10m, đủ sức chống chịu nhiều loại bom hạng nặng?": "…the tunnels have three different depth levels, with the deepest reaching 8-10m — deep enough to withstand many kinds of heavy bombs?",
+  "…bên trong lòng đất từng có đầy đủ bếp, kho chứa, bệnh xá và cả phòng họp, hình thành một \"thành phố\" thu nhỏ dưới mặt đất?": "…underground, the tunnels once held kitchens, storerooms, a clinic, and even meeting rooms — forming a whole miniature \"city\" beneath the ground?",
+  "…chính từ hệ thống địa đạo này, quân Giải phóng đã bất ngờ xuất phát tấn công vào trung tâm Sài Gòn trong Chiến dịch Tết Mậu Thân 1968?": "…it was from this very tunnel network that Liberation forces launched their surprise attack on central Saigon during the 1968 Tết Offensive?",
+
   "Đăng nhập": "Login",
   "Đăng ký": "Sign Up",
   "Trực quan": "Intuitive",
