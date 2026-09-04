@@ -36,12 +36,56 @@
   // để bản đồ tự fit to hơn trong khung chứa.
   var MAINLAND_BOUNDS = [[8.4, 102.1], [23.5, 109.6]];
 
-  // Padding khi fit khung nhìn toàn quốc: chừa thêm chỗ bên phải (right: 120px) 
-  // để không bị các thẻ Hoàng Sa / Trường Sa che khuất.
+  // Padding khi fit khung nhìn toàn quốc trên màn hình rộng (desktop):
+  // chừa thêm chỗ bên phải (right: 130px) để không bị các thẻ Hoàng Sa /
+  // Trường Sa (nằm bên phải bản đồ ở màn hình rộng) che khuất.
+  //
+  // paddingTopLeft/paddingBottomRight KHÔNG chỉ để chừa chỗ cho 2 thẻ đảo —
+  // chúng còn quyết định nhãn tên tỉnh nằm SÁT MÉP bản đồ (vd. Hà Giang ở
+  // cực Bắc, Điện Biên ở cực Tây) có bị cắt chữ hay không. Nhãn dài tối đa
+  // ~70-90px (xem --vnmap-label-maxw trong updateLabelScale/maps.css), tức
+  // có thể lấn ra khỏi tâm tỉnh tới ~35-45px mỗi bên; mà .leaflet-container
+  // luôn có overflow:hidden, nên nếu padding nhỏ hơn khoảng lấn đó, nhãn ở
+  // sát biên sẽ bị cắt cụt. 36px (nhỉnh hơn 35px) là mức tối thiểu an toàn.
   var COUNTRY_FIT_OPTIONS = {
-    paddingTopLeft: [10, 10],      // [left, top]
-    paddingBottomRight: [120, 10]  // [right, bottom]
+    paddingTopLeft: [36, 36],       // [left, top]
+    paddingBottomRight: [130, 36]   // [right, bottom]
   };
+
+  // Cùng ngưỡng với isCompact trong positionIslandCards() — dưới ngưỡng
+  // này, 2 thẻ Hoàng Sa/Trường Sa được CSS ghim xuống ĐÁY màn hình thay
+  // vì nằm bên phải, nên không cần (và không nên) chừa 130px bên phải
+  // nữa — chừa chỗ đó chỉ làm đất liền bị ép nhỏ/lệch một cách lãng phí
+  // trên màn hình vốn đã hẹp. Thêm 1 mốc trung gian cho tablet/laptop nhỏ
+  // để padding không quá to so với màn hình.
+  var COMPACT_BREAKPOINT = 640;
+  var MID_BREAKPOINT = 1024;
+
+  // Tính padding khung nhìn cấp Toàn quốc theo đúng bề rộng màn hình
+  // hiện tại, thay vì dùng 1 giá trị cố định cho mọi thiết bị. Mọi mốc
+  // đều giữ tối thiểu 30-36px top/left để không cắt chữ nhãn sát biên
+  // (xem giải thích ở COUNTRY_FIT_OPTIONS).
+  function getCountryFitOptions() {
+    var w = window.innerWidth;
+    if (w <= COMPACT_BREAKPOINT) {
+      // Điện thoại: 2 thẻ đảo nằm ở đáy màn hình (xem positionIslandCards)
+      // nên đổi sang chừa khoảng trống PHÍA DƯỚI thay vì bên phải — đủ chỗ
+      // cho cả 2 icon đảo (~54px cao) lẫn nhãn sát mép dưới bản đồ.
+      return {
+        paddingTopLeft: [30, 30],
+        paddingBottomRight: [30, 104]
+      };
+    }
+    if (w <= MID_BREAKPOINT) {
+      // Tablet / laptop nhỏ: vẫn chừa bên phải như desktop nhưng ít hơn,
+      // vì khung bản đồ đã hẹp sẵn.
+      return {
+        paddingTopLeft: [32, 32],
+        paddingBottomRight: [96, 32]
+      };
+    }
+    return COUNTRY_FIT_OPTIONS;
+  }
 
   var OSM_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   var OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
@@ -237,7 +281,16 @@
       zoomControl: true,
       attributionControl: true,
       minZoom: 4,
-      maxZoom: 18
+      maxZoom: 18,
+      // Mặc định Leaflet chỉ cho phép zoom là số nguyên (zoomSnap: 1) — mỗi
+      // lần fitBounds() tính ra mức zoom "vừa khít" lý tưởng (vd. 6.8) đều
+      // bị làm tròn XUỐNG số nguyên gần nhất (6), nên bản đồ luôn hiện nhỏ
+      // hơn mức có thể lấp đầy khung, bất kể đo kích thước khung chứa đúng
+      // hay sai. zoomSnap: 0 cho phép zoom lẻ (fractional), để fitBounds()
+      // tính đúng mức zoom khít nhất có thể — đây là nguyên nhân chính của
+      // hiện tượng bản đồ "lúc nào mở vào cũng nhỏ".
+      zoomSnap: 0,
+      zoomDelta: 0.75 // bước nhảy khi bấm nút +/- hoặc phím tắt, cho mượt hơn khi zoomSnap = 0
     });
     map.attributionControl.setPrefix(false);
     map.on('zoomend', updateLabelScale);
@@ -270,6 +323,15 @@
       });
       ro.observe(els.mapEl);
     }
+
+    // Xoay màn hình / đổi cỡ cửa sổ trình duyệt cũng có thể đổi hẳn breakpoint
+    // (padding cấp Toàn quốc phụ thuộc window.innerWidth — xem getCountryFitOptions),
+    // nên canh lại khung nhìn luôn khi resize, không chỉ khi khung chứa bản đồ đổi cỡ.
+    window.addEventListener('resize', function () {
+      if (!map || userInteractedMap) return;
+      map.invalidateSize();
+      refitCurrentView();
+    });
   }
 
   // Canh lại khung nhìn hiện tại theo đúng cấp đang xem — tách riêng để
@@ -278,9 +340,13 @@
   function refitCurrentView() {
     if (!map) return;
     if (state.level === 'country') {
-      map.fitBounds(MAINLAND_BOUNDS, COUNTRY_FIT_OPTIONS);
+      map.fitBounds(MAINLAND_BOUNDS, getCountryFitOptions());
     } else if (state.level === 'province' && activeLayer) {
-      map.fitBounds(activeLayer.getBounds(), { padding: [18, 18] });
+      // Tăng từ [18,18] lên [32,32]: cùng lý do với COUNTRY_FIT_OPTIONS —
+      // nhãn tên xã/phường sát biên tỉnh (vd. xã giáp ranh tỉnh khác) cần
+      // đủ khoảng trống để không bị .leaflet-container (overflow:hidden)
+      // cắt chữ.
+      map.fitBounds(activeLayer.getBounds(), { padding: [32, 32] });
     } else if (state.level === 'ward' && boundaryLayer) {
       map.fitBounds(boundaryLayer.getBounds(), { padding: [24, 24], maxZoom: 14 });
     }
@@ -335,7 +401,7 @@
     if (!map || els.islands.hidden) return;
     var hsCard = els.islands.querySelector('[data-island="hoang-sa"]');
     var tsCard = els.islands.querySelector('[data-island="truong-sa"]');
-    var isCompact = window.matchMedia('(max-width: 640px)').matches;
+    var isCompact = window.matchMedia('(max-width: ' + COMPACT_BREAKPOINT + 'px)').matches;
 
     if (state.level === 'country' && !isCompact) {
       var mapSize = map.getSize();
@@ -383,7 +449,14 @@
     if (!map) return;
     var z = map.getZoom();
     var size = Math.max(8, Math.min(15, Math.round(z * 1.15)));
+    // Chiều rộng tối đa của khối nhãn cũng co giãn theo zoom, không cố
+    // định 70px như trước: ở zoom thấp (cấp Toàn quốc, nhiều tỉnh nhỏ
+    // chen nhau) nhãn cần hẹp lại để không tràn lấn sang tỉnh kế bên;
+    // zoom càng cao (tỉnh/xã đã đủ to) nhãn được phép rộng hơn 1 chút để
+    // đỡ phải xuống quá nhiều dòng.
+    var maxWidth = Math.max(46, Math.min(96, Math.round(z * 9)));
     els.mapEl.style.setProperty('--vnmap-label-size', size + 'px');
+    els.mapEl.style.setProperty('--vnmap-label-maxw', maxWidth + 'px');
   }
 
   /* ---------------------- Bước 1: Toàn quốc ---------------------- */
@@ -827,7 +900,23 @@
         started = true;
         renderCountry();
       }
-      setTimeout(function () { map.invalidateSize(); }, 60);
+
+      // Chỉ invalidateSize() suông (như bản cũ) là chưa đủ: nó chỉ báo cho
+      // Leaflet biết canvas giờ đã đúng cỡ, chứ KHÔNG tự tính lại khung
+      // nhìn (zoom/tâm bản đồ). Nếu renderCountry() ở trên lỡ fitBounds()
+      // trước đó bằng kích thước đo sai (nhỏ hơn thật — panel Maps chưa
+      // kịp hiện hết cỡ ngay lúc bấm, nhất là khi dữ liệu đã được prefetch
+      // nên Promise trả về gần như tức thì), thì bản đồ vẫn hiện với độ
+      // zoom cũ (nhỏ hơn khung chứa thật). Nên phải refitCurrentView()
+      // ngay sau mỗi lần invalidateSize(), không chỉ gọi invalidateSize
+      // suông. Gọi 2 mốc thời gian (60ms và 300ms) để chắc ăn với cả thiết
+      // bị nhanh lẫn panel có hiệu ứng chuyển tab (CSS transition) chậm hơn.
+      [60, 300].forEach(function (delay) {
+        setTimeout(function () {
+          map.invalidateSize();
+          if (!userInteractedMap) refitCurrentView();
+        }, delay);
+      });
     }
 
     var mapsTab = document.querySelector('.sh-tab[data-panel="panel-maps"]');
