@@ -298,9 +298,14 @@
   color: var(--vnmap-ink);
 }
 
-/* Nhãn tên tỉnh / xã hiển thị thường trực trên bản đồ — cỡ chữ co giãn
-   theo mức zoom hiện tại (biến --vnmap-label-size do JS cập nhật) để
-   luôn gọn trong ranh giới thay vì tràn ra ngoài. */
+/* Nhãn tên tỉnh / xã hiển thị thường trực trên bản đồ — cỡ chữ VÀ chiều
+   rộng tối đa đều co giãn theo mức zoom hiện tại (2 biến --vnmap-label-size
+   / --vnmap-label-maxw do JS cập nhật trong updateLabelScale()). Ở zoom
+   thấp (cấp Toàn quốc, nhiều tỉnh nhỏ chen nhau — vd. cụm quanh Hà Nội)
+   khối nhãn hẹp lại để giảm tràn lấn sang tỉnh kế bên; đồng thời
+   .vnmap-panel > .vnmap-stage đã fitBounds với padding đủ rộng (xem
+   COUNTRY_FIT_OPTIONS trong maps.js) để nhãn ở sát biên bản đồ không bị
+   .leaflet-container (overflow: hidden) cắt chữ. */
 .vnmap-label {
   background: transparent;
   border: none;
@@ -312,9 +317,10 @@
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9), 0 0 6px rgba(255, 255, 255, 0.78);
   white-space: normal;
   text-align: center;
-  max-width: 70px;
+  max-width: var(--vnmap-label-maxw, 70px);
   line-height: 1.1;
   word-wrap: break-word;
+  overflow-wrap: break-word;
   pointer-events: none;
 }
 
@@ -573,15 +579,30 @@
     top: auto !important;
     bottom: 12px !important;
     transform: none;
-    padding: 4px;
+    padding: 5px;
+    /* Kích thước cố định (thay vì để nội dung tự quyết) để JS/CSS tính
+       khoảng cách giữa 2 thẻ một cách chắc chắn — không còn phụ thuộc vào
+       việc icon + padding cộng lại đúng bằng bao nhiêu. */
+    width: 44px;
+    height: 44px;
+    justify-content: center;
   }
 
+  /* Trước đây 2 thẻ cách nhau đúng 50px (62px - 12px) trong khi mỗi thẻ
+     rộng ~54px (icon 46px + padding 2×4px) → ĐÈ LÊN NHAU khoảng 4px.
+     Giờ thẻ đã cố định 44px, đặt cách nhau 56px (12px + 44px + 12px hở)
+     để chắc chắn không chạm nhau ở mọi trình duyệt. */
   .vnmap-island-card[data-island="hoang-sa"] {
-    right: 62px;
+    right: 68px;
   }
 
   .vnmap-island-card[data-island="truong-sa"] {
     right: 12px;
+  }
+
+  .vnmap-island-svg {
+    width: 34px;
+    height: 34px;
   }
 
   .vnmap-island-eyebrow,
@@ -593,6 +614,10 @@
     max-width: calc(100% - 24px);
     left: 12px;
     right: 12px;
-    bottom: 68px;
+    /* Đáy 2 icon đảo giờ ở bottom: 12px, cao 44px → mép trên của icon
+       cách đáy màn hình 56px. Nâng panel thông tin lên thêm (68px → 80px)
+       để chắc chắn không đè lên icon, kể cả khi nội dung panel dài hơn
+       bình thường. */
+    bottom: 80px;
   }
 }
