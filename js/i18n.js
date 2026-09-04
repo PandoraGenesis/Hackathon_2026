@@ -25,9 +25,9 @@ const dict = {
   "Hoàng Sa": "Hoang Sa",
   "Top to Mid": "Mountains & heritage",
   "Ẩm thực đa dạng": "Diverse cuisine",
+  "từ địa đầu Hà Giang đến mũi Cà Mau.": "from the northernmost point of Ha Giang to Cape Ca Mau.",
   "Chúng tôi muốn xây dựng một nền tảng không chỉ liệt kê thông tin có sẵn, mà còn \"hiểu\" người dùng đang tìm gì, thích gì, từ đó gợi ý những hành trình mang dấu ấn cá nhân thay vì một lịch trình dựng sẵn giống nhau cho tất cả mọi người. Mục tiêu cuối cùng là giúp những người thích khám phá tìm đến được vẻ đẹp thật của quê hương, những điều mà một bảng xếp hạng địa điểm nổi tiếng thường bỏ sót.": "We want to build a platform that not only lists available information, but also \"understands\" what users are looking for, what they like, thereby suggesting personalized itineraries instead of a pre-built itinerary that is the same for everyone. The ultimate goal is to help those who love to explore find the true beauty of their homeland, things that a famous location ranking often misses.",
   "Núi non & di sản": "Mountains & heritage",
-  "4. Why Choose Us?": "Mountains & heritage",
   "Lạc bước giữa những mái ngói rêu phong và bức tường vàng nhuốm màu thời gian.": "Get lost among the mossy tiled roofs and yellow walls tinged with time.",
   "Thính phòng": "Auditorium",
   "Kỳ quan thiên nhiên": "Natural wonders",
@@ -111,7 +111,7 @@ const dict = {
   "Thủ đô": "Capital",
   "Tự hào với những giá trị văn hóa phi vật thể và truyền thống lâu đời được thế giới công nhận.": "Proud of intangible cultural values ​​and long-standing traditions recognized around the world.",
   "5.5. DI SẢN VĂN HÓA": "5.5. CULTURAL HERITAGE",
-  "Người bạn đồng hành cùng bạn khám phá Việt Nam": "The companion who accompanies you to explore Vietnam",
+  "Người bạn đồng hành cùng bạn khám phá Việt Nam": "Your companion for exploring Vietnam",
   "Đất Võ": "Dat Vo",
   "Dữ liệu bản địa": "Local data",
   "⛩️ #Di_sản_Văn_Hóa_Miền_Trung": "⛩️ #Central_Cultural_Heritage",
@@ -167,11 +167,11 @@ const dict = {
   "Đất tổ thiêng liêng, cội nguồn của dân tộc Việt Nam với tín ngưỡng thờ cúng Hùng Vương trải qua hàng ngàn thế hệ.": "The sacred ancestral land, the origin of the Vietnamese people with the belief of worshiping the Hung Kings spanning thousands of generations.",
   "Khám phá vẻ đẹp hoang sơ của Biển Hồ và những đồi chè bạt ngàn.": "Explore the wild beauty of Tonle Sap and vast tea hills.",
   "Số ngày": "River rhythms",
-  "Thưởng thức bát phở nóng hổi hay chiếc bánh mì giòn rụm trên góc phố.": "VN",
-  "Thành phố đáng sống với những cây cầu độc đáo, bãi biển tuyệt đẹp và khu du lịch Bà Nà Hills nổi tiếng.": "Experience preferences",
+  "Thưởng thức bát phở nóng hổi hay chiếc bánh mì giòn rụm trên góc phố.": "Enjoy a steaming bowl of pho or a crispy bánh mì on a street corner.",
+  "Thành phố đáng sống với những cây cầu độc đáo, bãi biển tuyệt đẹp và khu du lịch Bà Nà Hills nổi tiếng.": "A city worth living in, featuring unique bridges, stunning beaches, and the famous Ba Na Hills tourist area.",
   "Định hình lại cách người trẻ đi du lịch bằng công nghệ. Trở thành hệ sinh thái du lịch thông minh và thân thiện nhất, góp phần đưa hình ảnh thiên nhiên và con người Việt Nam vươn xa trên bản đồ du lịch số toàn cầu.": "Experience preferences",
   "============================================================ 6. CHECK-IN — để trống ============================================================": "Experience preferences",
-  "Nhịp sống sông nước": "VN",
+  "Nhịp sống sông nước": "The Rhythm of River Life",
   "VN": "VN",
   "Sở thích trải nghiệm": "Experience preferences",
   "Tự động phân cụm lịch trình tối ưu theo thực tế địa lý giữa Biển Đảo & Cao Nguyên": "Eliminate planning anxiety. Just enter your preferences, and AI will automatically design a super-fast optimal ride.",
@@ -242,7 +242,6 @@ const dict = {
   "Nơi lưu giữ những tinh hoa văn hóa ngàn năm, từ đền đài miếu mạo cổ kính cho đến những kỳ quan thiên nhiên thế giới ngoạn mục và ruộng bậc thang hùng vĩ nơi núi rừng Tây Bắc.": "A place to store the cultural quintessence of thousands of years, from ancient temples and shrines to spectacular natural wonders of the world and majestic terraces in the Northwest mountains and forests.",
   "Lênh đênh trên chiếc xuồng ba lá, khám phá nét văn hóa miền Tây.": "Floating on a three-leaf canoe, discovering the culture of the West.",
   "Check-in": "Check-in",
-  "từ địa đầu Hà Giang đến mũi Cà Mau.": "from Ha Giang headland to Ca Mau cape.",
   "2. Cổ đại / Tự nhiên": "2. Ancient / Natural",
   "🤖 #Cá_nhân_hóa": "🤖 #Personalization",
   "17. Năm 1954 (Chiến thắng Điện Biên Phủ)": "17. 1954 (Dien Bien Phu victory)",
@@ -267,9 +266,9 @@ const dict = {
   "Tích hợp nguồn dữ liệu sâu rộng, bao quát cả những điểm đến \"ẩn mình\" ít người biết tới.": "Integrate extensive data sources, including unknown \"hidden\" destinations.",
   "End .phone-and-podium": "End .phone-and-podium",
   "8. Năm 1698 (Thành lập Sài Gòn)": "8. 1698 (Establishment of Saigon)",
-  "là một trợ lý AI do nhóm chúng tôi phát triển, với mục tiêu cá nhân hóa trải nghiệm khám phá Việt Nam cho từng du khách. Thay vì đưa ra một lịch trình dựng sẵn giống nhau cho tất cả mọi người, VNFinder cố gắng hiểu người dùng đang tìm gì và thích gì, để từ đó gợi ý một hành trình mang dấu ấn cá nhân.": "is an AI assistant developed by our team, with the goal of personalizing the experience of exploring Vietnam for each traveler. Instead of offering a pre-built schedule that is the same for everyone, VNFinder tries to understand what users are looking for and what they like, thereby suggesting a personal journey.",
+  "là một trợ lý AI do nhóm chúng tôi phát triển, với mục tiêu cá nhân hóa trải nghiệm khám phá Việt Nam cho từng du khách. Thay vì đưa ra một lịch trình dựng sẵn giống nhau cho tất cả mọi người, VNFinder cố gắng hiểu người dùng đang tìm gì và thích gì, để từ đó gợi ý một hành trình mang dấu ấn cá nhân.":"is an AI assistant developed by our team, with the goal of personalizing the experience of exploring Vietnam for each traveler. Instead of offering a pre-built schedule that is the same for everyone, VNFinder tries to understand what users are looking for and what they like, thereby suggesting a personal journey.",
   "Hà Nội": "Hanoi",
-  "TP. Quy Nhơn": "Scientific",
+  "TP. Quy Nhơn": "TP. Quy Nhơn",
   "Mang không khí trầm mặc với hệ thống lăng tẩm, đại nội cung đình nguy nga và nhã nhạc cung đình đặc sắc.": "Bring a quiet atmosphere with a system of mausoleums, grand palaces and special court music.",
   "Chinh phục những ngọn núi mây mù giăng lối tại vùng cao Tây Bắc.": "Conquer the cloudy mountains in the Northwest highlands.",
   "Tiết kiệm thời gian": "To save working time",
@@ -291,25 +290,25 @@ for (const [vi, en] of Object.entries(dict)) {
 
 function translateNode(node, lang) {
   if (node.nodeType === Node.TEXT_NODE) {
-    const text = node.nodeValue.trim();
+    const text = node.nodeValue.replace(/\s+/g, ' ').trim();   // chuẩn hóa whitespace trước khi so khớp
     if (text && text !== 'VN' && text !== 'EN' && text !== '|') {
       if (lang === 'en' && dict[text]) {
-        node.nodeValue = node.nodeValue.replace(text, dict[text]);
+        node.nodeValue = dict[text];
       } else if (lang === 'vn' && reverseDict[text]) {
-        node.nodeValue = node.nodeValue.replace(text, reverseDict[text]);
+        node.nodeValue = reverseDict[text];
       } else {
         if (lang === 'en') {
-          let updated = node.nodeValue;
+          let updated = text;
           for (const [v, e] of Object.entries(dict)) {
             if (v !== 'VN' && v !== 'EN' && updated.includes(v)) updated = updated.replace(v, e);
           }
-          if (updated !== node.nodeValue) node.nodeValue = updated;
+          if (updated !== text) node.nodeValue = updated;
         } else if (lang === 'vn') {
-          let updated = node.nodeValue;
+          let updated = text;
           for (const [v, e] of Object.entries(dict)) {
             if (v !== 'VN' && v !== 'EN' && updated.includes(e)) updated = updated.replace(e, v);
           }
-          if (updated !== node.nodeValue) node.nodeValue = updated;
+          if (updated !== text) node.nodeValue = updated;
         }
       }
     }
