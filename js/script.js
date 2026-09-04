@@ -3,61 +3,80 @@
  */
 
 /* ============ 1. MOCK DATA ============ */
-const DEPARTURE_GROUPS = [
+const VIETNAM_PROVINCES = [
   {
-    label: 'Thành phố / Thị xã',
-    options: ['TP. Quy Nhơn', 'TP. Pleiku', 'Thị xã An Nhơn', 'Thị xã Hoài Nhơn', 'Thị xã An Khê', 'Thị xã Ayun Pa']
+    label: 'Miền Bắc',
+    options: [
+      'Hà Nội', 'Lai Châu', 'Điện Biên', 'Sơn La', 'Lạng Sơn', 'Quảng Ninh', 'Cao Bằng',
+      'Tuyên Quang', 'Lào Cai', 'Thái Nguyên',
+      'Phú Thọ', 'Bắc Ninh', 'Hưng Yên',
+      'Hải Phòng', 'Ninh Bình'
+    ]
   },
   {
-    label: 'Huyện / Thị trấn',
-    options: ['Huyện Phù Cát', 'Huyện Phù Mỹ', 'Huyện Tuy Phước', 'Huyện Tây Sơn', 'Huyện Vân Canh', 'Huyện Chư Sê', 'Huyện Đak Đoa', 'Huyện Iagrai', 'Huyện Chư Prông', 'Huyện Chư Păh', 'Huyện KBang', 'Huyện Đak Pơ', 'Huyện Kông Chro']
+    label: 'Miền Trung & Tây Nguyên',
+    options: [
+      'Huế', 'Thanh Hóa', 'Nghệ An', 'Hà Tĩnh', 'Quảng Trị',
+      'Đà Nẵng', 'Quảng Ngãi', 'Gia Lai',
+      'Đắk Lắk', 'Khánh Hòa', 'Lâm Đồng'
+    ]
   },
   {
-    label: 'Cảng hàng không & Ga tàu',
-    options: ['Sân bay Phù Cát (UIH)', 'Sân bay Pleiku (PXU)', 'Ga Diêu Trì', 'Ga Quy Nhơn']
-  },
-  {
-    label: 'Phường / Xã phổ biến',
-    options: ['Phường Quang Trung (Quy Nhơn)', 'Phường Hội Phú (Pleiku)', 'Xã Nhơn Lý', 'Xã Nhơn Hải']
+    label: 'Miền Nam',
+    options: [
+      'Đồng Nai', 'Hồ Chí Minh',
+      'Tây Ninh', 'Đồng Tháp', 'Vĩnh Long',
+      'Cần Thơ', 'Cà Mau', 'An Giang'
+    ]
   }
 ];
 
-const DESTINATIONS = [
-  // Coastal Cluster (Quy Nhơn)
-  { id: 'kyco', name: 'Kỳ Co', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1559586616-361e18714958?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: '3-4 giờ', hours: '08:00 - 17:00', tips: 'Nên đi cano từ sáng sớm để ngắm san hô đẹp nhất. Nhớ mang theo kem chống nắng.' },
-  { id: 'eogio', name: 'Eo Gió', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1549473889-14f410d83298?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: '1-2 giờ', hours: '06:00 - 18:00', tips: 'Nơi ngắm bình minh và hoàng hôn tuyệt đẹp với con đường đi bộ ven biển.' },
-  { id: 'culaoxanh', name: 'Cù Lao Xanh', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1574887309990-281b376d29d3?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: 'Nửa ngày', hours: '07:00 - 16:00', tips: 'Hòn đảo ngọc hoang sơ, cần đi cano khoảng 30 phút từ bến tàu Hàm Tử.' },
-  { id: 'ghenhrang', name: 'Ghềnh Ráng Tiên Sa', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: '2 giờ', hours: 'Cả ngày', tips: 'Tham quan bãi tắm Hoàng Hậu, viếng mộ thi sĩ Hàn Mặc Tử.' },
-  { id: 'thapbanhit', name: 'Tháp Bánh Ít', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1600868153470-4f51e0892f39?auto=format&fit=crop&q=80&w=800', tags: ['🏛️ Văn Hóa Chăm Pa'], duration: '1.5 giờ', hours: '07:00 - 17:30', tips: 'Cụm tháp Chăm pa cổ đẹp và quy mô lớn nhất còn sót lại.' },
-  { id: 'honkho', name: 'Hòn Khô', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: '2-3 giờ', hours: '08:00 - 17:00', tips: 'Biển êm, có con đường xuyên biển tuyệt đẹp khi thủy triều rút.' },
-  { id: 'baixep', name: 'Bãi Xép', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: '2 giờ', hours: 'Cả ngày', tips: 'Bối cảnh phim "Tôi thấy hoa vàng trên cỏ xanh", yên bình và lãng mạn.' },
-  { id: 'btquangtrung', name: 'Bảo tàng Quang Trung', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&q=80&w=800', tags: ['🏛️ Văn Hóa'], duration: '2 giờ', hours: '07:00 - 17:00', tips: 'Xem biểu diễn võ thuật Tây Sơn và trống trận hào hùng.' },
-  { id: 'thapdoi', name: 'Tháp Đôi', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1590487988256-9ed24133863e?auto=format&fit=crop&q=80&w=800', tags: ['🏛️ Văn Hóa Chăm Pa'], duration: '1 giờ', hours: '07:00 - 17:00', tips: 'Nằm ngay trung tâm thành phố Quy Nhơn, tiện di chuyển.' },
-  { id: 'damthinai', name: 'Đầm Thị Nại', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae77?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: '1 giờ', hours: 'Cả ngày', tips: 'Cây cầu vượt biển dài nhất Việt Nam (trước khi có cầu Tân Vũ).' },
-  { id: 'longsong', name: 'Tiểu chủng viện Lòng Sông', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1548625361-ec853039d912?auto=format&fit=crop&q=80&w=800', tags: ['🏛️ Văn Hóa'], duration: '1 giờ', hours: '08:00 - 17:00', tips: 'Kiến trúc Gothic cổ kính đẹp như trời Âu giữa lòng Bình Định.' },
-  { id: 'hoanghau', name: 'Bãi tắm Hoàng Hậu', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800', tags: ['🌊 Biển Đảo'], duration: '1.5 giờ', hours: 'Cả ngày', tips: 'Bãi đá trứng độc đáo, từng là nơi tắm dành riêng cho Nam Phương Hoàng Hậu.' },
-  { id: 'doicat', name: 'Đồi cát Phương Mai', cluster: 'Coastal', image: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '1 giờ', hours: 'Sáng sớm / Chiều mát', tips: 'Thích hợp trượt cát và ngắm cảnh. Rất nắng gắt vào buổi trưa.' },
+const DESTINATION_LOCATIONS = {
+  'Tuyên Quang': ['Tuyên Quang', 'Huyện Sơn Dương', 'Hà Giang', 'Huyện Đồng Văn', 'Huyện Mèo Vạc'],
+  'Lào Cai': ['Lào Cai', 'Thị xã Sa Pa', 'Huyện Bắc Hà', 'Yên Bái', 'Thị xã Nghĩa Lộ', 'Huyện Mù Cang Chải'],
+  'Thái Nguyên': ['Thái Nguyên', 'Phổ Yên', 'Huyện Đại Từ', 'Bắc Kạn', 'Huyện Ba Bể'],
+  'Phú Thọ': ['Việt Trì', 'Vĩnh Yên', 'Thị xã Tam Đảo', 'Hòa Bình', 'Huyện Mai Châu'],
+  'Bắc Ninh': ['Bắc Ninh', 'Từ Sơn', 'Bắc Giang', 'Huyện Việt Yên', 'Huyện Lục Ngạn'],
+  'Hưng Yên': ['Hưng Yên', 'Thị xã Mỹ Hào', 'Khu đô thị Ecopark', 'Thái Bình', 'Huyện Tiền Hải'],
+  'Hải Phòng': ['Hải Phòng', 'Huyện Cát Hải', 'Hải Dương', 'Chí Linh'],
+  'Ninh Bình': ['Ninh Bình', 'Huyện Hoa Lư', 'Huyện Gia Viễn', 'Phủ Lý', 'Nam Định'],
+  'Quảng Trị': ['Đông Hà', 'Thị xã Quảng Trị', 'Huyện Vĩnh Linh', 'Đồng Hới', 'Huyện Bố Trạch'],
+  'Đà Nẵng': ['Đà Nẵng', 'Huyện Hòa Vang', 'Hội An', 'Tam Kỳ', 'Thị xã Điện Bàn'],
+  'Quảng Ngãi': ['Quảng Ngãi', 'Thị xã Đức Phổ', 'Huyện Bình Sơn (Lý Sơn)', 'Kon Tum', 'Huyện Đắk Hà', 'Huyện Măng Đen'],
+  'Gia Lai': ['Pleiku', 'Thị xã An Khê', 'Huyện Chư Sê', 'Quy Nhơn', 'Thị xã An Nhơn', 'Huyện Tây Sơn'],
+  'Đắk Lắk': ['Buôn Ma Thuột', 'Thị xã Buôn Hồ', 'Huyện Krông Pắc', 'Tuy Hòa', 'Thị xã Sông Cầu'],
+  'Khánh Hòa': ['Nha Trang', 'Cam Ranh', 'Huyện đảo Trường Sa', 'Phan Rang - Tháp Chàm', 'Huyện Ninh Hải'],
+  'Lâm Đồng': ['Đà Lạt', 'Bảo Lộc', 'Gia Nghĩa', 'Phan Thiết', 'Thị xã La Gi'],
+  'Đồng Nai': ['Biên Hòa', 'Long Khánh', 'Huyện Nhơn Trạch', 'Đồng Xoài', 'Thị xã Bình Long'],
+  'Hồ Chí Minh': ['Hồ Chí Minh', 'Thủ Đức', 'Huyện Cần Giờ', 'Vũng Tàu', 'Thủ Dầu Một', 'Huyện Côn Đảo'],
+  'Tây Ninh': ['Tây Ninh', 'Thị xã Trảng Bàng', 'Thị xã Hòa Thành', 'Tân An', 'Huyện Bến Lức'],
+  'Đồng Tháp': ['Cao Lãnh', 'Sa Đéc', 'Hồng Ngự', 'Mỹ Tho', 'Thị xã Cai Lậy'],
+  'Vĩnh Long': ['Vĩnh Long', 'Thị xã Bình Minh', 'Bến Tre', 'Huyện Châu Thành', 'Trà Vinh'],
+  'Cần Thơ': ['Cần Thơ', 'Huyện Phong Điền', 'Sóc Trăng', 'Vị Thanh'],
+  'Cà Mau': ['Cà Mau', 'Huyện Năm Căn', 'Huyện Ngọc Hiển', 'Bạc Liêu', 'Thị xã Giá Rai'],
+  'An Giang': ['Long Xuyên', 'Châu Đốc', 'Thị xã Tịnh Biên', 'Rạch Giá', 'Phú Quốc', 'Hà Tiên']
+};
 
-  // Highland Cluster (Gia Lai)
-  { id: 'bienho', name: 'Biển Hồ T\'Nưng', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1437482078695-73f5ca6c96e2?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '2 giờ', hours: '06:00 - 18:00', tips: 'Đôi mắt Pleiku, mặt hồ trong xanh như ngọc bích quanh năm.' },
-  { id: 'chudangya', name: 'Núi lửa Chư Đăng Ya', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1611080352820-227bb3098319?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '2-3 giờ', hours: 'Cả ngày', tips: 'Vào tháng 11, hoa dã quỳ nở rộ nhuộm vàng cả ngọn núi lửa.' },
-  { id: 'bienhoche', name: 'Biển Hồ Chè & Hàng thông', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1521798365611-66df3b364402?auto=format&fit=crop&q=80&w=800', tags: ['☕ Cà Phê'], duration: '1.5 giờ', hours: 'Sáng sớm', tips: 'Hàng thông trăm tuổi được mệnh danh là con đường Hàn Quốc.' },
-  { id: 'phucuong', name: 'Thác Phú Cường', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1432405972618-fc40814d22ea?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '2-3 giờ', hours: '07:00 - 17:00', tips: 'Thác nước hùng vĩ nhất Gia Lai, chảy trên nền nham thạch cổ.' },
-  { id: 'k50', name: 'Thác K50 (Kon Chư Răng)', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1502784444187-359ac188053e?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '1 ngày', hours: 'Cả ngày', tips: 'Cần có người dẫn đường, trekking đường rừng khám phá vẻ đẹp hoang sơ.' },
-  { id: 'minhthanh', name: 'Chùa Minh Thành', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1601007238210-22c66d8f8d68?auto=format&fit=crop&q=80&w=800', tags: ['🏛️ Văn Hóa'], duration: '1.5 giờ', hours: '07:00 - 17:00', tips: 'Ngôi chùa mang đậm kiến trúc Nhật Bản và Đài Loan tuyệt đẹp.' },
-  { id: 'daidoanket', name: 'Quảng trường Đại Đoàn Kết', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1577903875324-1fbc8ed2cf91?auto=format&fit=crop&q=80&w=800', tags: ['🏛️ Văn Hóa'], duration: '1 giờ', hours: 'Cả ngày', tips: 'Trái tim của Pleiku, nơi có tượng đài Bác Hồ lớn nhất Việt Nam.' },
-  { id: 'cohong', name: 'Đồi cỏ hồng Giao Thủy', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1508688461413-568ebcdce323?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '1.5 giờ', hours: 'Tháng 11-12', tips: 'Check-in tuyệt đẹp vào sáng sớm khi sương còn đọng trên lá.' },
-  { id: 'pleikep', name: 'Làng văn hóa Plei Kép', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1520113117462-1130e9d6d3fc?auto=format&fit=crop&q=80&w=800', tags: ['🪕 Văn Hóa Tây Nguyên'], duration: '2-3 giờ', hours: 'Cả ngày', tips: 'Khám phá nhà rông, văn hóa cồng chiêng và thưởng thức rượu cần.' },
-  { id: 'konkakinh', name: 'Vườn quốc gia Kon Ka Kinh', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a5d?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '1 ngày', hours: 'Cả ngày', tips: 'Nóc nhà của Gia Lai, đa dạng sinh học, thích hợp trekking.' },
-  { id: 'hamrong', name: 'Núi Hàm Rồng', cluster: 'Highland', image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800', tags: ['⛰️ Cao Nguyên'], duration: '2 giờ', hours: 'Cả ngày', tips: 'Trạm phát sóng, có thể ngắm toàn cảnh Pleiku từ trên cao.' }
-];
+function getDistrictsForProvince(provinceName) {
+  if (DESTINATION_LOCATIONS[provinceName]) {
+    return DESTINATION_LOCATIONS[provinceName];
+  }
+  return ['Trung tâm khu vực', 'Vùng ven', 'Các huyện lân cận'];
+}
+
+const DESTINATIONS = []; // Removed, now using ALL_DESTINATIONS from data.js
 
 const PREFERENCES_MAP = {
   bien: 'Coastal',
-  thiennhien: 'Highland',
-  caphe: 'Highland',
-  vanhoatn: 'Highland',
-  vanhoacp: 'Coastal'
+  nuirung: 'Highland',
+  amthuc: 'Urban',
+  disan: 'Heritage',
+  songnuoc: 'Delta',
+  vanhoa: 'Culture',
+  camtrai: 'Highland',
+  checkin: 'Urban',
+  sinhthai: 'Delta',
+  giaitri: 'Coastal'
 };
 
 /* ============ 2. DOM Elements ============ */
@@ -74,17 +93,79 @@ const cbClear = document.getElementById('departure-clear');
 const cbList = document.getElementById('departure-list');
 const cbChevron = document.getElementById('departure-chevron');
 
+const destText = document.getElementById('destination-text');
+const destDropdown = document.getElementById('destination-dropdown');
+const destSearch = document.getElementById('destination-search');
+const destClear = document.getElementById('destination-clear');
+const destList = document.getElementById('destination-list');
+const destChevron = document.getElementById('destination-chevron');
+const destTrigger = document.getElementById('destination-trigger');
+const destAzEl = document.getElementById('dest-loc-az');
+const destBubbleEl = document.getElementById('dest-loc-az-bubble');
+
 const tagButtons = document.querySelectorAll('.tag');
 const generateBtn = document.getElementById('generate-btn');
 const resultSection = document.getElementById('result');
 const smartDistanceAlert = document.getElementById('smart-distance-alert');
 
+// A-Z Initialization for Destination
+if (destAzEl) {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  let html = letters.map(l => `<button type="button" class="az-btn" data-letter="${l}">${l}</button>`).join('');
+  destAzEl.innerHTML = html;
+
+  let isDraggingDestAZ = false;
+
+  function handleDestAZMove(e) {
+    if (e.type === 'touchmove' && e.cancelable) e.preventDefault();
+
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const target = document.elementFromPoint(clientX, clientY);
+
+    if (target && target.classList.contains('az-btn')) {
+      const letter = target.getAttribute('data-letter');
+
+      if (destBubbleEl) {
+        destBubbleEl.textContent = letter;
+        const targetRect = target.getBoundingClientRect();
+        const azRect = destAzEl.getBoundingClientRect();
+        const topPos = targetRect.top - azRect.top + targetRect.height / 2;
+        destBubbleEl.style.top = `${topPos}px`;
+        destBubbleEl.classList.add('show');
+      }
+
+      if (isDraggingDestAZ || e.type === 'touchmove' || e.type === 'pointerdown') {
+        const groupTarget = destList.querySelector(`[data-group="${letter}"]`);
+        if (groupTarget) {
+          destList.scrollTo({ top: groupTarget.offsetTop, behavior: 'instant' });
+        }
+      }
+    }
+  }
+
+  destAzEl.addEventListener('pointerdown', (e) => {
+    isDraggingDestAZ = true;
+    handleDestAZMove(e);
+  });
+  window.addEventListener('pointerup', () => {
+    isDraggingDestAZ = false;
+    if (destBubbleEl) destBubbleEl.classList.remove('show');
+  });
+  destAzEl.addEventListener('pointermove', handleDestAZMove);
+  destAzEl.addEventListener('touchmove', handleDestAZMove, { passive: false });
+}
+
 /* ============ 3. STATE ============ */
 let state = {
-  duration: 3,
-  departure: 'TP. Quy Nhơn',
+  duration: '',
+  departure: '',
+  destination: '',
+  destLevel: 1,
+  destProvince: '',
   isCbOpen: false,
-  selectedPrefs: ['bien', 'caphe']
+  isDestOpen: false,
+  selectedPrefs: ['bien']
 };
 
 /* ============ 4. LOGIC ============ */
@@ -94,7 +175,7 @@ function updateDuration(val) {
   val = Math.max(1, Math.min(30, val));
   state.duration = val;
   inputDays.value = val;
-  
+
   presetBtns.forEach(btn => {
     if (parseInt(btn.dataset.days) === val) {
       btn.classList.add('active');
@@ -102,8 +183,8 @@ function updateDuration(val) {
       btn.classList.remove('active');
     }
   });
-  
-  checkSmartDistanceAlert();
+
+  checkWeatherAlert();
 }
 
 btnMinus.addEventListener('click', () => updateDuration(state.duration - 1));
@@ -117,7 +198,7 @@ presetBtns.forEach(btn => {
 // B. Combobox Departure
 function renderComboboxList(filterText = '') {
   let html = '';
-  DEPARTURE_GROUPS.forEach(group => {
+  VIETNAM_PROVINCES.forEach(group => {
     const filteredOpts = group.options.filter(o => o.toLowerCase().includes(filterText.toLowerCase()));
     if (filteredOpts.length > 0) {
       html += `<div class="combobox-group">
@@ -132,23 +213,152 @@ function renderComboboxList(filterText = '') {
       html += `</div>`;
     }
   });
-  
+
   if (!html) {
     html = `<div style="padding: 1rem; text-align: center; color: var(--slate-soft); font-size: 0.9rem;">Không tìm thấy khu vực nào</div>`;
   }
-  
+
   cbList.innerHTML = html;
   window.lucide.createIcons();
-  
+
   // Attach events
   const opts = cbList.querySelectorAll('.combobox-option');
   opts.forEach(opt => {
     opt.addEventListener('click', () => {
       state.departure = opt.dataset.value;
       cbText.textContent = state.departure;
+      cbText.style.color = 'var(--ink)';
       closeCombobox();
     });
   });
+}
+
+function renderDestinationList(filterText = '') {
+  let html = '';
+
+  if (state.destLevel === 1) {
+    if (destAzEl) destAzEl.style.display = 'flex';
+
+    // Level 1: Choose Province, group by A-Z
+    let allProvinces = [];
+    VIETNAM_PROVINCES.forEach(group => {
+      allProvinces.push(...group.options);
+    });
+
+    // Filter and Sort
+    const filteredOpts = allProvinces.filter(o => o.toLowerCase().includes(filterText.toLowerCase()));
+    filteredOpts.sort((a, b) => {
+      let cleanA = a;
+      let cleanB = b;
+      return cleanA.localeCompare(cleanB, 'vi');
+    });
+
+    const grouped = {};
+    filteredOpts.forEach(opt => {
+      let cleanOpt = opt;
+      let letter = cleanOpt.charAt(0).toUpperCase();
+      if (letter === 'Đ') letter = 'Đ';
+      else if (!/[A-Z]/.test(letter)) letter = '#';
+      if (!grouped[letter]) grouped[letter] = [];
+      grouped[letter].push(opt);
+    });
+
+    const sortedKeys = Object.keys(grouped).sort((a, b) => {
+      if (a === '#') return 1;
+      if (b === '#') return -1;
+      return a.localeCompare(b, 'vi');
+    });
+
+    sortedKeys.forEach(key => {
+      html += `<div class="loc-group" data-group="${key}">
+                 <div class="loc-group-title" style="padding: 0.25rem 1rem; font-weight: 700; color: var(--accent); background: #f8fafc;">${key}</div>`;
+      grouped[key].forEach(opt => {
+        const isSelected = opt === state.destProvince;
+        const hasDistricts = DESTINATION_LOCATIONS[opt] ? true : false;
+        html += `<button type="button" class="loc-item level-1-opt ${isSelected ? 'selected' : ''}" data-value="${opt}" style="width: 100%; text-align: left; padding: 0.75rem 1rem; border: none; background: transparent; cursor: pointer; color: var(--ink); border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+                   ${hasDistricts ? `<i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--slate);"></i>` : `<span style="width: 16px; display: inline-block;"></span>`}
+                   <span>${opt}</span>
+                 </button>`;
+      });
+      html += `</div>`;
+    });
+  } else {
+    if (destAzEl) destAzEl.style.display = 'none';
+    // Level 2: Choose District
+    html += `<div style="padding: 10px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--slate-soft); transition: background 0.2s;" id="dest-back-btn" onmouseover="this.style.background='#F1F5F9'" onmouseout="this.style.background='transparent'">
+               <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+               <span style="font-weight: 600; font-size: 0.9rem;">${state.destProvince}</span>
+             </div>`;
+
+    const districts = getDistrictsForProvince(state.destProvince);
+    const filteredOpts = districts.filter(o => o.toLowerCase().includes(filterText.toLowerCase()));
+
+    if (filteredOpts.length > 0) {
+      filteredOpts.forEach(opt => {
+        const fullVal = `${opt}, ${state.destProvince}`;
+        const isSelected = fullVal === state.destination;
+        html += `<button type="button" class="loc-item level-2-opt ${isSelected ? 'selected' : ''}" data-value="${opt}" style="width: 100%; text-align: left; padding: 0.75rem 1rem; border: none; background: transparent; cursor: pointer; color: var(--ink); border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+                   ${isSelected ? `<i data-lucide="check" class="check-icon" style="width: 16px; height: 16px;"></i>` : `<span style="width: 16px; display: inline-block;"></span>`}
+                   <span>${opt}</span>
+                 </button>`;
+      });
+    }
+  }
+
+  if (!html) {
+    html = `<div style="padding: 1rem; text-align: center; color: var(--slate-soft); font-size: 0.9rem;">Không tìm thấy khu vực nào</div>`;
+  }
+
+  destList.innerHTML = html;
+  window.lucide.createIcons();
+
+  // Attach events
+  if (state.destLevel === 1) {
+    const opts = destList.querySelectorAll('.level-1-opt');
+    opts.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const val = opt.dataset.value;
+        state.destProvince = val;
+
+        if (DESTINATION_LOCATIONS[val]) {
+          state.destLevel = 2;
+          destSearch.value = '';
+          renderDestinationList();
+          destSearch.focus();
+        } else {
+          state.destination = val;
+          destText.textContent = state.destination;
+          destText.style.color = 'var(--ink)';
+          closeDestCombobox();
+          checkWeatherAlert();
+        }
+      });
+    });
+  } else {
+    const backBtn = document.getElementById('dest-back-btn');
+    if (backBtn) {
+      backBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.destLevel = 1;
+        destSearch.value = '';
+        renderDestinationList();
+        destSearch.focus();
+      });
+    }
+
+    const opts = destList.querySelectorAll('.level-2-opt');
+    opts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const district = opt.dataset.value;
+        state.destination = `${district}, ${state.destProvince}`;
+        destText.textContent = state.destination;
+        destText.style.color = 'var(--ink)';
+        closeDestCombobox();
+        checkWeatherAlert();
+      });
+    });
+  }
 }
 
 function toggleCombobox() {
@@ -170,43 +380,198 @@ function closeCombobox() {
   cbChevron.classList.remove('open');
 }
 
-cbTrigger.addEventListener('click', toggleCombobox);
-cbSearch.addEventListener('input', (e) => {
-  const val = e.target.value;
-  cbClear.hidden = val.length === 0;
-  renderComboboxList(val);
-});
-cbClear.addEventListener('click', () => {
-  cbSearch.value = '';
-  cbClear.hidden = true;
-  renderComboboxList();
-  cbSearch.focus();
-});
+/* 
+  Departure combobox logic is now handled by js/location.js 
+  cbTrigger.addEventListener('click', toggleCombobox);
+  cbSearch.addEventListener('input', ...);
+  cbClear.addEventListener('click', ...);
+*/
 
 // Close outside click
 document.addEventListener('click', (e) => {
-  if (!document.getElementById('departure-container').contains(e.target)) {
+  if (document.getElementById('departure-container') && !document.getElementById('departure-container').contains(e.target)) {
     closeCombobox();
+  }
+  if (document.getElementById('destination-container') && !document.getElementById('destination-container').contains(e.target)) {
+    closeDestCombobox();
   }
 });
 
-// C. Tags and Alert Logic
-function checkSmartDistanceAlert() {
-  if (state.duration >= 3) {
-    smartDistanceAlert.hidden = true;
-    return;
+function toggleDestCombobox() {
+  state.isDestOpen = !state.isDestOpen;
+
+  // Close departure dropdown if open
+  const depDropdown = document.getElementById('departure-dropdown');
+  if (depDropdown && !depDropdown.hidden) {
+    depDropdown.hidden = true;
   }
-  
-  const prefClusters = state.selectedPrefs.map(p => PREFERENCES_MAP[p]);
-  const hasCoastal = prefClusters.includes('Coastal');
-  const hasHighland = prefClusters.includes('Highland');
-  
-  if (hasCoastal && hasHighland) {
-    smartDistanceAlert.hidden = false;
+
+  if (state.isDestOpen) {
+    destDropdown.hidden = false;
+    destChevron.classList.add('open');
+    if (!state.destProvince) {
+      state.destLevel = 1; // Default to level 1 if no province selected
+    }
+    renderDestinationList(destSearch.value);
+    destSearch.focus();
   } else {
-    smartDistanceAlert.hidden = true;
+    destDropdown.hidden = true;
+    destChevron.classList.remove('open');
   }
 }
+
+function closeDestCombobox() {
+  state.isDestOpen = false;
+  destDropdown.hidden = true;
+  destChevron.classList.remove('open');
+}
+window.closeDestCombobox = closeDestCombobox;
+
+if (destTrigger) destTrigger.addEventListener('click', toggleDestCombobox);
+if (destSearch) {
+  destSearch.addEventListener('input', (e) => {
+    const val = e.target.value;
+    destClear.hidden = val.length === 0;
+    renderDestinationList(val);
+  });
+}
+if (destClear) {
+  destClear.addEventListener('click', () => {
+    destSearch.value = '';
+    destClear.hidden = true;
+    renderDestinationList();
+    destSearch.focus();
+  });
+}
+
+// C. Tags and Alert Logic
+function checkWeatherAlert() {
+  const weatherAlert = document.getElementById('weather-alert');
+  const weatherDesc = document.getElementById('weather-alert-desc');
+  const startDateInput = document.getElementById('start-date');
+  const endDateInput = document.getElementById('end-date');
+
+  if (!weatherAlert || !weatherDesc || !startDateInput || !endDateInput) return;
+
+  const startDate = startDateInput.value;
+  const endDate = endDateInput.value;
+  const dest = state.destination;
+
+  if (startDate && endDate && dest) {
+    weatherAlert.hidden = false;
+    weatherDesc.innerHTML = `Dự báo thời tiết tại <b>${dest}</b> từ <b>${startDate}</b> đến <b>${endDate}</b>:
+      <ul style="margin-top: 4px; padding-left: 20px; margin-bottom: 0;">
+        <li>Thời tiết dự kiến khá đẹp, trời nắng ráo</li>
+        <li>Nhiệt độ dao động 24 - 30°C</li>
+        <li>Rất thích hợp cho các hoạt động trải nghiệm ngoài trời</li>
+      </ul>`;
+
+    // Render daily forecast
+    const rightCol = document.getElementById('weather-daily-forecast');
+    if (rightCol) {
+      let dailyHtml = '';
+      const icons = ['sun', 'cloud-sun', 'cloud-rain', 'sun', 'cloud'];
+      const colors = ['#f59e0b', '#f59e0b', '#3b82f6', '#f59e0b', '#94a3b8'];
+      const temps = ['30°C', '28°C', '25°C', '29°C', '27°C'];
+
+      let [d, m, y] = startDate.split('/');
+      let currentDate = new Date(y, m - 1, d);
+      let daysToShow = state.duration || 3;
+
+      for (let i = 0; i < daysToShow; i++) {
+        let displayDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}`;
+        let icon = icons[i % icons.length];
+        let color = colors[i % colors.length];
+        let temp = temps[i % temps.length];
+
+        dailyHtml += `
+          <div style="text-align: center; flex: 0 0 auto; min-width: 48px;">
+            <p style="font-size: 0.75rem; font-weight: 600; margin-bottom: 8px; color: rgba(230, 81, 0, 0.7);">${displayDate}</p>
+            <i data-lucide="${icon}" style="width: 24px; height: 24px; color: ${color}; margin: 0 auto;"></i>
+            <p style="font-size: 0.9rem; font-weight: 700; margin-top: 8px; color: var(--warn);">${temp}</p>
+          </div>
+        `;
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      rightCol.innerHTML = dailyHtml;
+      window.lucide.createIcons({ root: rightCol });
+    }
+  } else {
+    weatherAlert.hidden = true;
+  }
+}
+
+const startDateEl = document.getElementById('start-date');
+const endDateEl = document.getElementById('end-date');
+
+if (window.flatpickr && window.flatpickr.l10ns && window.flatpickr.l10ns.vn) {
+  window.flatpickr.l10ns.vn.months.longhand = [
+    "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+    "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+  ];
+}
+
+const flatpickrConfig = {
+  dateFormat: "d/m/Y",
+  locale: "vn",
+  disableMobile: true,
+  onReady: function (selectedDates, dateStr, instance) {
+    const btnContainer = document.createElement("div");
+    btnContainer.className = "flatpickr-buttons";
+    btnContainer.innerHTML = `
+      <button type="button" class="btn-clear">Clear</button>
+      <button type="button" class="btn-today">Today</button>
+    `;
+    instance.calendarContainer.appendChild(btnContainer);
+
+    btnContainer.querySelector('.btn-clear').addEventListener('click', () => {
+      instance.clear();
+      instance.close();
+      checkWeatherAlert();
+    });
+    btnContainer.querySelector('.btn-today').addEventListener('click', () => {
+      instance.setDate(new Date());
+      instance.close();
+      checkWeatherAlert();
+    });
+
+    const numInputWrapper = instance.calendarContainer.querySelector('.numInputWrapper');
+    if (numInputWrapper) {
+      numInputWrapper.style.display = 'none';
+
+      const yearSelect = document.createElement("select");
+      yearSelect.className = "flatpickr-monthDropdown-months flatpickr-year-select";
+
+      const currentYear = new Date().getFullYear();
+      for (let i = currentYear - 5; i <= currentYear + 10; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.text = i;
+        yearSelect.appendChild(option);
+      }
+      yearSelect.value = instance.currentYear;
+
+      yearSelect.addEventListener("change", function (e) {
+        instance.currentYearElement.value = e.target.value;
+        instance.changeYear(e.target.value);
+      });
+
+      numInputWrapper.parentNode.insertBefore(yearSelect, numInputWrapper.nextSibling);
+    }
+  },
+  onYearChange: function (selectedDates, dateStr, instance) {
+    const yearSelect = instance.calendarContainer.querySelector('.flatpickr-year-select');
+    if (yearSelect) {
+      yearSelect.value = instance.currentYear;
+    }
+  },
+  onChange: function () {
+    checkWeatherAlert();
+  }
+};
+
+if (startDateEl) flatpickr(startDateEl, flatpickrConfig);
+if (endDateEl) flatpickr(endDateEl, flatpickrConfig);
 
 tagButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -217,31 +582,53 @@ tagButtons.forEach((btn) => {
     } else {
       state.selectedPrefs.push(tag);
     }
-    checkSmartDistanceAlert();
+    checkWeatherAlert();
   });
 });
 
 // Init tags and alert
-checkSmartDistanceAlert();
+checkWeatherAlert();
 
 // D. Generate Logic
 generateBtn.addEventListener("click", () => {
-  if (state.selectedPrefs.length === 0) return;
-  
+  if (!state.duration || !state.departure || !state.destination || !startDateEl.value || !endDateEl.value) {
+    alert("Vui lòng điền đầy đủ các thông tin: Ngày đến/đi, Số ngày, Điểm khởi hành và Điểm đến trước khi tạo lịch trình.");
+    return;
+  }
+  if (state.selectedPrefs.length === 0) {
+    alert("Vui lòng chọn ít nhất một sở thích trải nghiệm.");
+    return;
+  }
+
   generateBtn.disabled = true;
   generateBtn.innerHTML = `<i data-lucide="loader-circle" class="cta-icon spin"></i><span>Đang phân tích & tối ưu...</span>`;
   window.lucide.createIcons();
 
   setTimeout(() => {
     const prefClusters = state.selectedPrefs.map(p => PREFERENCES_MAP[p]);
-    const filtered = DESTINATIONS.filter(d => prefClusters.includes(d.cluster));
     
-    // Shuffle
-    const shuffled = [...filtered].sort(() => 0.5 - Math.random());
-    const itemCount = Math.min(Math.max(state.duration * 2, 3), 8);
-    const itinerary = shuffled.slice(0, itemCount);
+    // Extract exact province string if it contains districts
+    const provinceStr = state.destProvince || state.destination.split(',').pop().trim();
     
-    renderResult(itinerary);
+    // Try to match destination province, fallback to all if none matched
+    let localDests = ALL_DESTINATIONS.filter(d => d.province === provinceStr);
+    if (localDests.length === 0) localDests = ALL_DESTINATIONS;
+    
+    let filtered = localDests.filter(d => prefClusters.includes(d.cluster));
+    if (filtered.length === 0) filtered = localDests;
+    
+    // Generate itinerary grouped by day
+    state.generatedItinerary = {};
+    for (let day = 1; day <= state.duration; day++) {
+        const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+        const numItems = Math.floor(Math.random() * 3) + 2; // 2 to 4 items
+        state.generatedItinerary[day] = shuffled.slice(0, Math.min(numItems, shuffled.length));
+    }
+    
+    state.selectedWeek = 1;
+    state.selectedDay = 1;
+
+    renderResult();
 
     generateBtn.disabled = false;
     generateBtn.innerHTML = `<i data-lucide="sparkles" class="cta-icon"></i><span>Tạo Lịch Trình Ngay</span>`;
@@ -250,50 +637,133 @@ generateBtn.addEventListener("click", () => {
 });
 
 /* ============ 5. Render ============ */
-function renderResult(itinerary) {
+function renderResult() {
+  const totalDays = state.duration || 1;
   let html = `
-    <div class="result-header">
-      <h2>Lịch Trình Đề Xuất Của Bạn</h2>
-      <p>Dựa trên ${state.duration} ngày khởi hành từ ${state.departure}, hệ thống đã gợi ý các điểm đến lý tưởng nhất.</p>
+    <div class="result-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <h2 style="margin: 0;">Lịch Trình Đề Xuất</h2>
+      <button type="button" class="save-itinerary-btn" onclick="alert('Đã lưu lịch trình thành công!')">
+        <i data-lucide="bookmark" style="width:18px; height:18px;"></i> Lưu lịch trình
+      </button>
     </div>
-    <div class="destination-grid">
   `;
-  
-  itinerary.forEach(dest => {
+
+  // Week Selector (Only if >= 14 days)
+  if (totalDays >= 14) {
+    const totalWeeks = Math.ceil(totalDays / 7);
     html += `
-      <div class="destination-card">
-        <div class="dest-image-wrap">
-          <img src="${dest.image}" alt="${dest.name}">
-          <div class="dest-overlay"></div>
-          <div class="dest-tags">
-            ${dest.tags.map(t => `<span>${t}</span>`).join('')}
-          </div>
-          <h3 class="dest-title">${dest.name}</h3>
-        </div>
-        <div class="dest-body">
-          <div class="dest-meta">
-            <div><i data-lucide="clock" class="meta-icon"></i> ${dest.duration}</div>
-            <div><i data-lucide="map" class="meta-icon"></i> ${dest.cluster === 'Coastal' ? 'Bình Định' : 'Gia Lai'}</div>
-          </div>
-          <div class="dest-hours">
-            <h4>Giờ mở cửa</h4>
-            <p>${dest.hours}</p>
-          </div>
-          <div class="dest-tips">
-            <h4><i data-lucide="info" class="tips-icon"></i> Local Tips</h4>
-            <p>${dest.tips}</p>
-          </div>
+      <div class="timeline-panel" style="margin-top: 1.5rem;">
+        <h3>Tuần</h3>
+        <div class="timeline-scroll">
+    `;
+    for (let w = 1; w <= totalWeeks; w++) {
+      const isActive = (w === state.selectedWeek);
+      html += `<button type="button" class="week-btn ${isActive ? 'active' : ''}" data-week="${w}">Tuần ${w}</button>`;
+    }
+    html += `
         </div>
       </div>
     `;
-  });
+  }
+
+  // Day Selector
+  html += `
+    <div class="timeline-panel" style="margin-top: ${totalDays >= 14 ? '1rem' : '1.5rem'}; margin-bottom: 2rem;">
+      <h3>Ngày</h3>
+      <div class="timeline-scroll">
+  `;
   
+  let startDay = 1;
+  let endDay = totalDays;
+  if (totalDays >= 14) {
+    startDay = (state.selectedWeek - 1) * 7 + 1;
+    endDay = Math.min(state.selectedWeek * 7, totalDays);
+  }
+
+  for (let d = startDay; d <= endDay; d++) {
+    const isActive = (d === state.selectedDay);
+    html += `<button type="button" class="circle-btn has-data ${isActive ? 'active' : ''}" data-day="${d}">${d}</button>`;
+  }
+  
+  html += `
+      </div>
+    </div>
+  `;
+
+  // Destination Grid for Selected Day
+  const dayItinerary = state.generatedItinerary[state.selectedDay] || [];
+  
+  html += `<div class="destination-grid" style="opacity: 0; animation: fadeIn 0.3s forwards;">`;
+  if (dayItinerary.length === 0) {
+      html += `<div style="grid-column: 1/-1; text-align:center; padding:3rem; color:var(--slate-soft);">Chưa có hoạt động nào cho ngày này.</div>`;
+  } else {
+      dayItinerary.forEach(dest => {
+        html += `
+          <div class="destination-card">
+            <div class="dest-image-wrap">
+              <img src="${dest.image}" alt="${dest.name}">
+              <div class="dest-overlay"></div>
+              <div class="dest-tags">
+                ${dest.tags.map(t => `<span>${t}</span>`).join('')}
+              </div>
+              <h3 class="dest-title">${dest.name}</h3>
+            </div>
+            <div class="dest-body">
+              <div class="dest-meta">
+                <div><i data-lucide="clock" class="meta-icon"></i> ${dest.duration}</div>
+                <div><i data-lucide="map" class="meta-icon"></i> ${dest.province}</div>
+              </div>
+              <div class="dest-hours">
+                <h4>Giờ mở cửa</h4>
+                <p>${dest.hours}</p>
+              </div>
+              <div class="dest-tips">
+                <h4><i data-lucide="info" class="tips-icon"></i> Local Tips</h4>
+                <p>${dest.tips}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+  }
   html += `</div>`;
   
+  // Add simple fade animation
+  if (!document.getElementById('fade-anim-style')) {
+    const style = document.createElement('style');
+    style.id = 'fade-anim-style';
+    style.innerHTML = `@keyframes fadeIn { to { opacity: 1; } }`;
+    document.head.appendChild(style);
+  }
+
   resultSection.innerHTML = html;
   resultSection.hidden = false;
   window.lucide.createIcons();
-  resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  
+  if (!state.isRerendering) {
+    resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  state.isRerendering = false;
+
+  // Events for Week and Day buttons
+  const weekBtns = resultSection.querySelectorAll('.week-btn');
+  weekBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      state.selectedWeek = parseInt(e.target.getAttribute('data-week'));
+      state.selectedDay = (state.selectedWeek - 1) * 7 + 1; 
+      state.isRerendering = true;
+      renderResult();
+    });
+  });
+
+  const dayBtns = resultSection.querySelectorAll('.circle-btn');
+  dayBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      state.selectedDay = parseInt(e.target.getAttribute('data-day'));
+      state.isRerendering = true;
+      renderResult();
+    });
+  });
 }
 
 /* ============ 6. Khởi tạo ============ */

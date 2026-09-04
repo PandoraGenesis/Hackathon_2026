@@ -51,6 +51,10 @@ body.sh-app :focus-visible {
   outline-offset: 3px;
 }
 
+.sh-nav :focus-visible {
+  outline: none !important;
+}
+
 .sh-container {
   max-width: 1180px;
   margin-inline: auto;
