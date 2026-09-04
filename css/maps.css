@@ -36,10 +36,11 @@
   font-size: clamp(2.2rem, 5vw, 3.2rem);
   margin: 0 0 24px;
   letter-spacing: -0.02em;
-  color: var(--vnmap-ink);
+  color: var(--vn-primary-dark);
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   position: relative;
   display: inline-block;
-  padding-bottom: 16px;
+  padding-bottom: 12px;
 }
 
 .vnmap-title::after {

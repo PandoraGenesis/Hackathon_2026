@@ -84,6 +84,7 @@
   var boundaryLayer = null; // viền khu vực chi tiết ở cấp chi tiết
   var lastAction = null;    // hàm để gọi lại khi nhấn "Thử lại"
   var isFileProtocol = window.location.protocol === 'file:';
+  var userInteractedMap = false; // true khi người dùng đã tự kéo/zoom bằng tay
 
   var cache = {
     provinces: null,
@@ -242,6 +243,47 @@
     map.on('zoomend', updateLabelScale);
     map.on('zoomend moveend', positionIslandCards);
     mapInited = true;
+
+    // Từ lúc người dùng tự kéo/zoom bằng tay thì thôi, không tự canh lại
+    // khung nhìn nữa (xem ResizeObserver bên dưới) — tránh giật ngược bản
+    // đồ về giữa khi họ đang chủ động xem một góc khác.
+    ['mousedown', 'touchstart', 'wheel', 'dblclick'].forEach(function (evt) {
+      els.mapEl.addEventListener(evt, function () { userInteractedMap = true; }, { passive: true });
+    });
+
+    // Bù cho trường hợp Leaflet đo kích thước khung chứa NGAY LÚC khung đó
+    // chưa kịp hiện hết cỡ (vd. dữ liệu 34 tỉnh đã được prefetch sẵn lúc rê
+    // chuột vào tab Maps, nên lúc bấm vào, Promise trả về gần như tức thì —
+    // có khi nhanh hơn cả lúc panel Maps kịp hiện ra đủ to). fitBounds tính
+    // theo kích thước đo sai (nhỏ hơn thật) khiến bản đồ hiện nhỏ hơn khung
+    // rất nhiều ở lần vào đầu tiên. Theo dõi kích thước THẬT của khung chứa
+    // bản đồ bằng ResizeObserver, hễ đổi (và người dùng chưa tự thao tác)
+    // thì đo lại + canh lại khung nhìn cho khớp kích thước mới nhất.
+    if ('ResizeObserver' in window) {
+      var lastW = 0, lastH = 0;
+      var ro = new ResizeObserver(function () {
+        var w = els.mapEl.clientWidth, h = els.mapEl.clientHeight;
+        if (!w || !h || (w === lastW && h === lastH)) return;
+        lastW = w; lastH = h;
+        map.invalidateSize();
+        if (!userInteractedMap) refitCurrentView();
+      });
+      ro.observe(els.mapEl);
+    }
+  }
+
+  // Canh lại khung nhìn hiện tại theo đúng cấp đang xem — tách riêng để
+  // dùng chung cho lúc mới render (bước 1/2/3) VÀ lúc ResizeObserver ở
+  // trên phát hiện khung chứa đổi kích thước thật.
+  function refitCurrentView() {
+    if (!map) return;
+    if (state.level === 'country') {
+      map.fitBounds(MAINLAND_BOUNDS, COUNTRY_FIT_OPTIONS);
+    } else if (state.level === 'province' && activeLayer) {
+      map.fitBounds(activeLayer.getBounds(), { padding: [18, 18] });
+    } else if (state.level === 'ward' && boundaryLayer) {
+      map.fitBounds(boundaryLayer.getBounds(), { padding: [24, 24], maxZoom: 14 });
+    }
   }
 
   function clearLayers() {
@@ -274,32 +316,62 @@
     smallIslandLayer = group.addTo(map);
   }
 
-  // Canh 2 ô chú thích Hoàng Sa / Trường Sa: ở cấp Toàn quốc, ghim theo
-  // đúng vĩ độ thật của từng quần đảo (quy chiếu qua map.latLngToContainerPoint)
-  // để chúng nằm ngang tầm Đà Nẵng / Khánh Hòa, giống bố cục bản đồ tham
-  // chiếu, thay vì dồn chung 1 góc. Ở cấp tỉnh (chỉ 1 ô liên quan) thì
-  // ghim cố định góc dưới-phải cho đơn giản.
+  // Canh 2 ô chú thích Hoàng Sa / Trường Sa: ở cấp Toàn quốc, KHÔNG ghim
+  // cứng vào mép phải khung nữa — mà bám theo đúng vị trí bờ biển thật
+  // trên bản đồ, giống bố cục bản đồ tham chiếu. Nhờ phép chiếu Mercator
+  // của Leaflet (trục X chỉ phụ thuộc kinh độ, trục Y chỉ phụ thuộc vĩ độ,
+  // độc lập với nhau), lấy kinh độ ở rìa đông của MAINLAND_BOUNDS — coi
+  // như ngay sát bờ biển — để tính X dùng chung cho cả 2 ô, cộng thêm 1
+  // khoảng hở nhỏ ra phía biển; còn Y thì vẫn tính theo đúng vĩ độ thật
+  // của từng quần đảo như trước, để chúng nằm ngang tầm Đà Nẵng / Khánh
+  // Hòa. Cả 2 trục đều được tính lại mỗi khi zoom/kéo bản đồ (gọi từ sự
+  // kiện 'zoomend moveend' ở ensureMap), nên 2 ô tự trôi theo bờ biển
+  // thay vì dính cứng 1 chỗ; nếu bám sát bờ mà tràn ra ngoài khung thì
+  // mới lùi lại gần mép để không bị cắt hình.
+  // Ở cấp tỉnh (chỉ 1 ô liên quan) thì vẫn ghim cố định góc dưới-phải cho
+  // đơn giản. Trên layout gọn của điện thoại (xem @media trong maps.css)
+  // thì nhường hẳn việc canh vị trí cho CSS, chỉ xoá style inline cũ đi.
   function positionIslandCards() {
     if (!map || els.islands.hidden) return;
     var hsCard = els.islands.querySelector('[data-island="hoang-sa"]');
     var tsCard = els.islands.querySelector('[data-island="truong-sa"]');
-    var mapH = map.getSize().y;
-    var half = 40;
+    var isCompact = window.matchMedia('(max-width: 640px)').matches;
 
-    if (state.level === 'country') {
+    if (state.level === 'country' && !isCompact) {
+      var mapSize = map.getSize();
+      var half = 40;
+      var gap = 20;         // khoảng hở giữa bờ biển và ô, để không dính sát bờ
+      var edgeMargin = 8;   // không để ô tràn ra ngoài khung bản đồ
+      var coastLon = MAINLAND_BOUNDS[1][1]; // rìa đông đất liền — dùng chung cho cả 2 ô
+      var coastX = map.latLngToContainerPoint([0, coastLon]).x;
+
       [[hsCard, HOANG_SA_LAT], [tsCard, TRUONG_SA_LAT]].forEach(function (pair) {
         var card = pair[0];
         if (!card || card.hidden) return;
-        var y = map.latLngToContainerPoint([pair[1], 108]).y;
-        y = Math.max(half, Math.min(mapH - half, y));
+        var y = map.latLngToContainerPoint([pair[1], coastLon]).y;
+        y = Math.max(half, Math.min(mapSize.y - half, y));
+        var cardW = card.offsetWidth || 170;
+        var x = Math.max(edgeMargin, Math.min(mapSize.x - cardW - edgeMargin, coastX + gap));
         card.style.top = y + 'px';
         card.style.bottom = 'auto';
+        card.style.left = x + 'px';
+        card.style.right = 'auto';
+      });
+    } else if (state.level === 'country') {
+      [hsCard, tsCard].forEach(function (card) {
+        if (!card) return;
+        card.style.top = '';
+        card.style.bottom = '';
+        card.style.left = '';
+        card.style.right = '';
       });
     } else {
       [hsCard, tsCard].forEach(function (card) {
         if (!card) return;
         card.style.top = 'auto';
         card.style.bottom = '14px';
+        card.style.left = '';
+        card.style.right = '';
       });
     }
   }
@@ -322,6 +394,7 @@
     state.provinceName = null;
     state.wardCode = null;
     state.wardName = null;
+    userInteractedMap = false; // vào lại 1 khung nhìn mới — cho phép auto-fit lại
 
     setLoading(true, 'Đang tải bản đồ 34 tỉnh, thành phố…');
     hideInfo();
@@ -355,7 +428,7 @@
         }
       }).addTo(map);
 
-      map.fitBounds(MAINLAND_BOUNDS, COUNTRY_FIT_OPTIONS);
+      refitCurrentView();
       updateLabelScale();
       renderSmallIslandLabels();
       renderIslandInsets(results[1], null);
@@ -373,6 +446,7 @@
     state.provinceName = name;
     state.wardCode = null;
     state.wardName = null;
+    userInteractedMap = false; // vào lại 1 khung nhìn mới — cho phép auto-fit lại
 
     setLoading(true, 'Đang tải xã, phường của ' + name + '…');
     renderBreadcrumb();
@@ -429,7 +503,7 @@
         }
       }).addTo(map);
 
-      map.fitBounds(activeLayer.getBounds(), { padding: [18, 18] });
+      refitCurrentView();
       updateLabelScale();
 
       // Nếu tỉnh này có đặc khu hải đảo, hiện lại đúng 1 ô nhỏ tương ứng
@@ -452,6 +526,7 @@
     state.provinceName = provinceName;
     state.wardCode = code;
     state.wardName = name;
+    userInteractedMap = false; // vào lại 1 khung nhìn mới — cho phép auto-fit lại
 
     setLoading(true, 'Đang tải bản đồ chi tiết ' + name + '…');
     renderBreadcrumb();
@@ -486,7 +561,7 @@
             fillOpacity: 0.12
           }
         }).addTo(map);
-        map.fitBounds(boundaryLayer.getBounds(), { padding: [24, 24], maxZoom: 14 });
+        refitCurrentView();
       }
 
       showInfo(feature ? feature.properties : null, provinceName);

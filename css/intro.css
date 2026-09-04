@@ -23,8 +23,8 @@ body.sh-app {
   --vn-gold: #f59e0b;
   --vn-jade: #10b981;
   --vn-line: rgba(0, 0, 0, 0.08);
-  --vn-shadow: 0 8px 30px rgba(0,0,0,0.06);
-  --vn-shadow-hover: 0 20px 40px rgba(0,0,0,0.12);
+  --vn-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  --vn-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
   --font-display: "Be Vietnam Pro", sans-serif;
   --font-body: "Be Vietnam Pro", sans-serif;
 
@@ -127,6 +127,8 @@ body.sh-app :focus-visible {
 .sh-tab {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 106px;
   gap: 6px;
   white-space: nowrap;
   border: none;
@@ -135,7 +137,7 @@ body.sh-app :focus-visible {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.88rem;
-  padding: 9px 16px;
+  padding: 8px 0;
   border-radius: 999px;
   cursor: pointer;
   transition: color 0.2s ease, background-color 0.2s ease;
@@ -148,6 +150,104 @@ body.sh-app :focus-visible {
 .sh-tab[aria-selected="true"] {
   background: var(--vn-primary);
   color: #fff;
+}
+
+.sh-nav__actions {
+  display: flex;
+  align-items: center;
+}
+
+.sh-lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  margin-right: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-body);
+  font-size: 0.94rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.lang-btn.active {
+  color: #fff;
+}
+
+.lang-btn:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lang-divider {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.sh-auth {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.auth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 99px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.auth-login {
+  background: #cce8fc;
+  color: #0056b3;
+  width: 108px;
+}
+
+.auth-login:hover {
+  background: #b6defa;
+}
+
+.auth-login .auth-icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+html[lang="vi"] .auth-login .auth-icon,
+html[lang="vn"] .auth-login .auth-icon {
+  display: none;
+}
+
+.auth-signup {
+  background: #0099ff;
+  color: #ffffff;
+  width: 86px;
+}
+
+.auth-signup:hover {
+  background: #007acc;
 }
 
 .sh-tab__icon {
@@ -275,6 +375,8 @@ body.sh-app :focus-visible {
   border-radius: 12px;
   box-shadow: var(--vn-shadow);
   overflow: hidden;
+  width: max-content;
+  margin: 0 auto;
 }
 
 .ora-booking-item {
@@ -348,14 +450,17 @@ body.sh-app :focus-visible {
   .ora-booking-bar {
     flex-direction: column;
   }
+
   .ora-booking-divider {
     width: auto;
     height: 1px;
     margin: 0 24px;
   }
+
   .ora-booking-btn {
     padding: 24px;
   }
+
   .sh-hero__scroll {
     display: none;
   }
@@ -393,7 +498,7 @@ body.sh-app :focus-visible {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 4vw, 3rem);
   font-weight: 800;
-  color: var(--vn-ink);
+  color: var(--vn-primary-dark);
   margin: 0 0 16px;
   line-height: 1.2;
 }
@@ -420,8 +525,8 @@ body.sh-app :focus-visible {
 .ora-feature-icon {
   width: 64px;
   height: 64px;
-  background-color: #e6f0ff; /* light blue */
-  color: var(--vn-primary);
+  background-color: rgba(225, 29, 72, 0.08); /* light red */
+  color: var(--vn-coral);
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -455,6 +560,7 @@ body.sh-app :focus-visible {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 600px) {
   .ora-features {
     grid-template-columns: 1fr;
@@ -543,7 +649,7 @@ body.sh-app :focus-visible {
 .ora-bento-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%);
 }
 
 .ora-bento-content {
@@ -561,7 +667,7 @@ body.sh-app :focus-visible {
 
 .ora-bento-tag {
   display: inline-block;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
   padding: 4px 12px;
   border-radius: 20px;
@@ -586,7 +692,7 @@ body.sh-app :focus-visible {
 
 .ora-bento-desc {
   font-size: 0.95rem;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   margin: 12px 0 0;
   line-height: 1.5;
 }
@@ -596,14 +702,19 @@ body.sh-app :focus-visible {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 600px) {
   .ora-bento {
     grid-template-columns: 1fr;
     grid-auto-rows: 240px;
   }
-  .bento-large, .bento-wide, .bento-small {
+
+  .bento-large,
+  .bento-wide,
+  .bento-small {
     grid-column: span 1;
   }
+
   .bento-large {
     grid-row: span 2;
   }
@@ -644,7 +755,7 @@ body.sh-app :focus-visible {
 .ora-exp-content {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.1) 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -663,7 +774,7 @@ body.sh-app :focus-visible {
 .ora-exp-desc {
   font-size: 1rem;
   line-height: 1.5;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
 }
 
@@ -690,6 +801,7 @@ body.sh-app :focus-visible {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 600px) {
   .ora-experiences {
     grid-template-columns: 1fr;
@@ -820,11 +932,25 @@ body.sh-app :focus-visible {
   z-index: 1;
 }
 
-.badge-coral { background: var(--vn-coral); }
-.badge-gold { background: var(--vn-gold); }
-.badge-jade { background: var(--vn-jade); }
-.badge-purple { background: #8b5cf6; }
-.badge-red { background: #ef4444; }
+.badge-coral {
+  background: var(--vn-coral);
+}
+
+.badge-gold {
+  background: var(--vn-gold);
+}
+
+.badge-jade {
+  background: var(--vn-jade);
+}
+
+.badge-purple {
+  background: #8b5cf6;
+}
+
+.badge-red {
+  background: #ef4444;
+}
 
 .ora-tour-card__content {
   padding: 24px;
@@ -959,13 +1085,14 @@ body.sh-app :focus-visible {
 .ora-region-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top left, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%);
+  background: linear-gradient(to top left, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.1) 100%);
   z-index: 1;
   transition: opacity 0.3s ease;
 }
 
 .ora-region-intro:hover .ora-region-overlay {
-  opacity: 0.85; /* Sáng lên khi hover */
+  opacity: 0.85;
+  /* Sáng lên khi hover */
 }
 
 .ora-region-content {
@@ -986,7 +1113,8 @@ body.sh-app :focus-visible {
   font-weight: 800;
   margin-bottom: 12px;
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Thêm shadow để nổi bật trên nền ảnh */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  /* Thêm shadow để nổi bật trên nền ảnh */
 }
 
 .ora-intro-desc {
@@ -994,14 +1122,428 @@ body.sh-app :focus-visible {
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Thêm shadow để nổi bật trên nền ảnh */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  /* Thêm shadow để nổi bật trên nền ảnh */
 }
 
 @media (max-width: 640px) {
   .ora-region-intro {
     grid-column: span 1;
   }
+
   .ora-region-content {
     padding: 24px;
   }
+}
+
+/* ============================================================
+   ABOUT SECTION - SPLIT LAYOUT (BỐ CỤC 2 CỘT VỀ VNFINDER)
+   ============================================================ */
+
+.about-hero-section {
+  padding-top: 90px;
+  padding-bottom: 70px;
+  overflow: hidden;
+}
+
+.about-split-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .about-split-grid {
+    grid-template-columns: 1fr max-content;
+    gap: 40px;
+  }
+}
+
+/* --- Cột Trái: Nội Dung --- */
+.about-content {
+  text-align: left;
+}
+
+.about-title {
+  font-family: var(--font-display, 'Be Vietnam Pro', sans-serif);
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  color: var(--vn-primary-dark);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.about-subtitle {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  color: var(--vn-muted, #64748b);
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+.about-text p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #334155;
+  margin-bottom: 18px;
+  text-align: justify;
+}
+
+/* --- Chip / Tags --- */
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.about-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.about-chip svg {
+  width: 16px;
+  height: 16px;
+}
+
+.chip-jade {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+.chip-coral {
+  background-color: #ffedd5;
+  color: #9a3412;
+  border-color: #fed7aa;
+}
+
+.chip-blue {
+  background-color: #cffafe;
+  color: #155e75;
+  border-color: #67e8f9;
+}
+
+.chip-purple {
+  background-color: #e0e7ff;
+  color: #3730a3;
+  border-color: #c7d2fe;
+}
+
+/* --- Cột Phải: Smartphone Mockup & AI Graphics --- */
+.about-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  background: radial-gradient(circle at 68% 32%, rgba(186, 230, 253, 0.4) 0%, rgba(255, 255, 255, 0) 55%);
+}
+
+/* Bản đồ Việt Nam mờ phía sau có đủ Hoàng Sa, Trường Sa */
+.about-map-bg {
+  position: absolute;
+  top: -40px;
+  left: -30px; /* Đưa sang bên trái khối stage-container */
+  width: 480px;
+  height: 650px;
+  background: url('../assets/img/Bản đồ hình chữ S.jpg') no-repeat center / contain;
+  mix-blend-mode: multiply;
+  filter: grayscale(100%) opacity(0.15); /* Biến thành bóng xám mờ */
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+.network-lines {
+  position: absolute;
+  width: 100px; /* Khóa cứng chiều rộng SVG */
+  height: 100%;
+  left: 120px;
+  top: 0;
+}
+
+.net-node {
+  position: absolute;
+}
+
+.node-label {
+  position: absolute;
+  right: 16px;
+  top: -9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.node-dot {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.dot-cyan {
+  background: #38bdf8;
+  box-shadow: 0 0 20px 8px rgba(56, 189, 248, 0.4);
+}
+
+.dot-blue {
+  background: #3b82f6;
+  box-shadow: 0 0 20px 8px rgba(59, 130, 246, 0.4);
+}
+
+.dot-green {
+  background: #4ade80;
+  box-shadow: 0 0 20px 8px rgba(74, 222, 128, 0.4);
+}
+
+.node-top {
+  top: 100px;
+  left: 130px; /* 120 + 10 */
+}
+
+.node-mid {
+  top: 200px;
+  left: 120px; /* 120 + 0 */
+}
+
+.node-bot {
+  top: 300px;
+  left: 130px; /* 120 + 10 */
+}
+
+/* Sân đài chứa điện thoại & bệ đỡ */
+.stage-container {
+  position: relative;
+  display: flex;
+  flex-direction: row; /* Đặt cạnh nhau */
+  align-items: center;
+  justify-content: flex-end;
+  width: max-content; /* Lấy kích thước thật của nội dung (380px) */
+  z-index: 3;
+}
+
+.phone-and-podium {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.network-graph {
+  position: relative;
+  width: 220px; /* Dự phòng 120px cho nhãn text bên trái, 100px cho lưới SVG */
+  height: 400px;
+  margin-right: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Mockup Điện thoại */
+.phone-mockup {
+  position: relative;
+  width: 280px;
+  height: 540px;
+  background: #0f172a;
+  border-radius: 40px;
+  padding: 10px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  z-index: 2;
+}
+
+.phone-notch {
+  width: 80px;
+  height: 16px;
+  background: #0f172a;
+  border-radius: 10px;
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: #f8fafc;
+  border-radius: 32px;
+  overflow: hidden;
+  padding: 36px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Nội dung bên trong điện thoại */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+}
+
+.app-name {
+  font-family: var(--font-display, sans-serif);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #0f172a;
+}
+
+.app-user {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-user svg {
+  width: 16px;
+  height: 16px;
+  color: #64748b;
+}
+
+/* Khối "Lịch trình của: Minh Quân" */
+.schedule-header .sub-label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.schedule-header .main-user {
+  margin: 2px 0 6px 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.schedule-header .trip-desc {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* Danh sách địa điểm gợi ý */
+.app-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.app-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.app-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.app-card-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-red {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.icon-blue {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.icon-yellow {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.icon-green {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.icon-purple {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.app-card-details h5 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* Bệ đỡ 3D (Podium) */
+.podium-3d {
+  width: 230px;
+  height: 50px;
+  position: relative;
+  margin-top: -15px; /* Giữ một khoảng cách nhỏ ở dưới theo yêu cầu */
+  z-index: 1;
+}
+
+.podium-top {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 24px; /* Hình elip mặt trên */
+  background: #f8fafc;
+  border-radius: 50%;
+  box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+}
+
+.podium-body {
+  position: absolute;
+  top: 12px; /* Bắt đầu từ nửa phần top */
+  width: 100%;
+  height: 35px; /* Độ dày của bục */
+  background: linear-gradient(to right, #94a3b8, #e2e8f0, #94a3b8);
+  border-bottom-left-radius: 50% 12px;
+  border-bottom-right-radius: 50% 12px;
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15);
+  z-index: 1;
 }

@@ -36,17 +36,28 @@
       </div>
       <div class="sh-nav__tabs" role="tablist">
         <button type="button" class="sh-tab" data-panel="panel-home" aria-selected="true"><i data-lucide="home"
-            class="sh-tab__icon" aria-hidden="true"></i>Home</button>
+            class="sh-tab__icon" aria-hidden="true"></i>Trang chủ</button>
         <button type="button" class="sh-tab" data-panel="panel-about" aria-selected="false"><i data-lucide="info"
-            class="sh-tab__icon" aria-hidden="true"></i>About</button>
+            class="sh-tab__icon" aria-hidden="true"></i>Giới thiệu</button>
         <button type="button" class="sh-tab" data-panel="panel-maps" aria-selected="false"><i data-lucide="map"
-            class="sh-tab__icon" aria-hidden="true"></i>Maps</button>
+            class="sh-tab__icon" aria-hidden="true"></i>Bản đồ</button>
         <button type="button" class="sh-tab" data-panel="panel-lich-trinh" aria-selected="false"><i
-            data-lucide="calendar-days" class="sh-tab__icon" aria-hidden="true"></i>Itinerary</button>
+            data-lucide="calendar-days" class="sh-tab__icon" aria-hidden="true"></i>Lịch trình</button>
         <button type="button" class="sh-tab" data-panel="panel-guide" aria-selected="false"><i data-lucide="compass"
-            class="sh-tab__icon" aria-hidden="true"></i>Guide</button>
+            class="sh-tab__icon" aria-hidden="true"></i>Cẩm nang</button>
         <button type="button" class="sh-tab" data-panel="panel-checkin" aria-selected="false"><i data-lucide="map-pin"
             class="sh-tab__icon" aria-hidden="true"></i>Check-in</button>
+
+        <div class="sh-lang-switch">
+          <button type="button" class="lang-btn active">VN</button>
+          <span class="lang-divider">|</span>
+          <button type="button" class="lang-btn">EN</button>
+        </div>
+        <div class="sh-auth">
+          <button type="button" class="auth-btn auth-login">Đăng nhập <i data-lucide="log-in"
+              class="auth-icon"></i></button>
+          <button type="button" class="auth-btn auth-signup">Đăng ký</button>
+        </div>
       </div>
     </div>
   </nav>
@@ -100,7 +111,6 @@
               <span class="ora-booking-val">Sông nước &amp; biển đảo</span>
             </span>
           </a>
-          <button type="button" class="ora-booking-btn">Tìm Kiếm</button>
         </nav>
       </div>
 
@@ -359,173 +369,176 @@
             </div>
 
           </div>
+
+
+          <!-- 5. ĐIỂM ĐẾN NỔI BẬT (Bento Grid) -->
+          <div class="ora-section ora-bg-light">
+            <div class="sh-container">
+              <div class="ora-section-header text-center">
+                <h2 class="ora-section-title">Điểm đến nổi bật</h2>
+                <p class="ora-section-subtitle">Những địa danh không thể bỏ lỡ trong hành trình khám phá Việt Nam.</p>
+              </div>
+
+              <div class="ora-bento">
+                <!-- Item lớn (chiếm 2 cột, 2 hàng) -->
+                <div class="ora-bento-item bento-large">
+                  <img src="assets/img/Hồ Gươm.jpg" alt="Hà Nội" class="ora-bento-img"
+                    style="object-position: right center;">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Thủ đô</span>
+                    <h3 class="ora-bento-title">Hà Nội</h3>
+                    <p class="ora-bento-desc">Trái tim của đất nước, nơi lưu giữ những nét đẹp cổ kính ngàn năm văn hiến
+                      cùng nhịp sống hối hả.</p>
+                  </div>
+                </div>
+
+                <!-- Item vừa (chiếm 2 cột, 1 hàng) -->
+                <div class="ora-bento-item bento-wide">
+                  <img src="assets/img/Phố cổ Hội An.jpg" alt="Hội An" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Phố cổ</span>
+                    <h3 class="ora-bento-title">Hội An</h3>
+                    <p class="ora-bento-desc">Đô thị cổ hoài niệm bên dòng sông Hoài thơ mộng, rực rỡ ánh đèn lồng.</p>
+                  </div>
+                </div>
+
+                <!-- Các item nhỏ (chiếm 1 cột, 1 hàng) -->
+                <div class="ora-bento-item bento-small">
+                  <img src="assets/img/Vịnh Hạ Long.jpg" alt="Hạ Long" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Di sản</span>
+                    <h3 class="ora-bento-title">Hạ Long</h3>
+                    <p class="ora-bento-desc">Kỳ quan thiên nhiên thế giới với hàng ngàn hòn đảo đá vôi kỳ vĩ.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-small">
+                  <img src="assets/img/Chợ nổi Cần Thơ.jpg" alt="Cần Thơ" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Miền Tây</span>
+                    <h3 class="ora-bento-title">Cần Thơ</h3>
+                    <p class="ora-bento-desc">Trải nghiệm văn hóa chợ nổi sầm uất trên sông nước miền Tây.</p>
+                  </div>
+                </div>
+
+                <!-- Thêm điểm đến mới (hàng thứ 3) -->
+                <div class="ora-bento-item bento-wide">
+                  <img src="assets/img/Tay Son.jpg" alt="Bình Định" class="ora-bento-img"
+                    style="object-position: center;">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Đất Võ</span>
+                    <h3 class="ora-bento-title">Bình Định</h3>
+                    <p class="ora-bento-desc">Vùng đất võ trời văn, thiêng liêng với bề dày lịch sử và cảnh sắc vạn
+                      người
+                      mê.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-small">
+                  <img src="assets/img/bien-ho-hero.jpg" alt="Gia Lai" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Tây Nguyên</span>
+                    <h3 class="ora-bento-title">Gia Lai</h3>
+                    <p class="ora-bento-desc">Khám phá vẻ đẹp hoang sơ của Biển Hồ và những đồi chè bạt ngàn.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-small">
+                  <img src="assets/img/TP HCM.jpg" alt="TP HCM" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Siêu đô thị</span>
+                    <h3 class="ora-bento-title">TP. HCM</h3>
+                    <p class="ora-bento-desc">Siêu đô thị năng động, sầm uất bậc nhất với nhịp sống không bao giờ ngủ.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5.5. DI SẢN VĂN HÓA -->
+          <div class="ora-section">
+            <div class="sh-container">
+              <div class="ora-section-header text-center">
+                <h2 class="ora-section-title">Di sản văn hóa</h2>
+                <p class="ora-section-subtitle">Tự hào với những giá trị văn hóa phi vật thể và truyền thống lâu đời
+                  được
+                  thế giới công nhận.</p>
+              </div>
+
+              <div class="ora-bento">
+                <div class="ora-bento-item bento-large">
+                  <img src="assets/img/Hue.jpg" alt="Nhã nhạc cung đình Huế" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Âm nhạc</span>
+                    <h3 class="ora-bento-title">Nhã nhạc cung đình Huế</h3>
+                    <p class="ora-bento-desc">Âm nhạc cung đình tao nhã, bác học thời phong kiến.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-wide">
+                  <img src="assets/img/quan_ho.jpg" alt="Dân ca Quan họ Bắc Ninh" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Dân ca</span>
+                    <h3 class="ora-bento-title">Dân ca Quan họ</h3>
+                    <p class="ora-bento-desc">Những làn điệu giao duyên mượt mà đằm thắm của liền anh, liền chị.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-small">
+                  <img src="assets/img/don_ca.jpg" alt="Đờn ca tài tử Nam Bộ" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Nghệ thuật</span>
+                    <h3 class="ora-bento-title">Đờn ca tài tử</h3>
+                    <p class="ora-bento-desc">Nghệ thuật đàn ca mộc mạc, phóng khoáng của người dân miệt vườn.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-small">
+                  <img src="assets/img/dong_ho.jpg" alt="Tranh dân gian Đông Hồ" class="ora-bento-img">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Tranh gỗ</span>
+                    <h3 class="ora-bento-title">Tranh Đông Hồ</h3>
+                    <p class="ora-bento-desc">Dòng tranh mộc mạc khắc gỗ, phản ánh chân thực đời sống sinh hoạt.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-wide">
+                  <img src="assets/img/Cồng chiêng.jpg" alt="Cồng chiêng Tây Nguyên" class="ora-bento-img"
+                    style="object-position: center;">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Không gian</span>
+                    <h3 class="ora-bento-title">Cồng chiêng Tây Nguyên</h3>
+                    <p class="ora-bento-desc">Âm vang đại ngàn linh thiêng, nhịp đập kết nối cộng đồng các dân tộc.</p>
+                  </div>
+                </div>
+
+                <div class="ora-bento-item bento-wide">
+                  <img src="assets/img/ca_tru.jpg" alt="Hát Ca trù" class="ora-bento-img"
+                    style="object-position: top center;">
+                  <div class="ora-bento-overlay"></div>
+                  <div class="ora-bento-content">
+                    <span class="ora-bento-tag">Thính phòng</span>
+                    <h3 class="ora-bento-title">Hát Ca trù</h3>
+                    <p class="ora-bento-desc">Nghệ thuật diễn xướng thính phòng độc đáo, tinh hoa âm nhạc Bắc Bộ.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- 5. ĐIỂM ĐẾN NỔI BẬT (Bento Grid) -->
-      <div class="ora-section ora-bg-light">
-        <div class="sh-container">
-          <div class="ora-section-header text-center">
-            <h2 class="ora-section-title">Điểm đến nổi bật</h2>
-            <p class="ora-section-subtitle">Những địa danh không thể bỏ lỡ trong hành trình khám phá Việt Nam.</p>
-          </div>
-
-          <div class="ora-bento">
-            <!-- Item lớn (chiếm 2 cột, 2 hàng) -->
-            <div class="ora-bento-item bento-large">
-              <img src="assets/img/Hồ Gươm.jpg" alt="Hà Nội" class="ora-bento-img"
-                style="object-position: right center;">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Thủ đô</span>
-                <h3 class="ora-bento-title">Hà Nội</h3>
-                <p class="ora-bento-desc">Trái tim của đất nước, nơi lưu giữ những nét đẹp cổ kính ngàn năm văn hiến
-                  cùng nhịp sống hối hả.</p>
-              </div>
-            </div>
-
-            <!-- Item vừa (chiếm 2 cột, 1 hàng) -->
-            <div class="ora-bento-item bento-wide">
-              <img src="assets/img/Phố cổ Hội An.jpg" alt="Hội An" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Phố cổ</span>
-                <h3 class="ora-bento-title">Hội An</h3>
-                <p class="ora-bento-desc">Đô thị cổ hoài niệm bên dòng sông Hoài thơ mộng, rực rỡ ánh đèn lồng.</p>
-              </div>
-            </div>
-
-            <!-- Các item nhỏ (chiếm 1 cột, 1 hàng) -->
-            <div class="ora-bento-item bento-small">
-              <img src="assets/img/Vịnh Hạ Long.jpg" alt="Hạ Long" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Di sản</span>
-                <h3 class="ora-bento-title">Hạ Long</h3>
-                <p class="ora-bento-desc">Kỳ quan thiên nhiên thế giới với hàng ngàn hòn đảo đá vôi kỳ vĩ.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-small">
-              <img src="assets/img/Chợ nổi Cần Thơ.jpg" alt="Cần Thơ" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Miền Tây</span>
-                <h3 class="ora-bento-title">Cần Thơ</h3>
-                <p class="ora-bento-desc">Trải nghiệm văn hóa chợ nổi sầm uất trên sông nước miền Tây.</p>
-              </div>
-            </div>
-
-            <!-- Thêm điểm đến mới (hàng thứ 3) -->
-            <div class="ora-bento-item bento-wide">
-              <img src="assets/img/Tay Son.jpg" alt="Bình Định" class="ora-bento-img" style="object-position: center;">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Đất Võ</span>
-                <h3 class="ora-bento-title">Bình Định</h3>
-                <p class="ora-bento-desc">Vùng đất võ trời văn, thiêng liêng với bề dày lịch sử và cảnh sắc vạn người
-                  mê.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-small">
-              <img src="assets/img/bien-ho-hero.jpg" alt="Gia Lai" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Tây Nguyên</span>
-                <h3 class="ora-bento-title">Gia Lai</h3>
-                <p class="ora-bento-desc">Khám phá vẻ đẹp hoang sơ của Biển Hồ và những đồi chè bạt ngàn.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-small">
-              <img src="assets/img/TP HCM.jpg" alt="TP HCM" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Siêu đô thị</span>
-                <h3 class="ora-bento-title">TP. HCM</h3>
-                <p class="ora-bento-desc">Siêu đô thị năng động, sầm uất bậc nhất với nhịp sống không bao giờ ngủ.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5.5. DI SẢN VĂN HÓA -->
-      <div class="ora-section">
-        <div class="sh-container">
-          <div class="ora-section-header text-center">
-            <h2 class="ora-section-title">Di sản văn hóa</h2>
-            <p class="ora-section-subtitle">Tự hào với những giá trị văn hóa phi vật thể và truyền thống lâu đời được
-              thế giới công nhận.</p>
-          </div>
-
-          <div class="ora-bento">
-            <div class="ora-bento-item bento-large">
-              <img src="assets/img/Hue.jpg" alt="Nhã nhạc cung đình Huế" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Âm nhạc</span>
-                <h3 class="ora-bento-title">Nhã nhạc cung đình Huế</h3>
-                <p class="ora-bento-desc">Âm nhạc cung đình tao nhã, bác học thời phong kiến.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-wide">
-              <img src="assets/img/quan_ho.jpg" alt="Dân ca Quan họ Bắc Ninh" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Dân ca</span>
-                <h3 class="ora-bento-title">Dân ca Quan họ</h3>
-                <p class="ora-bento-desc">Những làn điệu giao duyên mượt mà đằm thắm của liền anh, liền chị.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-small">
-              <img src="assets/img/don_ca.jpg" alt="Đờn ca tài tử Nam Bộ" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Nghệ thuật</span>
-                <h3 class="ora-bento-title">Đờn ca tài tử</h3>
-                <p class="ora-bento-desc">Nghệ thuật đàn ca mộc mạc, phóng khoáng của người dân miệt vườn.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-small">
-              <img src="assets/img/dong_ho.jpg" alt="Tranh dân gian Đông Hồ" class="ora-bento-img">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Tranh gỗ</span>
-                <h3 class="ora-bento-title">Tranh Đông Hồ</h3>
-                <p class="ora-bento-desc">Dòng tranh mộc mạc khắc gỗ, phản ánh chân thực đời sống sinh hoạt.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-wide">
-              <img src="assets/img/Cồng chiêng.jpg" alt="Cồng chiêng Tây Nguyên" class="ora-bento-img"
-                style="object-position: center;">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Không gian</span>
-                <h3 class="ora-bento-title">Cồng chiêng Tây Nguyên</h3>
-                <p class="ora-bento-desc">Âm vang đại ngàn linh thiêng, nhịp đập kết nối cộng đồng các dân tộc.</p>
-              </div>
-            </div>
-
-            <div class="ora-bento-item bento-wide">
-              <img src="assets/img/ca_tru.jpg" alt="Hát Ca trù" class="ora-bento-img"
-                style="object-position: top center;">
-              <div class="ora-bento-overlay"></div>
-              <div class="ora-bento-content">
-                <span class="ora-bento-tag">Thính phòng</span>
-                <h3 class="ora-bento-title">Hát Ca trù</h3>
-                <p class="ora-bento-desc">Nghệ thuật diễn xướng thính phòng độc đáo, tinh hoa âm nhạc Bắc Bộ.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div>
       </div>
 
       <!-- 6. TRẢI NGHIỆM TIÊU BIỂU -->
@@ -538,8 +551,7 @@
 
           <div class="ora-bento">
             <div class="ora-bento-item bento-large">
-              <img src="assets/img/Áo dài truyền thống.jpg" alt="Văn hóa dân gian" class="ora-bento-img"
-                style="object-position: top center;">
+              <img src="assets/img/Áo dài truyền thống.jpg" alt="Văn hóa dân gian" class="ora-bento-img">
               <div class="ora-bento-overlay"></div>
               <div class="ora-bento-content">
                 <span class="ora-bento-tag">Văn hóa</span>
@@ -803,7 +815,349 @@
     <!-- ============================================================
          4. ABOUT — để trống
          ============================================================ -->
-    <section id="panel-about" class="sh-panel" hidden></section>
+    <section id="panel-about" class="sh-panel" hidden>
+
+      <!-- 1. Hero Intro (Bố cục 2 cột Split Layout) -->
+      <div class="ora-section ora-bg-light about-hero-section">
+        <div class="sh-container">
+          <div class="about-split-grid">
+
+            <!-- Cột trái: Nội dung văn bản & Tags -->
+            <div class="about-content">
+              <h1 class="about-title">Về VNFinder</h1>
+              <p class="about-subtitle">Người bạn đồng hành thông minh</p>
+
+              <div class="about-text">
+                <p>
+                  <strong>VNFinder</strong> là một trợ lý AI do nhóm chúng tôi phát triển, với mục tiêu cá nhân hóa trải
+                  nghiệm khám phá Việt Nam cho từng du khách. Thay vì đưa ra một lịch trình dựng sẵn giống nhau cho tất
+                  cả mọi người, VNFinder cố gắng hiểu người dùng đang tìm gì và thích gì, để từ đó gợi ý một hành trình
+                  mang dấu ấn cá nhân.
+                </p>
+                <p>
+                  Dù bạn thích những cung đường phượt ở Tây Bắc, quan tâm đến di sản văn hóa miền Trung, hay chỉ muốn
+                  nghỉ dưỡng ở miệt vườn sông nước, VNFinder đều có gợi ý phù hợp. Mỗi kiểu du khách sẽ nhận được một
+                  hướng gợi ý khác nhau, xuất phát từ chính sở thích họ thể hiện, chứ không phải một danh sách địa điểm
+                  chung chung áp dụng cho mọi người.
+                </p>
+              </div>
+
+              <!-- Các thẻ Tag / Chip sở thích -->
+              <div class="about-tags">
+                <span class="about-chip chip-jade">
+                  ⛰️ #Phượt_Tây_Bắc
+                </span>
+                <span class="about-chip chip-coral">
+                  ⛩️ #Di_sản_Văn_Hóa_Miền_Trung
+                </span>
+                <span class="about-chip chip-blue">
+                  🛶 #Miệt_vườn_Sông_nước
+                </span>
+                <span class="about-chip chip-purple">
+                  🤖 #Cá_nhân_hóa
+                </span>
+              </div>
+            </div>
+
+            <!-- Cột phải: Mockup điện thoại & Mạng lưới AI -->
+            <div class="about-visual">
+              <div class="stage-container">
+                <!-- Nền bản đồ bóng xám (chứa Hoàng Sa, Trường Sa) -->
+                <div class="about-map-bg" aria-hidden="true"></div>
+                <!-- Mạng lưới nút AI (AI Network Nodes) -->
+                <div class="network-graph">
+                  <svg class="network-lines" width="100%" height="100%">
+                    <!-- Top to phone -->
+                    <line x1="10" y1="100" x2="100" y2="150" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+                    <!-- Mid to phone -->
+                    <line x1="0" y1="200" x2="100" y2="200" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+                    <!-- Bot to phone -->
+                    <line x1="10" y1="300" x2="100" y2="250" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+                    <!-- Top to Mid -->
+                    <line x1="10" y1="100" x2="0" y2="200" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+                    <!-- Mid to Bot -->
+                    <line x1="0" y1="200" x2="10" y2="300" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+                  </svg>
+
+                  <div class="net-node node-top">
+                    <span class="node-label">Sở thích</span>
+                    <span class="node-dot dot-cyan"></span>
+                  </div>
+                  <div class="net-node node-mid">
+                    <span class="node-label">Dữ liệu người dùng</span>
+                    <span class="node-dot dot-blue"></span>
+                  </div>
+                  <div class="net-node node-bot">
+                    <span class="node-label">Điểm đánh giá</span>
+                    <span class="node-dot dot-green"></span>
+                  </div>
+                </div>
+
+                <div class="phone-and-podium">
+                  <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+
+                      <!-- Header ứng dụng trong điện thoại -->
+                      <div class="app-header">
+                        <div class="app-brand">
+                          <img src="assets/img/logo.png" alt="VNFinder" class="app-logo">
+                          <span class="app-name">VNFINDER</span>
+                        </div>
+
+                        <div class="app-user">
+                          <i data-lucide="user"></i>
+                        </div>
+                      </div>
+
+                      <!-- Thông tin lịch trình người dùng -->
+                      <div class="schedule-header">
+                        <p class="sub-label">Lịch trình của:</p>
+                        <h3 class="main-user">Pandora</h3>
+                        <p class="trip-desc">Phượt Sapa 3 Ngày - Sở thích:<br>Khám phá, Văn hóa</p>
+                      </div>
+
+                      <!-- Danh sách địa điểm gợi ý -->
+                      <div class="app-cards">
+                        <div class="app-card">
+                          <div class="app-card-icon icon-red" style="font-size: 1.2rem;">🚠</div>
+                          <div class="app-card-details">
+                            <h5>Fansipan Legend</h5>
+                          </div>
+                        </div>
+
+                        <div class="app-card">
+                          <div class="app-card-icon icon-blue" style="font-size: 1.2rem;">🏞️</div>
+                          <div class="app-card-details">
+                            <h5>Thác Bạc</h5>
+                          </div>
+                        </div>
+
+                        <div class="app-card">
+                          <div class="app-card-icon icon-yellow" style="font-size: 1.2rem;">🏡</div>
+                          <div class="app-card-details">
+                            <h5>Bản Cát Cát</h5>
+                          </div>
+                        </div>
+
+                        <div class="app-card">
+                          <div class="app-card-icon icon-green" style="font-size: 1.2rem;">🌄</div>
+                          <div class="app-card-details">
+                            <h5>Đèo Ô Quy Hồ</h5>
+                          </div>
+                        </div>
+
+                        <div class="app-card">
+                          <div class="app-card-icon icon-purple" style="font-size: 1.2rem;">⛰️</div>
+                          <div class="app-card-details">
+                            <h5>Núi Hàm Rồng</h5>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- Bệ đỡ 3D (Podium) -->
+                  <div class="podium-3d">
+                    <div class="podium-top"></div>
+                    <div class="podium-body"></div>
+                  </div>
+                </div> <!-- End .phone-and-podium -->
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Our Story (Centered Premium Card) -->
+      <div class="ora-section">
+        <div class="sh-container">
+          <div
+            style="max-width: 900px; margin: 0 auto; background: var(--vn-surface); border-radius: 32px; padding: 60px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; position: relative; overflow: hidden; border: 1px solid var(--vn-line);">
+
+            <img src="assets/img/logo.png" alt="Logo"
+              style="width: 80px; height: 80px; margin-bottom: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+
+            <h2 class="ora-section-title" style="font-size: 2.2rem; margin-bottom: 24px;">Khởi nguồn từ đam mê chuyển
+              đổi
+            </h2>
+            <p
+              style="font-size: 1.15rem; line-height: 1.8; color: var(--vn-muted); margin-bottom: 20px; text-align: justify;">
+              Dự án VNFinder ra đời từ cuộc thi Gia Lai Youth HackAIthon 2026, khi nhóm chúng tôi để ý một vấn đề khá
+              quen thuộc với người đi du lịch: lên lịch trình sao cho hợp lý, và tìm được thông tin văn hóa mang tính
+              địa phương thay vì những nội dung chung chung có thể thấy ở bất kỳ đâu. Nhiều ứng dụng lập lịch trình hiện
+              nay thường tiếp cận theo hướng rộng, bao quát nhiều địa điểm nhưng lại thiếu chiều sâu về văn hóa vùng
+              miền. Từ đó, chúng tôi quyết định ứng dụng Trí tuệ nhân tạo (AI) để giải quyết đúng khoảng trống này, tập
+              trung vào yếu tố địa phương thay vì cố phủ rộng như các sản phẩm khác.
+            </p>
+
+            <p style="font-size: 1.15rem; line-height: 1.8; color: var(--vn-muted); text-align: justify;">
+              Chúng tôi muốn xây dựng một nền tảng không chỉ liệt kê thông tin có sẵn, mà còn "hiểu" người dùng đang tìm
+              gì, thích gì, từ đó gợi ý những hành trình mang dấu ấn cá nhân thay vì một lịch trình dựng sẵn giống nhau
+              cho tất cả mọi người. Mục tiêu cuối cùng là giúp những người thích khám phá tìm đến được vẻ đẹp thật của
+              quê hương, những điều mà một bảng xếp hạng địa điểm nổi tiếng thường bỏ sót.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Core Values (Bento Grid) -->
+      <div class="ora-section ora-bg-light">
+        <div class="sh-container">
+          <div class="ora-section-header text-center">
+            <h2 class="ora-section-title">Giá trị cốt lõi</h2>
+            <p class="ora-section-subtitle">4 trụ cột làm nên sự khác biệt của hệ sinh thái VNFinder</p>
+          </div>
+
+          <div class="ora-bento">
+            <!-- Bản đồ -->
+            <div class="ora-bento-item bento-large">
+              <img src="assets/img/Bản đồ hình chữ S.jpg" alt="Bản đồ" class="ora-bento-img"
+                style="object-position: right center;">
+              <div class="ora-bento-overlay"></div>
+              <div class="ora-bento-content">
+                <span class="ora-bento-tag">Trực quan</span>
+                <h3 class="ora-bento-title">Bản đồ đa lớp</h3>
+                <p class="ora-bento-desc">Khám phá Việt Nam trực quan qua bản đồ 3 cấp độ. Mọi địa danh, di sản hay danh
+                  thắng đều nằm trong tầm tay bạn.</p>
+              </div>
+            </div>
+
+            <!-- AI -->
+            <div class="ora-bento-item bento-wide">
+              <img src="assets/img/Lịch trình.jpg" alt="AI" class="ora-bento-img"
+                style="object-position: center bottom;">
+              <div class="ora-bento-overlay"></div>
+              <div class="ora-bento-content">
+                <span class="ora-bento-tag">Thông minh</span>
+                <h3 class="ora-bento-title">Lên lịch trình AI</h3>
+                <p class="ora-bento-desc">Xóa bỏ nỗi lo lập kế hoạch. Chỉ cần nhập sở thích, AI sẽ tự động thiết kế một
+                  chuyến đi tối ưu siêu tốc.</p>
+              </div>
+            </div>
+
+            <!-- Văn hóa -->
+            <div class="ora-bento-item bento-small">
+              <img src="assets/img/Di sản.jpg" alt="Di sản" class="ora-bento-img" style="object-position: center 20%;">
+              <div class="ora-bento-overlay"></div>
+              <div class="ora-bento-content">
+                <span class="ora-bento-tag">Nguyên bản</span>
+                <h3 class="ora-bento-title">Văn hóa</h3>
+                <p class="ora-bento-desc">Di sản phi vật thể và ẩm thực.</p>
+              </div>
+            </div>
+
+            <!-- Cộng đồng -->
+            <div class="ora-bento-item bento-small">
+              <img src="assets/img/Chợ nổi Cần Thơ.jpg" alt="Cộng đồng" class="ora-bento-img"
+                style="object-position: center;">
+              <div class="ora-bento-overlay"></div>
+              <div class="ora-bento-content">
+                <span class="ora-bento-tag">Kết nối</span>
+                <h3 class="ora-bento-title">Cộng đồng</h3>
+                <p class="ora-bento-desc">Lưu giữ kỷ niệm & chia sẻ cẩm nang.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Why Choose Us? -->
+      <div class="ora-section">
+        <div class="sh-container">
+          <div class="ora-section-header text-center">
+            <h2 class="ora-section-title">Vì sao chọn VNFinder?</h2>
+          </div>
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-top: 50px;">
+
+            <div
+              style="text-align: center; padding: 40px 30px; background: var(--vn-surface); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--vn-line);">
+              <i data-lucide="target"
+                style="width: 48px; height: 48px; color: var(--vn-coral); display: block; margin: 0 auto 20px;"></i>
+              <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 16px;">Cá nhân hóa tối đa
+              </h3>
+              <p style="color: var(--vn-muted); line-height: 1.6;">Mọi đề xuất đều được AI tinh chỉnh chuẩn xác dựa trên
+                gu du lịch, độ tuổi và ngân sách riêng của bạn.</p>
+            </div>
+
+            <div
+              style="text-align: center; padding: 40px 30px; background: var(--vn-surface); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--vn-line);">
+              <i data-lucide="zap"
+                style="width: 48px; height: 48px; color: var(--vn-coral); display: block; margin: 0 auto 20px;"></i>
+              <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 16px;">Tiết kiệm thời gian
+              </h3>
+              <p style="color: var(--vn-muted); line-height: 1.6;">Lên lịch trình chi tiết 5 ngày 4 đêm, tìm quán ăn,
+                điểm tham quan chỉ trong vòng chưa đầy 10 giây.</p>
+            </div>
+
+            <div
+              style="text-align: center; padding: 40px 30px; background: var(--vn-surface); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--vn-line);">
+              <i data-lucide="database"
+                style="width: 48px; height: 48px; color: var(--vn-coral); display: block; margin: 0 auto 20px;"></i>
+              <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 16px;">Dữ liệu bản địa</h3>
+              <p style="color: var(--vn-muted); line-height: 1.6;">Tích hợp nguồn dữ liệu sâu rộng, bao quát cả những
+                điểm đến "ẩn mình" ít người biết tới.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Vision & Mission (Redesigned as light elegant cards) -->
+      <div class="ora-section ora-bg-light">
+        <div class="sh-container">
+
+          <!-- KHỐI TỰA ĐỀ MỚI THÊM -->
+          <div class="ora-section-header text-center">
+            <h2 class="ora-section-title">Sứ mệnh &amp; Tầm nhìn</h2>
+            <p class="ora-section-subtitle">Kim chỉ nam đưa VNFinder trở thành người bạn
+            <p>đồng hành tin cậy trên mọi hành
+              trình</p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px;">
+            <!-- Sứ mệnh -->
+            <div
+              style="background: var(--vn-surface); padding: 50px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid var(--vn-line);">
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <div
+                  style="width: 50px; height: 50px; border-radius: 50%; background: rgba(193, 55, 58, 0.1); display: flex; align-items: center; justify-content: center;">
+                  <i data-lucide="flag" style="color: var(--vn-coral); width: 24px; height: 24px;"></i>
+                </div>
+                <h2 style="font-family: var(--font-display); font-size: 2rem; margin: 0; color: var(--vn-ink);">Sứ mệnh
+                </h2>
+              </div>
+              <p style="font-size: 1.15rem; line-height: 1.8; color: var(--vn-muted);">Xóa bỏ rào cản thông tin và ngôn
+                ngữ, kết nối du khách với những trải nghiệm du lịch chân thực và ý nghĩa nhất tại Việt Nam. VNFinder nỗ
+                lực đưa du lịch không chỉ là đi để thấy, mà là đi để hiểu và yêu thương.</p>
+            </div>
+
+            <!-- Tầm nhìn -->
+            <div
+              style="background: var(--vn-surface); padding: 50px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid var(--vn-line);">
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <div
+                  style="width: 50px; height: 50px; border-radius: 50%; background: rgba(193, 55, 58, 0.1); display: flex; align-items: center; justify-content: center;">
+                  <i data-lucide="eye" style="color: var(--vn-coral); width: 24px; height: 24px;"></i>
+                </div>
+                <h2 style="font-family: var(--font-display); font-size: 2rem; margin: 0; color: var(--vn-ink);">Tầm nhìn
+                </h2>
+              </div>
+              <p style="font-size: 1.15rem; line-height: 1.8; color: var(--vn-muted);">Định hình lại cách người trẻ đi
+                du lịch bằng công nghệ. Trở thành hệ sinh thái du lịch thông minh và thân thiện nhất, góp phần đưa hình
+                ảnh thiên nhiên và con người Việt Nam vươn xa trên bản đồ du lịch số toàn cầu.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+    </section>
 
     <!-- ============================================================
          5. GUIDE — để trống
@@ -824,6 +1178,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="js/script.js?v=1" defer></script>
   <script src="js/nav.js?v=1" defer></script>
+  <script src="js/i18n.js?v=1" defer></script>
   <!-- Leaflet + maps.js: phải nạp sau nav.js theo thứ tự này để js/maps.js
        tự gắn sự kiện vào tab Maps khi DOM đã có nav -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

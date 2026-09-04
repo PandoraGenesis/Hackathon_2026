@@ -28,7 +28,7 @@
 
   tabs.forEach(function (tab) {
     tab.addEventListener('click', function () {
-      activate(tab.dataset.panel, true);
+      activate(tab.dataset.panel, false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
