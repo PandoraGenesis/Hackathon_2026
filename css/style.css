@@ -12,6 +12,9 @@
   --accent: #C62828;
   --accent-soft: #FDEAEA;
 
+  --success: #16A34A;
+  --success-soft: #E8F7EE;
+
   --warn: #E65100;
   --warn-bg: #FFF3E0;
 
@@ -438,12 +441,14 @@ svg {
 .tag-group {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 0.5rem;
   margin-top: 0.85rem;
 }
 
 .tag {
+  flex: 1 0 auto;
+  text-align: center;
   border: 2px solid var(--border);
   border-radius: 12px;
   background: #ffffff;
@@ -586,6 +591,119 @@ svg {
   color: var(--slate-soft);
   max-width: 600px;
   margin: 0 auto;
+}
+
+/* --- Nút Lưu lịch trình --- */
+.save-itinerary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.save-itinerary-btn:hover {
+  border-color: var(--success);
+  color: var(--success);
+  background: var(--success-soft);
+}
+
+/* --- Bộ chọn Tuần / Ngày --- */
+.timeline-panel h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.85rem;
+}
+
+.timeline-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.week-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--slate);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.week-btn:hover {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.week-btn.active {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.circle-btn {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--slate-soft);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.circle-btn:hover {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.circle-btn.active {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.timeline-box {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+}
+
+.timeline-box h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  text-align: left;
+}
+
+.timeline-scroll.center-scroll {
+  justify-content: center;
 }
 
 .destination-grid {

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const trigger = document.getElementById('departure-trigger');
   const dropdown = document.getElementById('departure-dropdown');
   const textDisplay = document.getElementById('departure-text');
-  
+
   if (!trigger || !dropdown) return;
 
   // DOM Structure for the 2-level picker
@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderAZ() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     let html = letters.map(l => `<button type="button" class="az-btn" data-letter="${l}">${l}</button>`).join('');
-    html += `<div id="loc-az-bubble" class="loc-az-bubble"></div>`;
     azEl.innerHTML = html;
   }
 
@@ -55,31 +54,30 @@ document.addEventListener('DOMContentLoaded', () => {
   let isDraggingAZ = false;
 
   function handleAZMove(e) {
-    if (e.type === 'touchmove' && e.cancelable) e.preventDefault(); // prevent native scroll
-
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const target = document.elementFromPoint(clientX, clientY);
-    
+
     if (target && target.classList.contains('az-btn')) {
       const letter = target.getAttribute('data-letter');
-      
+
       // Update Bubble
       const bubble = document.getElementById('loc-az-bubble');
       if (bubble) {
         bubble.textContent = letter;
-        // Position relative to azEl
+        // Position fixed relative to viewport
         const targetRect = target.getBoundingClientRect();
-        const azRect = azEl.getBoundingClientRect();
-        const topPos = targetRect.top - azRect.top + targetRect.height / 2;
+        const topPos = targetRect.top + targetRect.height / 2;
+        bubble.style.position = 'fixed';
         bubble.style.top = `${topPos}px`;
+        bubble.style.left = `${targetRect.left - 60}px`;
         bubble.classList.add('show');
       }
 
       if (isDraggingAZ || e.type === 'touchmove' || e.type === 'pointerdown') {
         const groupTarget = listEl.querySelector(`[data-group="${letter}"]`);
         if (groupTarget) {
-          listEl.scrollTo({ top: groupTarget.offsetTop, behavior: 'instant' });
+          azEl.parentElement.scrollTo({ top: groupTarget.offsetTop, behavior: 'instant' });
         }
       }
     }
@@ -89,20 +87,48 @@ document.addEventListener('DOMContentLoaded', () => {
     isDraggingAZ = true;
     handleAZMove(e);
   });
-  
+
   window.addEventListener('pointerup', () => {
     isDraggingAZ = false;
     const bubble = document.getElementById('loc-az-bubble');
     if (bubble) bubble.classList.remove('show');
   });
-  
+
   azEl.addEventListener('pointermove', handleAZMove);
-  azEl.addEventListener('touchmove', handleAZMove, { passive: false });
-  
+  azEl.addEventListener('touchmove', handleAZMove, { passive: true });
+
   azEl.addEventListener('pointerleave', () => {
     const bubble = document.getElementById('loc-az-bubble');
     if (bubble) bubble.classList.remove('show');
   });
+
+  // Keep the A-Z bar synced when the user scrolls the name list directly
+  // (instead of dragging on the A-Z bar itself).
+  function syncAZWithList() {
+    if (isDraggingAZ) return;
+
+    const listRect = listEl.getBoundingClientRect();
+    let activeLetter = null;
+    listEl.querySelectorAll('[data-group]').forEach(group => {
+      if (group.getBoundingClientRect().top - listRect.top <= 8) {
+        activeLetter = group.getAttribute('data-group');
+      }
+    });
+    if (!activeLetter) return;
+
+    const azBtn = azEl.querySelector(`[data-letter="${activeLetter}"]`);
+    if (!azBtn) return;
+
+    const azRect = azEl.getBoundingClientRect();
+    const btnRect = azBtn.getBoundingClientRect();
+    if (btnRect.top < azRect.top || btnRect.bottom > azRect.bottom) {
+      azEl.scrollTo({
+        top: azBtn.offsetTop - azEl.clientHeight / 2 + azBtn.clientHeight / 2,
+        behavior: 'instant'
+      });
+    }
+  }
+  listEl.addEventListener('scroll', syncAZWithList, { passive: true });
 
   renderAZ();
 
@@ -113,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('https://countriesnow.space/api/v0.1/countries/states');
       const responseData = await response.json();
       const data = responseData.data;
-      
+
       // Override Vietnam's states with 2025 merged list from VIETNAM_PROVINCES (script.js)
       const vietnam = data.find(c => c.name === 'Vietnam');
       if (vietnam && typeof VIETNAM_PROVINCES !== 'undefined') {
@@ -145,14 +171,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const grouped = {};
     items.forEach(item => {
       let firstLetter = item[nameKey].charAt(0).toUpperCase();
-      
+
       // Handle Vietnamese 'Đ' specifically
       if (firstLetter === 'Đ') {
         firstLetter = 'Đ';
       } else if (!/[A-Z]/.test(firstLetter)) {
         firstLetter = '#';
       }
-      
+
       if (!grouped[firstLetter]) grouped[firstLetter] = [];
       grouped[firstLetter].push(item);
     });
@@ -166,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (b === '#') return -1;
       return a.localeCompare(b, 'vi');
     });
-    
+
     if (sortedKeys.length === 0) {
       html = `<div class="loc-empty">No results found.</div>`;
     } else {
@@ -184,9 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
         html += `</div>`;
       });
     }
-    
+
     listEl.innerHTML = html;
-    
+
     // Add click events to items
     const items = listEl.querySelectorAll('.loc-item');
     items.forEach(item => {
@@ -202,13 +228,13 @@ document.addEventListener('DOMContentLoaded', () => {
     currentLevel = 1;
     backBtn.style.display = 'none';
     searchInput.placeholder = "Tìm kiếm quốc gia";
-    
+
     let filtered = countriesData;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = countriesData.filter(c => c.name.toLowerCase().includes(term));
     }
-    
+
     const grouped = groupData(filtered);
     renderList(grouped, (id, name) => {
       // Find country object
@@ -228,13 +254,13 @@ document.addEventListener('DOMContentLoaded', () => {
     currentLevel = 2;
     backBtn.style.display = 'flex';
     searchInput.placeholder = "Tìm kiếm tỉnh/thành";
-    
+
     let states = country.states;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       states = states.filter(s => s.name.toLowerCase().includes(term));
     }
-    
+
     const grouped = groupData(states);
     renderList(grouped, (id, name) => {
       finishSelection(`${name}, ${country.name}`);
@@ -252,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    
+
     // Close destination dropdown if open
     if (window.closeDestCombobox) window.closeDestCombobox();
 

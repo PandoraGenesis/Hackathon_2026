@@ -298,6 +298,11 @@ const dict = {
   "📸 Sống ảo & Check-in": "📸 Photography & Check-in",
   "🌿 Sinh thái & Thiên nhiên": "🌿 Ecology & Nature",
   "🎢 Vui chơi & Giải trí": "🎢 Amusement & Entertainment",
+  "Thời gian du lịch": "Trip Duration",
+  "Vui lòng chọn điểm khởi hành": "Please select a departure point",
+  "Vui lòng chọn điểm đến": "Please select a destination",
+  "Thông tin thời tiết": "Weather Information",
+  "Hãy điền đầy đủ thông tin của chuyến đi để xem dự báo thời tiết.": "Please fill in all trip details to see the weather forecast.",
   "|": "|"
 };
 
