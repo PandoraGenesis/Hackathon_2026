@@ -27,6 +27,8 @@
   <link rel="stylesheet" href="css/maps.css?v=2">
   <!-- auth.css: giao diện trang Đăng nhập / Đăng ký -->
   <link rel="stylesheet" href="css/auth.css?v=1">
+  <!-- checkin.css: giao diện tab Check-in (danh sách lịch trình đã lưu) -->
+  <link rel="stylesheet" href="css/checkin.css?v=1">
   <!-- Flatpickr CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <!-- custom.css: tùy chỉnh Flatpickr + Location Picker (tách từ style inline) -->
@@ -659,8 +661,7 @@
         <div class="vnmap-search-field">
           <i data-lucide="search" aria-hidden="true"></i>
           <input type="text" id="vnmap-search-input" class="vnmap-search-input"
-            placeholder="Tìm địa điểm, địa chỉ, quán ăn…" autocomplete="off"
-            aria-label="Tìm điểm đến">
+            placeholder="Tìm địa điểm, địa chỉ, quán ăn…" autocomplete="off" aria-label="Tìm điểm đến">
           <button type="button" class="vnmap-search-clear" id="vnmap-search-clear" hidden aria-label="Xóa tìm kiếm">
             <i data-lucide="x" aria-hidden="true"></i>
           </button>
@@ -751,7 +752,8 @@
                         <button type="button" id="btn-minus-nights" class="stepper-btn"><i
                             data-lucide="minus"></i></button>
                         <input type="number" id="nights" value="" min="0" max="30">
-                        <button type="button" id="btn-plus-nights" class="stepper-btn"><i data-lucide="plus"></i></button>
+                        <button type="button" id="btn-plus-nights" class="stepper-btn"><i
+                            data-lucide="plus"></i></button>
                       </div>
                     </div>
                   </div>
@@ -1424,6 +1426,43 @@
     </section>
 
 
+    <!-- ============================================================
+         6. CHECK-IN — danh sách lịch trình đã lưu
+         ============================================================ -->
+    <section id="panel-checkin" class="sh-panel" hidden>
+      <div class="checkin-panel">
+
+        <div class="checkin-header">
+          <h1 class="checkin-title">Hành trình của tôi ✈️</h1>
+          <p class="checkin-subtitle">Những lịch trình bạn đã lưu. Nhấn vào để xem lại và tiếp tục hành trình.</p>
+        </div>
+
+        <!-- Danh sách thẻ check-in — checkin.js sẽ render vào đây -->
+        <div class="checkin-list" id="checkin-list"></div>
+
+        <!-- Hiện khi chưa có lịch trình nào được lưu -->
+        <div class="checkin-empty" id="checkin-empty">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"
+            stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 20px; display:block; color: #cbd5e1;">
+            <path
+              d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19.5 2.5c-1.5-1.5-3.5-1.5-5 0L11 6 2.8 4.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 1 1 2 1 1 2 1-1V17l3-2 5.5 6.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
+          </svg>
+          <strong style="font-size:1.1rem; color: #334155; display:block; margin-bottom:8px;">Chưa có lịch trình nào
+            được lưu</strong>
+          <p>Hãy đến tab <strong>Lịch trình</strong>, tạo lịch trình và nhấn
+            <strong>"Lưu lịch trình"</strong> để lưu lại ở đây.
+          </p>
+          <button type="button" onclick="document.querySelector('.sh-tab[data-panel=\'panel-lich-trinh\']').click()"
+            style="margin-top:16px; padding:10px 24px; border:none; border-radius:10px;
+              background:linear-gradient(135deg,#c1373a,#e05a2b); color:#fff;
+              font-family:inherit; font-weight:700; font-size:0.95rem; cursor:pointer;">
+            → Tạo lịch trình ngay
+          </button>
+        </div>
+
+      </div>
+    </section>
+
 
     <!-- ============================================================
          7. ĐĂNG NHẬP
@@ -1540,6 +1579,8 @@
   <script src="js/region-filter.js?v=1" defer></script>
   <!-- nights-stepper.js: Tăng/giảm và nhập tay cho mục Số Đêm -->
   <script src="js/nights-stepper.js?v=1" defer></script>
+  <!-- checkin.js: lưu lịch trình, checkbox check-in và khôi phục lịch trình đã lưu -->
+  <script src="js/checkin.js?v=1" defer></script>
 </body>
 
 </html>
