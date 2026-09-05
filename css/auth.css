@@ -290,11 +290,16 @@
 .auth-welcome {
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--vn-ink, #21302f);
+    color: #ffffff;
     margin-right: 6px;
 }
 
 .auth-btn.auth-logout {
-    background: transparent;
-    border: 1px solid var(--vn-line, #e2e8f0);
+    background: #0099ff;
+    border: none;
+    color: #ffffff;
+}
+
+.auth-btn.auth-logout:hover {
+    background: #007acc;
 }

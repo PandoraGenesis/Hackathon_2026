@@ -24,6 +24,39 @@
   var VN_DEFAULT_ZOOM = 6;
   var SEARCH_DEBOUNCE_MS = 350;
 
+  // Khung giới hạn khu vực Việt Nam (kèm biên độ + toàn bộ Hoàng Sa, Trường Sa).
+  // Dùng để chặn không cho phóng to/kéo ra ngoài phạm vi này — tránh hiển thị
+  // tên địa danh nước ngoài bằng chữ Trung, Hàn, Ả Rập, Bengal... như khi bản
+  // đồ nền OpenStreetMap bị zoom ra hết cả châu Á.
+  var VN_BOUNDS = L.latLngBounds([4.0, 99.0], [24.5, 118.5]);
+  var VN_MIN_ZOOM = 5;
+
+  // Hai quần đảo thuộc chủ quyền Việt Nam — vẽ trực tiếp trên bản đồ vì dữ
+  // liệu nền OpenStreetMap ở khu vực này thưa/không nhất quán về tên gọi.
+  // Thông tin hành chính theo Nghị quyết 1659, 1667/NQ-UBTVQH15 (2025):
+  // Hoàng Sa → đặc khu Hoàng Sa, TP. Đà Nẵng; Trường Sa → đặc khu Trường Sa,
+  // tỉnh Khánh Hòa.
+  var ISLANDS = [
+    {
+      id: 'hoang-sa',
+      label: 'Quần đảo Hoàng Sa',
+      center: [16.5, 112.0],
+      radius: 90000,
+      popup: 'Quần đảo Hoàng Sa — thuộc đặc khu Hoàng Sa, TP. Đà Nẵng, Việt Nam. ' +
+        'Hiện quần đảo này đang bị Trung Quốc kiểm soát trên thực tế; Việt Nam ' +
+        'tiếp tục khẳng định và duy trì chủ quyền.'
+    },
+    {
+      id: 'truong-sa',
+      label: 'Quần đảo Trường Sa',
+      center: [9.5, 113.8],
+      radius: 320000,
+      popup: 'Quần đảo Trường Sa — thuộc đặc khu Trường Sa, tỉnh Khánh Hòa, Việt Nam. ' +
+        'Việt Nam đang quản lý một số đảo, đá tại đây; một số thực thể khác trong ' +
+        'quần đảo hiện do Trung Quốc, Đài Loan, Philippines và Malaysia kiểm soát.'
+    }
+  ];
+
   var els = {};
   var map = null;
   var userIcon = null;
@@ -130,16 +163,73 @@
 
   /* -------------------- Khởi tạo bản đồ Leaflet -------------------- */
 
+  // Vẽ đường viền biên giới toàn bộ lãnh thổ Việt Nam bằng màu đỏ để làm nổi
+  // bật trên nền bản đồ OpenStreetMap. Dữ liệu ranh giới (rút gọn từ Natural
+  // Earth, ~11KB) nằm ở data/vn-boundary.geojson — nếu thiếu file này thì bỏ
+  // qua, không ảnh hưởng các tính năng chính của bản đồ.
+  function addVietnamBoundary() {
+    fetch('data/vn-boundary.geojson')
+      .then(function (r) { return r.json(); })
+      .then(function (geo) {
+        L.geoJSON(geo, {
+          style: {
+            color: '#e11d2f',
+            weight: 2.5,
+            opacity: 0.9,
+            fill: false
+          }
+        }).addTo(map);
+      })
+      .catch(function () {});
+  }
+
+  function addIslandLayers() {
+    ISLANDS.forEach(function (isl) {
+      L.circle(isl.center, {
+        radius: isl.radius,
+        color: getCssVar('--vn-primary', '#0ea5e9'),
+        weight: 1.5,
+        dashArray: '4 6',
+        fillOpacity: 0.04
+      }).addTo(map);
+
+      L.marker(isl.center, {
+        icon: L.divIcon({
+          className: 'vnmap-island-marker',
+          html: '<span class="vnmap-island-dot"></span>',
+          iconSize: [14, 14],
+          iconAnchor: [7, 7]
+        })
+      })
+        .addTo(map)
+        .bindTooltip(isl.label, {
+          permanent: true,
+          direction: 'top',
+          offset: [0, -4],
+          className: 'vnmap-island-tooltip'
+        })
+        .bindPopup(escapeHtml(isl.popup), { maxWidth: 260 });
+    });
+  }
+
   function initMap() {
     if (map || !window.L) return;
 
-    map = L.map(els.mapDiv, { zoomControl: true, attributionControl: true })
-      .setView(VN_CENTER, VN_DEFAULT_ZOOM);
+    map = L.map(els.mapDiv, {
+      zoomControl: true,
+      attributionControl: true,
+      minZoom: VN_MIN_ZOOM,
+      maxBounds: VN_BOUNDS,
+      maxBoundsViscosity: 1.0
+    }).setView(VN_CENTER, VN_DEFAULT_ZOOM);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
     }).addTo(map);
+
+    addVietnamBoundary();
+    addIslandLayers();
 
     userIcon = L.divIcon({
       className: 'vnmap-user-marker',
@@ -248,22 +338,34 @@
   }
 
   // Tách địa chỉ trả về thành tối đa 4 lớp: địa chỉ/tên nơi cụ thể,
-  // đường, phường/xã, tỉnh/thành — dựa vào addressdetails=1 của Nominatim
-  // (nếu dữ liệu không đủ chi tiết thì dự phòng bằng display_name).
+  // đường (kèm số nhà nếu có), phường/xã, tỉnh/thành — dựa vào
+  // addressdetails=1 của Nominatim (nếu dữ liệu không đủ chi tiết thì
+  // dự phòng bằng display_name).
   function buildAddressLines(item) {
     var addr = item.address || {};
 
     var houseNumber = addr.house_number || '';
     var road = addr.road || addr.pedestrian || addr.footway || addr.residential || '';
-    var venue = addr.amenity || addr.shop || addr.tourism || addr.leisure ||
+    // Số nhà + tên đường luôn đi cùng nhau — trước đây số nhà bị bỏ sót khi
+    // địa điểm có tên riêng (trường học, quán ăn…) vì chỉ được gộp vào lúc
+    // không có tên riêng.
+    var streetLine = [houseNumber, road].filter(Boolean).join(' ');
+
+    // Tên riêng của địa điểm (trường học, quán ăn, khu vui chơi…) — ưu tiên
+    // lấy từ item.name (tên hiển thị Nominatim trả trực tiếp), vì tên khoá
+    // trong addressdetails cho từng loại POI (school, restaurant…) không cố
+    // định, dò theo danh sách cứng dễ bị bỏ sót.
+    var venue = item.name || addr.amenity || addr.shop || addr.tourism || addr.leisure ||
       addr.office || addr.building || addr.historic || '';
 
     var ward = addr.suburb || addr.quarter || addr.neighbourhood || addr.city_district ||
       addr.village || addr.commune || addr.hamlet || addr.town || '';
     var province = addr.state || addr.city || addr.province || addr.region || '';
 
-    var line1 = venue || (houseNumber ? (houseNumber + (road ? ' ' + road : '')) : '');
-    var line2 = road && line1.indexOf(road) === -1 ? road : '';
+    var line1 = venue || streetLine;
+    // Chỉ tách đường thành dòng riêng khi dòng 1 là tên riêng (tránh lặp lại
+    // đúng nội dung đó ở cả 2 dòng).
+    var line2 = (venue && streetLine) ? streetLine : '';
 
     var lines = [line1, line2, ward, province].filter(Boolean);
     lines = lines.filter(function (v, idx) { return lines.indexOf(v) === idx; });
@@ -313,8 +415,24 @@
     });
   }
 
-  function renderResults(list) {
-    lastResults = Array.isArray(list) ? list : [];
+  function renderResults(list, query) {
+    // Khử trùng lặp: nhiều đoạn OSM khác nhau của cùng 1 con đường có thể trả
+    // về y hệt cùng một dòng địa chỉ hiển thị — chỉ giữ lại bản đầu tiên
+    // (đã được sortResults xếp gần/đúng nhất lên trước).
+    var seen = {};
+    var deduped = [];
+    var dedupedLines = [];
+
+    (Array.isArray(list) ? list : []).forEach(function (item) {
+      var lines = buildAddressLines(item);
+      var key = lines.join('|');
+      if (seen[key]) return;
+      seen[key] = true;
+      deduped.push(item);
+      dedupedLines.push(lines);
+    });
+
+    lastResults = deduped;
 
     if (lastResults.length === 0) {
       els.searchResults.innerHTML = '<div class="vnmap-search-empty">Không tìm thấy địa điểm phù hợp.</div>';
@@ -322,8 +440,17 @@
       return;
     }
 
-    var html = lastResults.map(function (item, idx) {
-      var lines = buildAddressLines(item);
+    // Nếu người dùng gõ số nhà (vd "9 Trần Phú") nhưng không có kết quả nào
+    // khớp đúng số nhà đó — báo rõ để tránh hiểu nhầm là app tìm sai, trong
+    // khi thực chất dữ liệu OpenStreetMap khu vực đó chưa có điểm địa chỉ
+    // chi tiết đến mức số nhà.
+    var wantsHouseNumber = /^\s*\d+/.test(query || '');
+    var hasHouseNumber = deduped.some(function (item) { return item.address && item.address.house_number; });
+    var notice = (wantsHouseNumber && !hasHouseNumber)
+      ? '<div class="vnmap-search-notice">Chưa có dữ liệu số nhà chính xác cho địa chỉ này — dưới đây là kết quả gần đúng theo tên đường/khu vực.</div>'
+      : '';
+
+    var html = dedupedLines.map(function (lines, idx) {
       var main = lines[0] || '';
       var sub = lines.slice(1).join(' · ');
       return (
@@ -337,7 +464,7 @@
       );
     }).join('');
 
-    els.searchResults.innerHTML = html;
+    els.searchResults.innerHTML = notice + html;
     els.searchResults.hidden = false;
     refreshIcons();
 
@@ -367,7 +494,7 @@
 
     fetch(url, { signal: searchAbort ? searchAbort.signal : undefined })
       .then(function (r) { return r.json(); })
-      .then(function (list) { renderResults(sortResults(list)); })
+      .then(function (list) { renderResults(sortResults(list), query); })
       .catch(function (err) {
         if (err && err.name === 'AbortError') return;
         els.searchResults.innerHTML = '<div class="vnmap-search-empty">Có lỗi khi tìm kiếm, vui lòng thử lại.</div>';

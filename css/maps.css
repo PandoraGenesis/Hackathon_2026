@@ -23,6 +23,14 @@
   gap: 6px;
 }
 
+.vnmap-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+  align-items: center;
+}
+
 .vnmap-title {
   font-family: var(--font-display, 'Be Vietnam Pro', sans-serif);
   font-size: clamp(1.5rem, 2vw, 2rem);
@@ -33,7 +41,7 @@
 
 .vnmap-subtitle {
   color: var(--vn-muted, #64748b);
-  margin: 0;
+  margin: 0 auto;
   font-size: 0.95rem;
   max-width: 640px;
 }
@@ -45,6 +53,7 @@
   position: relative;
   max-width: 560px;
   width: 100%;
+  align-self: center;
 }
 
 .vnmap-search-field {
@@ -56,6 +65,15 @@
   border-radius: 14px;
   padding: 12px 14px;
   box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  /* Ghi đè viền/outline mặc định của trình duyệt (một số trình duyệt như
+     Cốc Cốc gán màu thương hiệu đỏ cho outline focus mặc định) bằng viền
+     tông xanh riêng của VNFinder. */
+  outline: none;
+}
+
+.vnmap-search-field:focus-within {
+  border-color: var(--vn-primary, #0ea5e9);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.18);
 }
 
 .vnmap-search-field i[data-lucide="search"] {
@@ -76,8 +94,13 @@
   background: transparent;
 }
 
+.vnmap-search-input:focus-visible {
+  outline: none !important;
+}
+
 .vnmap-search-clear {
   border: none;
+  outline: none;
   background: none;
   cursor: pointer;
   color: var(--vn-muted, #64748b);
@@ -91,6 +114,10 @@
 .vnmap-search-clear:hover {
   background: #f1f5f9;
   color: var(--vn-ink, #1e293b);
+}
+
+.vnmap-search-clear:focus-visible {
+  box-shadow: 0 0 0 2px var(--vn-primary, #0ea5e9);
 }
 
 .vnmap-search-results {
@@ -164,6 +191,15 @@
   text-align: center;
   color: var(--vn-muted, #64748b);
   font-size: 0.9rem;
+}
+
+.vnmap-search-notice {
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--vn-muted, #64748b);
+  background: #f8fafc;
+  border-bottom: 1px solid var(--vn-line, #f1f5f9);
+  line-height: 1.4;
 }
 
 /* ---------------------------------------------------------
@@ -358,9 +394,41 @@
 
 /* Bỏ nền/khung mặc định Leaflet gán cho icon tùy chỉnh */
 .leaflet-marker-icon.vnmap-user-marker,
-.leaflet-marker-icon.vnmap-dest-marker {
+.leaflet-marker-icon.vnmap-dest-marker,
+.leaflet-marker-icon.vnmap-island-marker {
   background: transparent !important;
   border: none !important;
+}
+
+/* ---------------------------------------------------------
+   Nhãn quần đảo Hoàng Sa / Trường Sa (chủ quyền Việt Nam) —
+   vẽ trực tiếp trên bản đồ vì dữ liệu nền OpenStreetMap ở khu
+   vực này thưa/không nhất quán.
+   --------------------------------------------------------- */
+.vnmap-island-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 2px;
+  background: var(--vn-primary, #0ea5e9);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.vnmap-island-tooltip.leaflet-tooltip {
+  background: var(--vn-surface, #fff);
+  border: 1px solid var(--vn-line, #e2e8f0);
+  color: var(--vn-ink, #1e293b);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.vnmap-island-tooltip.leaflet-tooltip::before {
+  border-top-color: var(--vn-line, #e2e8f0);
 }
 
 /* ---------------------------------------------------------
@@ -467,6 +535,20 @@
   font-size: 0.8rem;
   color: var(--vn-muted, #94a3b8);
   margin: 0;
+  text-align: center;
+}
+
+/* Popup mặc định của Leaflet — đồng bộ font/màu với giao diện chung */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  font-family: inherit;
+}
+
+.leaflet-popup-content {
+  font-size: 0.85rem;
+  color: var(--vn-ink, #1e293b);
+  line-height: 1.5;
+  margin: 12px 14px;
 }
 
 /* ---------------------------------------------------------

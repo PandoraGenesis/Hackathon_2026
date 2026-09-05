@@ -216,7 +216,18 @@ function updateDuration(val) {
 
 btnMinus.addEventListener('click', () => updateDuration(state.duration - 1));
 btnPlus.addEventListener('click', () => updateDuration(state.duration + 1));
-inputDays.addEventListener('change', (e) => updateDuration(parseInt(e.target.value) || 1));
+
+// Khi rời khỏi ô (change): KHÔNG tự điền về 1 nếu người dùng cố tình xóa trống.
+// Chỉ cập nhật khi có số hợp lệ được nhập vào.
+inputDays.addEventListener('change', (e) => {
+  if (e.target.value === '') return; // để trống thì giữ trống, không tự nhảy số
+  const parsed = parseInt(e.target.value, 10);
+  if (isNaN(parsed)) {
+    e.target.value = '';
+    return;
+  }
+  updateDuration(parsed);
+});
 
 presetBtns.forEach(btn => {
   btn.addEventListener('click', () => updateDuration(parseInt(btn.dataset.days)));
