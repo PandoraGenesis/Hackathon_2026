@@ -25,6 +25,8 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <!-- maps.css: giao diện bản đồ Việt Nam tương tác 3 cấp -->
   <link rel="stylesheet" href="css/maps.css?v=1">
+  <!-- auth.css: giao diện trang Đăng nhập / Đăng ký -->
+  <link rel="stylesheet" href="css/auth.css?v=1">
   <!-- Flatpickr CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
@@ -1691,8 +1693,7 @@
             </div>
           </article>
 
-          <article class="guide-card" data-wiki-title="Cầu_Vàng_(Đà_Nẵng)"
-            data-search="cầu vàng bà nà hills đà nẵng">
+          <article class="guide-card" data-wiki-title="Cầu_Vàng_(Đà_Nẵng)" data-search="cầu vàng bà nà hills đà nẵng">
             <div class="guide-card__body">
               <div class="guide-card__badge"><span class="guide-card__badge-mark">?</span>Bạn có biết</div>
               <h3 class="guide-card__title">Cầu Vàng, Bà Nà Hills</h3>
@@ -1782,6 +1783,90 @@
     </section>
 
 
+
+    <!-- ============================================================
+         7. ĐĂNG NHẬP
+         ============================================================ -->
+    <section id="panel-login" class="sh-panel auth-panel" hidden>
+      <div class="auth-wrapper">
+        <div class="auth-box">
+          <div class="auth-brand">
+            <img src="assets/img/logo.png" alt="VNFinder" class="auth-logo">
+          </div>
+          <h1 class="auth-title">Đăng nhập VNFinder</h1>
+
+          <p class="auth-message" id="login-message" hidden></p>
+
+          <form class="auth-form" id="login-form" novalidate>
+            <div class="auth-field">
+              <label for="login-username">Tên đăng nhập hoặc email</label>
+              <input type="text" id="login-username" name="username" autocomplete="username" required
+                placeholder="Nhập email hoặc tên đăng nhập">
+            </div>
+
+            <div class="auth-field">
+              <div class="auth-field-row">
+                <label for="login-password">Mật khẩu</label>
+                <a href="#" class="auth-link" id="login-forgot">Quên mật khẩu?</a>
+              </div>
+              <input type="password" id="login-password" name="password" autocomplete="current-password" required
+                placeholder="Nhập mật khẩu">
+            </div>
+
+            <button type="submit" class="auth-submit">Đăng nhập</button>
+          </form>
+        </div>
+
+        <div class="auth-switch-box">
+          <span>Chưa có tài khoản VNFinder?</span>
+          <button type="button" class="auth-link auth-switch-btn" data-target="panel-signup">Đăng ký ngay.</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         8. ĐĂNG KÝ
+         ============================================================ -->
+    <section id="panel-signup" class="sh-panel auth-panel" hidden>
+      <div class="auth-wrapper">
+        <div class="auth-box">
+          <div class="auth-brand">
+            <img src="assets/img/logo.png" alt="VNFinder" class="auth-logo">
+          </div>
+          <h1 class="auth-title">Tạo tài khoản VNFinder</h1>
+
+          <p class="auth-message" id="signup-message" hidden></p>
+
+          <form class="auth-form" id="signup-form" novalidate>
+            <div class="auth-field">
+              <label for="signup-email">Địa chỉ email</label>
+              <input type="email" id="signup-email" name="email" autocomplete="email" required
+                placeholder="example@email.com">
+            </div>
+
+            <div class="auth-field">
+              <label for="signup-username">Tên đăng nhập</label>
+              <input type="text" id="signup-username" name="username" autocomplete="username" required
+                placeholder="Tên hiển thị của bạn">
+            </div>
+
+            <div class="auth-field">
+              <label for="signup-password">Mật khẩu</label>
+              <input type="password" id="signup-password" name="password" autocomplete="new-password" required
+                minlength="8" placeholder="Ít nhất 8 ký tự">
+            </div>
+
+            <button type="submit" class="auth-submit">Tạo tài khoản</button>
+          </form>
+        </div>
+
+        <div class="auth-switch-box">
+          <span>Đã có tài khoản VNFinder?</span>
+          <button type="button" class="auth-link auth-switch-btn" data-target="panel-login">Đăng nhập.</button>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="sh-footer">
@@ -1808,6 +1893,8 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/maps.js?v=1" defer></script>
+  <!-- auth.js: đăng nhập / đăng ký + lưu cloud JSONBin.io -->
+  <script src="js/auth.js?v=1" defer></script>
   <!-- Lọc vùng miền (Destinations Filter) -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
