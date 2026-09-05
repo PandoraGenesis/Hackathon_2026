@@ -216,18 +216,7 @@ function updateDuration(val) {
 
 btnMinus.addEventListener('click', () => updateDuration(state.duration - 1));
 btnPlus.addEventListener('click', () => updateDuration(state.duration + 1));
-
-// Khi rời khỏi ô (change): KHÔNG tự điền về 1 nếu người dùng cố tình xóa trống.
-// Chỉ cập nhật khi có số hợp lệ được nhập vào.
-inputDays.addEventListener('change', (e) => {
-  if (e.target.value === '') return; // để trống thì giữ trống, không tự nhảy số
-  const parsed = parseInt(e.target.value, 10);
-  if (isNaN(parsed)) {
-    e.target.value = '';
-    return;
-  }
-  updateDuration(parsed);
-});
+inputDays.addEventListener('change', (e) => updateDuration(parseInt(e.target.value) || 1));
 
 presetBtns.forEach(btn => {
   btn.addEventListener('click', () => updateDuration(parseInt(btn.dataset.days)));
@@ -495,6 +484,19 @@ function checkWeatherAlert() {
   const endDate = endDateInput.value;
   const dest = state.destination;
 
+  // Đồng bộ số ngày lịch trình theo đúng khoảng Ngày đến -> Ngày đi (ngày làm nguồn dữ liệu chính)
+  if (startDate && endDate) {
+    const [sd, sm, sy] = startDate.split('/');
+    const [ed, em, ey] = endDate.split('/');
+    const startD = new Date(sy, sm - 1, sd);
+    const endD = new Date(ey, em - 1, ed);
+    const diffDays = Math.round((endD - startD) / (1000 * 60 * 60 * 24)) + 1;
+    if (diffDays >= 1 && diffDays <= 30 && diffDays !== state.duration) {
+      updateDuration(diffDays);
+      return; // updateDuration() sẽ tự gọi lại checkWeatherAlert() với state.duration đã đồng bộ
+    }
+  }
+
   if (startDate && endDate && dest) {
     weatherAlert.hidden = false;
     weatherDesc.innerHTML = `Dự báo thời tiết tại <b>${dest}</b> từ <b>${startDate}</b> đến <b>${endDate}</b>:
@@ -628,61 +630,15 @@ tagButtons.forEach((btn) => {
 checkWeatherAlert();
 
 /* ============ DYNAMIC ITINERARY DATA ============ */
-const DYNAMIC_PLACES = {
-  'Hà Nội': {
-    visit: ['Hồ Hoàn Kiếm & Đền Ngọc Sơn', 'Văn Miếu - Quốc Tử Giám', 'Khu phố cổ Hà Nội', 'Hoàng thành Thăng Long', 'Lăng Chủ tịch Hồ Chí Minh', 'Bảo tàng Dân tộc học'],
-    food: [
-      { name: 'Thưởng thức Phở Hà Nội', dishes: ['Phở bò', 'Quẩy nóng', 'Trà đá'] },
-      { name: 'Khám phá ẩm thực Phố cổ', dishes: ['Bún chả', 'Nem cua bể', 'Trà chanh'] },
-      { name: 'Ăn vặt chiều Hà Nội', dishes: ['Cà phê trứng', 'Bún ốc nguội', 'Bánh tôm Hồ Tây'] }
-    ]
-  },
-  'Hồ Chí Minh': {
-    visit: ['Chợ Bến Thành', 'Dinh Độc Lập', 'Nhà thờ Đức Bà & Bưu điện TP', 'Phố đi bộ Nguyễn Huệ', 'Bảo tàng Chứng tích Chiến tranh', 'Địa đạo Củ Chi'],
-    food: [
-      { name: 'Ẩm thực Sài Thành', dishes: ['Cơm tấm sườn bì chả', 'Canh khổ qua', 'Trà đá'] },
-      { name: 'Món ngon đường phố', dishes: ['Bánh mì Huỳnh Hoa', 'Gỏi cuốn', 'Nước sâm'] },
-      { name: 'Đặc sản chợ đêm', dishes: ['Ốc nhồi thịt', 'Cút lộn xào me', 'Hủ tiếu Nam Vang'] }
-    ]
-  },
-  'Đà Nẵng': {
-    visit: ['Bà Nà Hills', 'Bán đảo Sơn Trà & Chùa Linh Ứng', 'Cầu Rồng & Chợ đêm Sơn Trà', 'Ngũ Hành Sơn', 'Biển Mỹ Khê', 'Công viên Châu Á (Asia Park)'],
-    food: [
-      { name: 'Đặc sản Đà Nẵng', dishes: ['Mì Quảng', 'Bánh tráng cuốn thịt heo', 'Chè Liên'] },
-      { name: 'Hải sản biển Mỹ Khê', dishes: ['Mực nhảy hấp', 'Chíp chíp xấp sả', 'Tôm nướng muối ớt'] },
-      { name: 'Ăn vặt buổi chiều', dishes: ['Bánh xèo bún thịt nướng', 'Nem lụi', 'Sữa đậu nành'] }
-    ]
-  }
-};
+// Dữ liệu chi tiết theo từng điểm đến cấp 2 (ITINERARY_DATA, PROVINCE_FALLBACK,
+// GENERIC_FALLBACK) được nạp từ js/itinerary-data.js, load trước file này.
 
-const GENERIC_PREFIXES = {
-  visit: ['Khám phá', 'Tham quan', 'Check-in tại', 'Dạo quanh', 'Tìm hiểu văn hóa tại'],
-  places: ['Bảo tàng văn hóa', 'Chợ trung tâm', 'Khu du lịch sinh thái', 'Quảng trường thành phố', 'Làng nghề truyền thống', 'Đền chùa cổ', 'Công viên quốc gia', 'Khu phố mua sắm'],
-  night_visit: ['Hòa mình vào', 'Dạo bước', 'Khám phá', 'Trải nghiệm', 'Tận hưởng'],
-  night_places: ['Khu phố đêm', 'Chợ đêm', 'Phố đi bộ', 'Khu ẩm thực đường phố', 'Quán Bar/Pub sôi động', 'Bến thuyền đêm', 'Khu vui chơi giải trí đêm', 'Chợ đêm hải sản'],
-  food_verbs: ['Thưởng thức ẩm thực', 'Khám phá đặc sản', 'Trải nghiệm món ngon', 'Ăn tối tại nhà hàng địa phương'],
-  dishes: ['Bún hải sản', 'Gỏi nộm đặc sản', 'Bánh canh chả cá', 'Cơm gà xé', 'Bánh xèo', 'Nem nướng', 'Hải sản tươi sống', 'Lẩu mắm đặc trưng', 'Thịt nướng xiên que', 'Chè thập cẩm']
-};
-
-async function fetchWikiImage(query) {
-  try {
-    let url = `https://vi.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(query)}&gsrlimit=1&prop=pageimages&piprop=thumbnail|original&pithumbsize=800&format=json&origin=*`;
-    let res = await fetch(url);
-    let data = await res.json();
-    if (data.query && data.query.pages) {
-      const page = Object.values(data.query.pages)[0];
-      if (page) {
-        if (page.thumbnail) return page.thumbnail.source;
-        if (page.original) return page.original.source;
-      }
-    }
-    
-    // Nếu không tìm thấy, thử tìm với từ khóa ngắn hơn
-    if (query.split(' ').length > 2) {
-      const shortQuery = query.split(' ').slice(0, 2).join(' ');
-      url = `https://vi.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(shortQuery)}&gsrlimit=1&prop=pageimages&piprop=thumbnail|original&pithumbsize=800&format=json&origin=*`;
-      res = await fetch(url);
-      data = await res.json();
+async function fetchWikiImage(query, fallbackQuery) {
+  async function trySearch(q, lang) {
+    try {
+      const url = `https://${lang}.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=1&prop=pageimages&piprop=thumbnail|original&pithumbsize=800&format=json&origin=*`;
+      const res = await fetch(url);
+      const data = await res.json();
       if (data.query && data.query.pages) {
         const page = Object.values(data.query.pages)[0];
         if (page) {
@@ -690,125 +646,113 @@ async function fetchWikiImage(query) {
           if (page.original) return page.original.source;
         }
       }
+    } catch (e) {
+      console.error(e);
     }
-  } catch (e) {
-    console.error(e);
+    return null;
   }
-  // Fallback
-  return 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Ha_Long_Bay_-_Vietnam.jpg/800px-Ha_Long_Bay_-_Vietnam.jpg';
+
+  // 1. Tìm chính xác từ khóa trên Wikipedia tiếng Việt
+  let result = await trySearch(query, 'vi');
+  if (result) return result;
+
+  // 2. Rút gọn từ khóa (bỏ bớt từ cuối) rồi thử lại
+  if (query.split(' ').length > 2) {
+    const shortQuery = query.split(' ').slice(0, 2).join(' ');
+    result = await trySearch(shortQuery, 'vi');
+    if (result) return result;
+  }
+
+  // 3. Thêm "Việt Nam" để tăng độ chính xác cho các từ khóa dễ trùng với nước khác
+  result = await trySearch(`${query} Việt Nam`, 'vi');
+  if (result) return result;
+
+  // 4. Thử trên Wikipedia tiếng Anh
+  result = await trySearch(query, 'en');
+  if (result) return result;
+
+  // 5. Lùi về từ khóa cấp tỉnh/thành — vẫn liên quan địa lý, tốt hơn ảnh sai địa danh
+  if (fallbackQuery) {
+    result = await trySearch(fallbackQuery, 'vi');
+    if (result) return result;
+  }
+
+  // 6. Không tìm được ảnh phù hợp: giữ khung ảnh trung tính thay vì hiển thị nhầm địa danh khác
+  return null;
 }
 
 const GRAY_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMmU4ZjAiLz48L3N2Zz4=';
 
-function generateDynamicSession(province, sessionType = 'day') {
-  let visitItems = [];
-  let foodItems = [];
-  
-  const specificData = DYNAMIC_PLACES[province];
-  
-  if (sessionType === 'noon') {
-    const shuffledDishes = [...GENERIC_PREFIXES.dishes].sort(() => 0.5 - Math.random());
-    for (let i = 0; i < 3; i++) {
-      const verb = GENERIC_PREFIXES.food_verbs[Math.floor(Math.random() * GENERIC_PREFIXES.food_verbs.length)];
-      foodItems.push({
-        name: `${verb} ${province}`,
-        province: province,
-        tags: ['🍛 Ăn Trưa', '🔥 Đặc sản'],
-        image: GRAY_PLACEHOLDER,
-        keyword: `${shuffledDishes[i] || verb}`,
-        duration: '45 phút',
-        hours: '11:00 - 14:00',
-        tips: `Gợi ý món ăn: **${shuffledDishes[i] || 'Đặc sản địa phương'}**`
-      });
-    }
-  } else if (sessionType === 'evening') {
-    // Nightlife visit (1 item)
-    const prefix = GENERIC_PREFIXES.night_visit[Math.floor(Math.random() * GENERIC_PREFIXES.night_visit.length)];
-    const place = GENERIC_PREFIXES.night_places[Math.floor(Math.random() * GENERIC_PREFIXES.night_places.length)];
-    visitItems.push({
-      name: `${prefix} ${place} ${province}`,
-      province: province,
-      tags: ['🌃 Sống về đêm', '🎉 Vui chơi'],
-      image: GRAY_PLACEHOLDER,
-      keyword: `${place} ${province}`,
-      duration: '1-2 giờ',
-      hours: '18:00 - 23:00',
-      tips: `Gợi ý: Trải nghiệm không khí nhộn nhịp, rực rỡ sắc màu về đêm.`
-    });
+/**
+ * Lấy đúng bộ dữ liệu (ẩm thực + địa danh) cho một điểm đến cấp 2 cụ thể.
+ * Ưu tiên: dữ liệu riêng (ITINERARY_DATA) -> dữ liệu chung cấp tỉnh (PROVINCE_FALLBACK)
+ * -> phương án cuối cùng (GENERIC_FALLBACK). Không bao giờ ghép ngẫu nhiên các từ rời rạc.
+ */
+function resolveItineraryPool(destination, province) {
+  const data = (typeof ITINERARY_DATA !== 'undefined') ? ITINERARY_DATA : {};
+  const fallback = (typeof PROVINCE_FALLBACK !== 'undefined') ? PROVINCE_FALLBACK : {};
+  const generic = (typeof GENERIC_FALLBACK !== 'undefined') ? GENERIC_FALLBACK : null;
+  if (data[destination]) return data[destination];
+  if (fallback[province]) return fallback[province];
+  return generic || { breakfast: [], morningVisit: [], lunch: [], afternoonVisit: [], dinner: [], nightlife: [] };
+}
 
-    // 3 Food items for the evening
-    const shuffledDishes = [...GENERIC_PREFIXES.dishes].sort(() => 0.5 - Math.random());
-    for (let i = 0; i < 3; i++) {
-      const verb = GENERIC_PREFIXES.food_verbs[Math.floor(Math.random() * GENERIC_PREFIXES.food_verbs.length)];
-      foodItems.push({
-        name: `${verb} ${province}`,
-        province: province,
-        tags: ['🍜 Ẩm Thực Tối', '🔥 Đặc sản'],
-        image: GRAY_PLACEHOLDER,
-        keyword: `${shuffledDishes[i] || verb}`,
-        duration: '1 giờ',
-        hours: '18:00 - 22:00',
-        tips: `Gợi ý món chính: **${shuffledDishes[i] || 'Đặc sản địa phương'}**`
-      });
-    }
-  } else if (specificData) {
-    const numVisits = Math.random() > 0.5 ? 2 : 1;
-    const shuffledVisits = [...specificData.visit].sort(() => 0.5 - Math.random());
-    visitItems = shuffledVisits.slice(0, numVisits).map(name => ({
-      name: name,
-      province: province,
-      tags: ['📸 Sống ảo & Check-in', '🌿 Khám phá'],
-      image: GRAY_PLACEHOLDER,
-      keyword: name,
-      duration: '2-3 giờ',
-      hours: '08:00 - 17:00',
-      tips: 'Gợi ý: Mang theo máy ảnh và trang phục thoải mái.'
-    }));
-    
-    const randomFood = specificData.food[Math.floor(Math.random() * specificData.food.length)];
-    foodItems.push({
-      name: randomFood.name,
-      province: province,
-      tags: ['🍜 Ẩm Thực'],
-      image: GRAY_PLACEHOLDER,
-      keyword: randomFood.name,
-      duration: '1-2 giờ',
-      hours: '06:00 - 22:00',
-      tips: `Thực đơn 3 món gợi ý: **${randomFood.dishes.join(', ')}**`
-    });
-  } else {
-    const numVisits = Math.random() > 0.5 ? 2 : 1;
-    for(let i = 0; i < numVisits; i++) {
-      const prefix = GENERIC_PREFIXES.visit[Math.floor(Math.random() * GENERIC_PREFIXES.visit.length)];
-      const place = GENERIC_PREFIXES.places[Math.floor(Math.random() * GENERIC_PREFIXES.places.length)];
-      visitItems.push({
-        name: `${prefix} ${place} ${province}`,
-        province: province,
-        tags: ['📸 Sống ảo & Check-in', '🪕 Khám phá'],
-        image: GRAY_PLACEHOLDER,
-        keyword: `${place} ${province}`,
-        duration: '2-3 giờ',
-        hours: 'Mở cửa cả ngày',
-        tips: `Gợi ý: Tìm hiểu thêm về lịch sử ${province} tại đây.`
-      });
-    }
-    
-    const verb = GENERIC_PREFIXES.food_verbs[Math.floor(Math.random() * GENERIC_PREFIXES.food_verbs.length)];
-    const shuffledDishes = [...GENERIC_PREFIXES.dishes].sort(() => 0.5 - Math.random());
-    const selectedDishes = shuffledDishes.slice(0, 3);
-    foodItems.push({
-      name: `${verb} ${province}`,
-      province: province,
-      tags: ['🍜 Ẩm Thực'],
-      image: GRAY_PLACEHOLDER,
-      keyword: `${selectedDishes[0] || verb}`,
-      duration: '1-2 giờ',
-      hours: '06:00 - 22:00',
-      tips: `Thực đơn 3 món gợi ý: **${selectedDishes.join(', ')}**`
-    });
+/**
+ * Chọn `count` phần tử từ `arr` cho ngày thứ `dayIndex` (0-based), không lặp lại cho
+ * tới khi hết dữ liệu (rồi mới quay vòng). `seed` đổi mỗi lần bấm "Tạo lịch trình" để
+ * các lần tạo khác nhau có sự đa dạng, nhưng trong CÙNG một lịch trình thì không trùng.
+ */
+function pickForDay(arr, dayIndex, count, seed) {
+  if (!arr || arr.length === 0) return [];
+  const n = arr.length;
+  const offset = seed % n;
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    out.push(arr[(offset + dayIndex * count + i) % n]);
   }
-  
-  return [...visitItems, ...foodItems];
+  return out;
+}
+
+const SESSION_ITEM_COUNTS = {
+  breakfast: 2,
+  morningVisit: 2,
+  lunch: 3,
+  afternoonVisit: 2,
+  dinner: 2,
+  nightlife: 1
+};
+
+/**
+ * Sinh lịch trình đầy đủ cho `totalDays` ngày, dựa trên điểm đến cấp 2 cụ thể.
+ * Mỗi ngày có 4 buổi: sáng (ẩm thực + tham quan), trưa (ẩm thực), chiều (tham quan),
+ * tối (ẩm thực + trải nghiệm về đêm).
+ */
+function buildFullItinerary(destination, province, totalDays) {
+  const pool = resolveItineraryPool(destination, province);
+  const seed = Math.floor(Math.random() * 9973); // số nguyên tố lớn để trộn đều giữa các lần tạo
+  const itinerary = {};
+
+  for (let day = 1; day <= totalDays; day++) {
+    const dayIndex = day - 1;
+    itinerary[day] = {
+      morning: {
+        food: pickForDay(pool.breakfast, dayIndex, SESSION_ITEM_COUNTS.breakfast, seed),
+        visit: pickForDay(pool.morningVisit, dayIndex, SESSION_ITEM_COUNTS.morningVisit, seed)
+      },
+      noon: {
+        food: pickForDay(pool.lunch, dayIndex, SESSION_ITEM_COUNTS.lunch, seed)
+      },
+      afternoon: {
+        visit: pickForDay(pool.afternoonVisit, dayIndex, SESSION_ITEM_COUNTS.afternoonVisit, seed)
+      },
+      evening: {
+        food: pickForDay(pool.dinner, dayIndex, SESSION_ITEM_COUNTS.dinner, seed),
+        visit: pickForDay(pool.nightlife, dayIndex, SESSION_ITEM_COUNTS.nightlife, seed)
+      }
+    };
+  }
+
+  return itinerary;
 }
 
 // D. Generate Logic
@@ -827,28 +771,11 @@ generateBtn.addEventListener("click", () => {
   window.lucide.createIcons();
 
   setTimeout(() => {
-    const prefClusters = state.selectedPrefs.map(p => PREFERENCES_MAP[p]);
-
-    // Extract exact province string if it contains districts
+    // Điểm đến cấp 2 cụ thể (vd: "Pleiku, Gia Lai") và tỉnh tương ứng
     const provinceStr = state.destProvince || state.destination.split(',').pop().trim();
 
-    // Try to match destination province, fallback to all if none matched
-    let localDests = ALL_DESTINATIONS.filter(d => d.province === provinceStr);
-    if (localDests.length === 0) localDests = ALL_DESTINATIONS;
-
-    let filtered = localDests.filter(d => prefClusters.includes(d.cluster));
-    if (filtered.length === 0) filtered = localDests;
-
-    // Generate itinerary grouped by day and session
-    state.generatedItinerary = {};
-    for (let day = 1; day <= state.duration; day++) {
-      state.generatedItinerary[day] = {
-        morning: generateDynamicSession(provinceStr, 'morning'),
-        noon: generateDynamicSession(provinceStr, 'noon'),
-        afternoon: generateDynamicSession(provinceStr, 'afternoon'),
-        evening: generateDynamicSession(provinceStr, 'evening')
-      };
-    }
+    // Số ngày lấy trực tiếp từ khoảng Ngày đến -> Ngày đi (đã đồng bộ trong checkWeatherAlert)
+    state.generatedItinerary = buildFullItinerary(state.destination, provinceStr, state.duration);
 
     state.selectedWeek = 1;
     state.selectedDay = 1;
@@ -862,6 +789,82 @@ generateBtn.addEventListener("click", () => {
 });
 
 /* ============ 5. Render ============ */
+
+// Khung giờ mặc định hiển thị theo từng buổi (không cần dữ liệu riêng cho từng món)
+const SLOT_HOURS = {
+  breakfast: '06:00 - 08:00',
+  morningVisit: '08:00 - 11:00',
+  lunch: '11:00 - 13:00',
+  afternoonVisit: '13:30 - 17:00',
+  dinner: '18:00 - 21:00',
+  nightlife: '19:00 - 23:00'
+};
+
+// Nhãn + icon cho từng nhóm nội dung trong 1 buổi
+const SUBGROUP_META = {
+  food: { label: 'Ẩm thực gợi ý', icon: 'utensils' },
+  visit: { label: 'Địa danh tham quan', icon: 'map-pin' },
+  nightlifeVisit: { label: 'Trải nghiệm về đêm', icon: 'moon-star' }
+};
+
+function escapeHtml(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Vẽ 1 thẻ (card) cho 1 món ăn hoặc 1 địa danh
+function renderDestCard(item, kind, slotKey, provinceStr) {
+  const isFood = kind === 'food';
+  const title = isFood ? item.dish : item.name;
+  const bodyText = isFood ? item.desc : (item.tips || item.desc || '');
+  const badgeIcon = kind === 'nightlifeVisit' ? 'moon-star' : (isFood ? 'utensils' : 'map-pin');
+  const hours = SLOT_HOURS[slotKey] || '';
+  const safeTitle = escapeHtml(title);
+  const safeBody = escapeHtml(bodyText);
+  const safeKeyword = escapeHtml(item.keyword || title);
+  const safeProvince = escapeHtml(provinceStr);
+
+  return `
+    <div class="destination-card ${isFood ? 'food-card' : 'visit-card'}">
+      <div class="dest-image-wrap" onclick="openImageLightbox(this)">
+        <img src="${GRAY_PLACEHOLDER}" alt="${safeTitle}" data-keyword="${safeKeyword}" data-fallback-keyword="${safeProvince}" class="dynamic-dest-img">
+        <div class="dest-overlay"></div>
+        <span class="dest-type-badge"><i data-lucide="${badgeIcon}"></i></span>
+        <i data-lucide="maximize-2" class="dest-expand-icon"></i>
+        <h3 class="dest-title i18n-dyn" data-vi="${safeTitle}">${safeTitle}</h3>
+      </div>
+      <div class="dest-body">
+        <div class="dest-meta"><i data-lucide="clock" class="meta-icon"></i> ${hours}</div>
+        <div class="dest-tips">
+          <p class="i18n-dyn" data-vi="${safeBody}">${safeBody}</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Vẽ 1 nhóm nhỏ (vd: "Ẩm thực gợi ý") gồm tiêu đề + lưới thẻ, bỏ qua nếu rỗng
+function renderSubGroup(groupKey, items, kind, slotKey, provinceStr) {
+  if (!items || items.length === 0) return '';
+  const meta = SUBGROUP_META[groupKey];
+  let html = `
+    <div class="dest-subgroup-header">
+      <i data-lucide="${meta.icon}"></i>
+      <span>${meta.label}</span>
+    </div>
+    <div class="destination-grid">
+  `;
+  items.forEach(item => {
+    html += renderDestCard(item, kind, slotKey, provinceStr);
+  });
+  html += `</div>`;
+  return html;
+}
+
 function renderResult() {
   const totalDays = state.duration || 1;
   let html = `
@@ -920,30 +923,39 @@ function renderResult() {
 
   // Destination Grid for Selected Day
   const dayItinerary = state.generatedItinerary[state.selectedDay] || {};
+  const provinceStr = state.destProvince || (state.destination ? state.destination.split(',').pop().trim() : '');
 
   html += `<div style="opacity: 0; animation: fadeIn 0.3s forwards;">`;
   if (!dayItinerary.morning) {
     html += `<div style="text-align:center; padding:3rem; color:var(--slate-soft);">Chưa có hoạt động nào cho ngày này.</div>`;
   } else {
     const sessions = [
-      { id: 'morning', title: '🌅 Buổi Sáng', data: dayItinerary.morning },
-      { id: 'noon', title: '🍲 Buổi Trưa', data: dayItinerary.noon },
-      { id: 'afternoon', title: '☀️ Buổi Chiều', data: dayItinerary.afternoon },
-      { id: 'evening', title: '🌙 Buổi Tối', data: dayItinerary.evening }
+      { id: 'morning', title: '🌅 Buổi Sáng', gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+        groups: [
+          { groupKey: 'food', kind: 'food', slotKey: 'breakfast', items: dayItinerary.morning.food },
+          { groupKey: 'visit', kind: 'visit', slotKey: 'morningVisit', items: dayItinerary.morning.visit }
+        ] },
+      { id: 'noon', title: '🍲 Buổi Trưa', gradient: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)',
+        groups: [
+          { groupKey: 'food', kind: 'food', slotKey: 'lunch', items: dayItinerary.noon.food }
+        ] },
+      { id: 'afternoon', title: '☀️ Buổi Chiều', gradient: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+        groups: [
+          { groupKey: 'visit', kind: 'visit', slotKey: 'afternoonVisit', items: dayItinerary.afternoon.visit }
+        ] },
+      { id: 'evening', title: '🌙 Buổi Tối', gradient: 'linear-gradient(135deg, #818cf8 0%, #4f46e5 100%)',
+        groups: [
+          { groupKey: 'food', kind: 'food', slotKey: 'dinner', items: dayItinerary.evening.food },
+          { groupKey: 'nightlifeVisit', kind: 'nightlifeVisit', slotKey: 'nightlife', items: dayItinerary.evening.visit }
+        ] }
     ];
 
     sessions.forEach(session => {
-      let gradient = '';
-      if (session.id === 'morning') gradient = 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)';
-      else if (session.id === 'noon') gradient = 'linear-gradient(135deg, #34d399 0%, #10b981 100%)';
-      else if (session.id === 'afternoon') gradient = 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)';
-      else if (session.id === 'evening') gradient = 'linear-gradient(135deg, #818cf8 0%, #4f46e5 100%)';
-
       html += `
         <div style="
           margin: 2.5rem 0 1.5rem;
           padding: 1rem 1.5rem;
-          background: ${gradient};
+          background: ${session.gradient};
           color: white;
           border-radius: 12px;
           display: flex;
@@ -955,36 +967,9 @@ function renderResult() {
           <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: white;">${session.title}</h3>
         </div>
       `;
-      html += `<div class="destination-grid">`;
-      session.data.forEach(dest => {
-        html += `
-          <div class="destination-card">
-            <div class="dest-image-wrap">
-              <img src="${dest.image}" alt="${dest.name}" data-keyword="${dest.keyword || dest.name}" class="dynamic-dest-img">
-              <div class="dest-overlay"></div>
-              <div class="dest-tags">
-                ${dest.tags.map(t => `<span>${t}</span>`).join('')}
-              </div>
-              <h3 class="dest-title">${dest.name}</h3>
-            </div>
-            <div class="dest-body">
-              <div class="dest-meta">
-                <div><i data-lucide="clock" class="meta-icon"></i> ${dest.duration}</div>
-                <div><i data-lucide="map" class="meta-icon"></i> ${dest.province}</div>
-              </div>
-              <div class="dest-hours">
-                <h4>Giờ mở cửa</h4>
-                <p>${dest.hours}</p>
-              </div>
-              <div class="dest-tips">
-                <h4><i data-lucide="info" class="tips-icon"></i> Local Tips</h4>
-                <p>${dest.tips.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</p>
-              </div>
-            </div>
-          </div>
-        `;
+      session.groups.forEach(group => {
+        html += renderSubGroup(group.groupKey, group.items, group.kind, group.slotKey, provinceStr);
       });
-      html += `</div>`;
     });
   }
   html += `</div>`;
@@ -1006,11 +991,12 @@ function renderResult() {
   }
   state.isRerendering = false;
 
-  // Tải hình ảnh bất đồng bộ từ Wikipedia
+  // Tải hình ảnh bất đồng bộ từ Wikipedia (giữ khung ảnh trung tính nếu không tìm được ảnh phù hợp)
   document.querySelectorAll('.dynamic-dest-img').forEach(async (img) => {
     const keyword = img.getAttribute('data-keyword');
+    const fallbackKeyword = img.getAttribute('data-fallback-keyword');
     if (keyword) {
-      const actualImgUrl = await fetchWikiImage(keyword);
+      const actualImgUrl = await fetchWikiImage(keyword, fallbackKeyword);
       if (actualImgUrl) {
         img.src = actualImgUrl;
       }
@@ -1037,6 +1023,44 @@ function renderResult() {
     });
   });
 }
+
+/* ============ Lightbox xem ảnh phóng to ============ */
+function openImageLightbox(wrapEl) {
+  const img = wrapEl.querySelector('img.dynamic-dest-img');
+  const titleEl = wrapEl.querySelector('.dest-title');
+  if (!img || !img.src) return;
+
+  const lightbox = document.getElementById('image-lightbox');
+  const lightboxImg = document.getElementById('image-lightbox-img');
+  const lightboxCaption = document.getElementById('image-lightbox-caption');
+  if (!lightbox || !lightboxImg) return;
+
+  lightboxImg.src = img.src;
+  lightboxImg.alt = img.alt || '';
+  if (lightboxCaption) lightboxCaption.textContent = titleEl ? titleEl.textContent : (img.alt || '');
+  lightbox.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageLightbox() {
+  const lightbox = document.getElementById('image-lightbox');
+  if (!lightbox) return;
+  lightbox.hidden = true;
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const lightbox = document.getElementById('image-lightbox');
+  if (!lightbox) return;
+  const closeBtn = document.getElementById('image-lightbox-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeImageLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeImageLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !lightbox.hidden) closeImageLightbox();
+  });
+});
 
 /* ============ 6. Khởi tạo ============ */
 window.lucide.createIcons();

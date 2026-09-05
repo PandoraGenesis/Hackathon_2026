@@ -363,6 +363,21 @@ const dict = {
   "Vui lòng chọn điểm đến": "Please select a destination",
   "Thông tin thời tiết": "Weather Information",
   "Hãy điền đầy đủ thông tin của chuyến đi để xem dự báo thời tiết.": "Please fill in all trip details to see the weather forecast.",
+  "🌅 Buổi Sáng": "🌅 Morning",
+  "🍲 Buổi Trưa": "🍲 Midday",
+  "☀️ Buổi Chiều": "☀️ Afternoon",
+  "🌙 Buổi Tối": "🌙 Evening",
+  "Ẩm thực gợi ý": "Suggested cuisine",
+  "Địa danh tham quan": "Places to visit",
+  "Trải nghiệm về đêm": "Nightlife experience",
+  "Lịch Trình Đề Xuất": "Suggested Itinerary",
+  "Lưu lịch trình": "Save itinerary",
+  "Đã lưu lịch trình thành công!": "Itinerary saved successfully!",
+  "Chưa có hoạt động nào cho ngày này.": "No activities for this day yet.",
+  "Đang phân tích & tối ưu...": "Analyzing & optimizing...",
+  "Tạo Lịch Trình Ngay": "Create Itinerary Now",
+  "Vui lòng điền đầy đủ các thông tin: Ngày đến/đi, Số ngày, Điểm khởi hành và Điểm đến trước khi tạo lịch trình.": "Please fill in all details: start/end dates, number of days, departure point and destination before creating an itinerary.",
+  "Vui lòng chọn ít nhất một sở thích trải nghiệm.": "Please select at least one experience preference.",
   "|": "|"
 };
 
@@ -411,6 +426,10 @@ function translateNode(node, lang) {
 function updateLanguage(lang) {
   document.documentElement.lang = lang;
   translateNode(document.body, lang);
+  // Dịch tự động phần nội dung động của lịch trình (món ăn, địa danh, mô tả)
+  if (window.applyAutoTranslation) {
+    window.applyAutoTranslation(document.getElementById('result'), lang);
+  }
   const btns = document.querySelectorAll('.lang-btn');
   btns.forEach(btn => {
     if (btn.textContent.trim().toLowerCase() === lang.toLowerCase()) {
