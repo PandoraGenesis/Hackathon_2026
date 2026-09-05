@@ -1,1009 +1,558 @@
 /* ============================================================
-   MAPS — bản đồ Việt Nam tương tác 3 bước, dùng Leaflet.js
-   (CDN được nạp trong index.html) + dữ liệu GeoJSON tĩnh trong
-   thư mục data/maps/.
+   maps.js — Bản đồ chỉ đường kiểu Google Maps cho tab "Bản đồ"
+   ------------------------------------------------------------
+   - Nền bản đồ : Leaflet + OpenStreetMap tile layer
+   - Định vị    : navigator.geolocation (GPS thiết bị người dùng)
+   - Tìm kiếm   : Nominatim geocoding API (giới hạn trong Việt Nam)
+   - Chỉ đường  : OSRM routing API (driving), vẽ tuyến + từng bước đi
 
-   3 bước:
-     1) Toàn quốc  — 34 tỉnh/thành + 2 quần đảo Hoàng Sa, Trường Sa
-     2) Tỉnh/Thành — toàn bộ xã/phường/đặc khu của tỉnh đó, tên
-        hiện thường trực (không cần hover)
-     3) Xã/Phường/Đặc khu — bản đồ chi tiết (nền OpenStreetMap)
-        khoanh vùng ranh giới khu vực đã chọn
+   Lưu ý triển khai thực tế: Nominatim và OSRM demo server (dùng
+   trong file này) là dịch vụ công cộng miễn phí, chỉ phù hợp cho
+   dự án nhỏ/thi đấu — có giới hạn tốc độ gọi API. Nếu đưa VNFinder
+   lên sản phẩm thật với lượng truy cập lớn, nên tự host lại hai
+   dịch vụ này hoặc dùng nhà cung cấp trả phí (Mapbox, Google
+   Directions, Goong, v.v.).
 
-   Nguồn dữ liệu ranh giới: thanglequoc/vietnamese-provinces-database
-   (giấy phép mở, xem README trong thư mục data/maps/).
-
-   LƯU Ý: trang phải chạy qua HTTP (vd. GitHub Pages, hoặc
-   `python3 -m http.server` lúc phát triển) vì fetch() không đọc
-   được file cục bộ qua giao thức file:// (bị chặn CORS).
+   Script này tự gắn sự kiện vào tab "Bản đồ" khi DOM đã sẵn sàng,
+   nên phải nạp sau nav.js (xem chú thích trong index.html).
    ============================================================ */
 
 (function () {
   'use strict';
 
-  var DATA = {
-    provinces: 'data/maps/provinces.geojson',
-    islands: 'data/maps/islands.geojson',
-    searchIndex: 'data/maps/search-index.json',
-    wardsDir: 'data/maps/wards/'
-  };
-
-  // Mã 2 đơn vị đặc khu hải đảo — được tách file riêng (islands.geojson)
-  // để không làm lệch khung nhìn khi hiển thị Đà Nẵng / Khánh Hòa.
-  var ISLAND_CODES = { '20333': '48', '22736': '56' };
-
-  // Khung nhìn đất liền sát hơn với tọa độ thật (Cà Mau ~8.5, Hà Giang ~23.4, Lai Châu ~102.1, Khánh Hòa ~109.5)
-  // để bản đồ tự fit to hơn trong khung chứa.
-  var MAINLAND_BOUNDS = [[8.4, 102.1], [23.5, 109.6]];
-
-  // Padding khi fit khung nhìn toàn quốc trên màn hình rộng (desktop):
-  // chừa thêm chỗ bên phải (right: 130px) để không bị các thẻ Hoàng Sa /
-  // Trường Sa (nằm bên phải bản đồ ở màn hình rộng) che khuất.
-  //
-  // paddingTopLeft/paddingBottomRight KHÔNG chỉ để chừa chỗ cho 2 thẻ đảo —
-  // chúng còn quyết định nhãn tên tỉnh nằm SÁT MÉP bản đồ (vd. Hà Giang ở
-  // cực Bắc, Điện Biên ở cực Tây) có bị cắt chữ hay không. Nhãn dài tối đa
-  // ~70-90px (xem --vnmap-label-maxw trong updateLabelScale/maps.css), tức
-  // có thể lấn ra khỏi tâm tỉnh tới ~35-45px mỗi bên; mà .leaflet-container
-  // luôn có overflow:hidden, nên nếu padding nhỏ hơn khoảng lấn đó, nhãn ở
-  // sát biên sẽ bị cắt cụt. 36px (nhỉnh hơn 35px) là mức tối thiểu an toàn.
-  var COUNTRY_FIT_OPTIONS = {
-    paddingTopLeft: [36, 36],       // [left, top]
-    paddingBottomRight: [130, 36]   // [right, bottom]
-  };
-
-  // Cùng ngưỡng với isCompact trong positionIslandCards() — dưới ngưỡng
-  // này, 2 thẻ Hoàng Sa/Trường Sa được CSS ghim xuống ĐÁY màn hình thay
-  // vì nằm bên phải, nên không cần (và không nên) chừa 130px bên phải
-  // nữa — chừa chỗ đó chỉ làm đất liền bị ép nhỏ/lệch một cách lãng phí
-  // trên màn hình vốn đã hẹp. Thêm 1 mốc trung gian cho tablet/laptop nhỏ
-  // để padding không quá to so với màn hình.
-  var COMPACT_BREAKPOINT = 640;
-  var MID_BREAKPOINT = 1024;
-
-  // Tính padding khung nhìn cấp Toàn quốc theo đúng bề rộng màn hình
-  // hiện tại, thay vì dùng 1 giá trị cố định cho mọi thiết bị. Mọi mốc
-  // đều giữ tối thiểu 30-36px top/left để không cắt chữ nhãn sát biên
-  // (xem giải thích ở COUNTRY_FIT_OPTIONS).
-  function getCountryFitOptions() {
-    var w = window.innerWidth;
-    if (w <= COMPACT_BREAKPOINT) {
-      // Điện thoại: 2 thẻ đảo nằm ở đáy màn hình (xem positionIslandCards)
-      // nên đổi sang chừa khoảng trống PHÍA DƯỚI thay vì bên phải — đủ chỗ
-      // cho cả 2 icon đảo (~54px cao) lẫn nhãn sát mép dưới bản đồ.
-      return {
-        paddingTopLeft: [30, 30],
-        paddingBottomRight: [30, 104]
-      };
-    }
-    if (w <= MID_BREAKPOINT) {
-      // Tablet / laptop nhỏ: vẫn chừa bên phải như desktop nhưng ít hơn,
-      // vì khung bản đồ đã hẹp sẵn.
-      return {
-        paddingTopLeft: [32, 32],
-        paddingBottomRight: [96, 32]
-      };
-    }
-    return COUNTRY_FIT_OPTIONS;
-  }
-
-  var OSM_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  var OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
-
-  // Bảng màu tươi, nhiều sắc để phân biệt các mảng liền kề — độ bão hòa
-  // cao hơn bản trước để nhìn rực rỡ, sinh động hơn trên nền kem ngà.
-  var PALETTE = [
-    '#e63946', '#f4a300', '#2a9d8f', '#e76f51', '#3a86ff',
-    '#ff6b6b', '#06d6a0', '#ffb703', '#8338ec', '#43aa8b',
-    '#fb8500', '#4cc9f0', '#f15bb5', '#588157', '#ee9b00', '#5e60ce'
-  ];
-
-  // Các đảo nhỏ ven bờ — hình dạng đã có sẵn trong provinces.geojson
-  // (là một phần MultiPolygon của tỉnh chủ quản) nhưng không có nhãn
-  // riêng vì mỗi tỉnh chỉ có 1 tooltip đặt ở trọng tâm. Thêm nhãn điểm
-  // riêng cho các đảo được biết đến nhiều, giống bản đồ tham chiếu.
-  var SMALL_ISLANDS = [
-    { name: 'Đ. Cô Tô', lat: 21.03, lon: 107.77 },
-    { name: 'Đ. Cát Bà', lat: 20.80, lon: 107.05 },
-    { name: 'Đ. Bạch Long Vĩ', lat: 20.13, lon: 107.72 },
-    { name: 'Đ. Cồn Cỏ', lat: 17.17, lon: 107.33 },
-    { name: 'Đ. Lý Sơn', lat: 15.38, lon: 109.13 },
-    { name: 'Đ. Phú Quý', lat: 10.51, lon: 108.93 },
-    { name: 'Đ. Côn Sơn', lat: 8.69, lon: 106.60 },
-    { name: 'Đảo Phú Quốc', lat: 10.22, lon: 103.97 }
-  ];
-
-  // Vĩ độ đại diện thật của 2 quần đảo — dùng để canh ô chú thích
-  // Hoàng Sa / Trường Sa ngang đúng tầm vĩ độ của chúng trên bản đồ
-  // (kinh độ bỏ qua, ô luôn ghim sát mép phải khung bản đồ).
-  var HOANG_SA_LAT = 16.5;
-  var TRUONG_SA_LAT = 9.3;
+  var VN_CENTER = [16.047079, 108.206230]; // Trung tâm Việt Nam (gần Đà Nẵng)
+  var VN_DEFAULT_ZOOM = 6;
+  var SEARCH_DEBOUNCE_MS = 350;
 
   var els = {};
   var map = null;
-  var mapInited = false;
-  var activeLayer = null;   // layer GeoJSON đang hiển thị (tỉnh hoặc xã)
-  var smallIslandLayer = null; // nhãn các đảo nhỏ ven bờ, chỉ ở cấp Toàn quốc
-  var archipelagoDotsLayer = null; // chấm tròn Hoàng Sa/Trường Sa trên bản đồ
-  var tileLayer = null;     // chỉ tồn tại ở cấp chi tiết (bước 3)
-  var boundaryLayer = null; // viền khu vực chi tiết ở cấp chi tiết
-  var lastAction = null;    // hàm để gọi lại khi nhấn "Thử lại"
-  var isFileProtocol = window.location.protocol === 'file:';
-  var userInteractedMap = false; // true khi người dùng đã tự kéo/zoom bằng tay
+  var userIcon = null;
+  var destIcon = null;
+  var userMarker = null;
+  var userAccuracyCircle = null;
+  var destMarker = null;
+  var routeLine = null;
+  var userLatLng = null;
+  var watchId = null;
+  var searchTimer = null;
+  var searchAbort = null;
+  var lastResults = [];
+  var initialized = false;
 
-  var cache = {
-    provinces: null,
-    islands: null,
-    searchIndex: null,
-    wardsByProvince: {}
+  function cacheEls() {
+    els.mapDiv = document.getElementById('vnmap-map');
+    els.searchBox = document.getElementById('vnmap-search');
+    els.searchInput = document.getElementById('vnmap-search-input');
+    els.searchClear = document.getElementById('vnmap-search-clear');
+    els.searchResults = document.getElementById('vnmap-search-results');
+    els.loading = document.getElementById('vnmap-loading');
+    els.loadingText = document.getElementById('vnmap-loading-text');
+    els.loadingRetry = document.getElementById('vnmap-loading-retry');
+    els.locateBtn = document.getElementById('vnmap-locate-btn');
+    els.routePanel = document.getElementById('vnmap-route-panel');
+    els.routeClose = document.getElementById('vnmap-route-close');
+    els.routeSummary = document.getElementById('vnmap-route-summary');
+    els.routeSteps = document.getElementById('vnmap-route-steps');
+  }
+
+  function getCssVar(name, fallback) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name);
+    return (v && v.trim()) || fallback;
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function refreshIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+
+  function formatDistance(meters) {
+    if (meters < 1000) return Math.round(meters) + ' m';
+    return (Math.round(meters / 100) / 10) + ' km';
+  }
+
+  function formatDuration(seconds) {
+    var minutes = Math.round(seconds / 60);
+    if (minutes < 1) return '< 1 phút';
+    if (minutes < 60) return minutes + ' phút';
+    var hours = Math.floor(minutes / 60);
+    var rem = minutes % 60;
+    return hours + ' giờ' + (rem ? ' ' + rem + ' phút' : '');
+  }
+
+  var MOD_VI = {
+    'uturn': 'quay đầu',
+    'sharp right': 'rẽ phải gắt',
+    'right': 'rẽ phải',
+    'slight right': 'rẽ phải nhẹ',
+    'straight': 'đi thẳng',
+    'slight left': 'rẽ trái nhẹ',
+    'left': 'rẽ trái',
+    'sharp left': 'rẽ trái gắt'
   };
 
-  var state = {
-    level: 'country',       // 'country' | 'province' | 'ward'
-    provinceCode: null,
-    provinceName: null,
-    wardCode: null,
-    wardName: null
-  };
+  function stepInstruction(step) {
+    var m = step.maneuver || {};
+    var type = m.type;
+    var modifier = m.modifier;
+    var road = step.name || '';
+    var roadText = road ? ' vào ' + road : '';
 
-  /* ---------------------- Tiện ích chung ---------------------- */
-
-  function qs(id) { return document.getElementById(id); }
-
-  function hashCode(str) {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-      hash |= 0;
+    switch (type) {
+      case 'depart':
+        return 'Xuất phát' + roadText;
+      case 'arrive':
+        return 'Đến nơi';
+      case 'roundabout':
+      case 'rotary':
+        return 'Vào vòng xuyến' + roadText;
+      case 'merge':
+        return 'Nhập làn' + roadText;
+      case 'on ramp':
+        return 'Vào đường nhánh' + roadText;
+      case 'off ramp':
+        return 'Ra khỏi đường nhánh' + roadText;
+      case 'fork':
+        return 'Đi theo nhánh ' + (MOD_VI[modifier] || '') + roadText;
+      case 'end of road':
+        return (MOD_VI[modifier] || 'Rẽ') + roadText;
+      case 'turn':
+      default:
+        return (MOD_VI[modifier] || 'Đi tiếp') + roadText;
     }
-    return hash;
   }
 
-  function hexToRgb(hex) {
-    var v = parseInt(hex.slice(1), 16);
-    return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
-  }
+  /* -------------------- Khởi tạo bản đồ Leaflet -------------------- */
 
-  function lighten(hex, amount) {
-    var rgb = hexToRgb(hex);
-    var out = rgb.map(function (c) { return Math.round(c + (255 - c) * amount); });
-    return 'rgb(' + out.join(',') + ')';
-  }
+  function initMap() {
+    if (map || !window.L) return;
 
-  function colorForCode(code, light) {
-    var base = PALETTE[Math.abs(hashCode(String(code))) % PALETTE.length];
-    return light ? lighten(base, 0.22) : base;
-  }
+    map = L.map(els.mapDiv, { zoomControl: true, attributionControl: true })
+      .setView(VN_CENTER, VN_DEFAULT_ZOOM);
 
-  function formatArea(km2) {
-    if (!km2 && km2 !== 0) return '';
-    return km2.toLocaleString('vi-VN', { maximumFractionDigits: 1 }) + ' km²';
-  }
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+    }).addTo(map);
 
-  function normalize(str) {
-    return (str || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/đ/gi, 'd')
-      .toLowerCase()
-      .trim();
-  }
-
-  function fetchJSON(url) {
-    return fetch(url).then(function (res) {
-      if (!res.ok) throw new Error('Không tải được ' + url + ' (HTTP ' + res.status + ')');
-      return res.json();
+    userIcon = L.divIcon({
+      className: 'vnmap-user-marker',
+      html: '<span class="vnmap-user-pulse"></span><span class="vnmap-user-dot"></span>',
+      iconSize: [22, 22],
+      iconAnchor: [11, 11]
     });
+
+    destIcon = L.divIcon({
+      className: 'vnmap-dest-marker',
+      html: '<span class="vnmap-pin"></span>',
+      iconSize: [26, 34],
+      iconAnchor: [14, 32]
+    });
+
+    // Leaflet cần biết đúng kích thước khung chứa sau khi panel hiển thị
+    setTimeout(function () { map.invalidateSize(); }, 200);
   }
 
-  function setLoading(isLoading, message, isError) {
-    if (!els.loading) return;
-    els.loading.hidden = !isLoading;
-    els.loading.classList.toggle('is-error', !!isError);
-    if (message) els.loading.querySelector('span').textContent = message;
-    els.loadingRetry.hidden = !isError || isFileProtocol || !lastAction;
+  /* -------------------- Định vị người dùng (GPS) -------------------- */
+
+  function showLoading(isOn) {
+    els.loading.classList.remove('is-error');
+    els.loadingRetry.hidden = true;
+    els.loading.hidden = !isOn;
   }
 
-  function showFetchError(err, retryFn) {
-    console.error(err);
-    lastAction = retryFn || null;
-    if (isFileProtocol) {
-      setLoading(true,
-        'Trang đang mở qua file:// nên trình duyệt chặn tải dữ liệu bản đồ (lỗi CORS). ' +
-        'Hãy chạy qua một máy chủ cục bộ — ví dụ mở Terminal tại thư mục dự án rồi chạy "python3 -m http.server" ' +
-        'hoặc dùng tiện ích Live Server của VS Code — rồi mở lại bằng http://localhost. ' +
-        'Khi deploy lên GitHub Pages sẽ không gặp lỗi này.',
-        true);
+  function showMessage(text, withRetry) {
+    els.loadingText.textContent = text;
+    els.loading.classList.add('is-error');
+    els.loadingRetry.hidden = !withRetry;
+    els.loading.hidden = false;
+  }
+
+  function handleGeoError(err) {
+    var msgs = {
+      1: 'Bạn chưa cho phép truy cập vị trí. Hãy bật quyền định vị cho trang web này để dùng tính năng chỉ đường.',
+      2: 'Không thể xác định vị trí thiết bị lúc này. Vui lòng kiểm tra kết nối hoặc GPS.',
+      3: 'Quá thời gian chờ định vị, vui lòng thử lại.'
+    };
+    showMessage(msgs[err.code] || 'Không thể lấy vị trí của bạn.', true);
+  }
+
+  function handlePosition(pos) {
+    var latlng = [pos.coords.latitude, pos.coords.longitude];
+    var firstFix = !userLatLng;
+    userLatLng = latlng;
+
+    if (!userMarker) {
+      userMarker = L.marker(latlng, { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
     } else {
-      setLoading(true, 'Không tải được dữ liệu bản đồ. Vui lòng kiểm tra kết nối và thử lại.', true);
+      userMarker.setLatLng(latlng);
+    }
+
+    if (userAccuracyCircle) map.removeLayer(userAccuracyCircle);
+    if (pos.coords.accuracy) {
+      var color = getCssVar('--vn-primary', '#0ea5e9');
+      userAccuracyCircle = L.circle(latlng, {
+        radius: pos.coords.accuracy,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.08,
+        weight: 1
+      }).addTo(map);
+    }
+
+    if (firstFix) {
+      map.setView(latlng, 15);
     }
   }
 
-  /* ---------------------- Nạp dữ liệu (có cache) ---------------------- */
-
-  // Cache theo PROMISE (không chỉ theo kết quả) để nếu tải trước (prefetch
-  // lúc hover tab) và tải thật (lúc click) xảy ra gần nhau, chỉ có đúng 1
-  // request được gửi đi — request thứ hai dùng lại promise đang chạy dở.
-  function loadProvinces() {
-    if (!cache.provinces) {
-      cache.provinces = fetchJSON(DATA.provinces).catch(function (err) {
-        cache.provinces = null; // cho phép thử lại nếu lỗi
-        throw err;
-      });
-    }
-    return cache.provinces;
-  }
-
-  function loadIslands() {
-    if (!cache.islands) {
-      cache.islands = fetchJSON(DATA.islands).catch(function (err) {
-        cache.islands = null;
-        throw err;
-      });
-    }
-    return cache.islands;
-  }
-
-  function loadWards(provinceCode) {
-    if (!cache.wardsByProvince[provinceCode]) {
-      cache.wardsByProvince[provinceCode] = fetchJSON(DATA.wardsDir + provinceCode + '.geojson').catch(function (err) {
-        delete cache.wardsByProvince[provinceCode];
-        throw err;
-      });
-    }
-    return cache.wardsByProvince[provinceCode];
-  }
-
-  function loadSearchIndex() {
-    if (!cache.searchIndex) {
-      cache.searchIndex = fetchJSON(DATA.searchIndex).then(function (data) {
-        return data.map(function (e) {
-          e._key = normalize(e.name);
-          return e;
-        });
-      }).catch(function (err) {
-        cache.searchIndex = null;
-        throw err;
-      });
-    }
-    return cache.searchIndex;
-  }
-
-  function prefetchCountryData() {
-    loadProvinces().catch(function () { });
-    loadIslands().catch(function () { });
-  }
-
-  /* ---------------------- Khởi tạo bản đồ Leaflet ---------------------- */
-
-  function ensureMap() {
-    if (mapInited) return;
-    map = L.map(els.mapEl, {
-      zoomControl: true,
-      attributionControl: true,
-      minZoom: 4,
-      maxZoom: 18,
-      // Mặc định Leaflet chỉ cho phép zoom là số nguyên (zoomSnap: 1) — mỗi
-      // lần fitBounds() tính ra mức zoom "vừa khít" lý tưởng (vd. 6.8) đều
-      // bị làm tròn XUỐNG số nguyên gần nhất (6), nên bản đồ luôn hiện nhỏ
-      // hơn mức có thể lấp đầy khung, bất kể đo kích thước khung chứa đúng
-      // hay sai. zoomSnap: 0 cho phép zoom lẻ (fractional), để fitBounds()
-      // tính đúng mức zoom khít nhất có thể — đây là nguyên nhân chính của
-      // hiện tượng bản đồ "lúc nào mở vào cũng nhỏ".
-      zoomSnap: 0,
-      zoomDelta: 0.75 // bước nhảy khi bấm nút +/- hoặc phím tắt, cho mượt hơn khi zoomSnap = 0
-    });
-    map.attributionControl.setPrefix(false);
-    map.on('zoomend', updateLabelScale);
-    map.on('zoomend moveend', positionIslandCards);
-    mapInited = true;
-
-    // Từ lúc người dùng tự kéo/zoom bằng tay thì thôi, không tự canh lại
-    // khung nhìn nữa (xem ResizeObserver bên dưới) — tránh giật ngược bản
-    // đồ về giữa khi họ đang chủ động xem một góc khác.
-    ['mousedown', 'touchstart', 'wheel', 'dblclick'].forEach(function (evt) {
-      els.mapEl.addEventListener(evt, function () { userInteractedMap = true; }, { passive: true });
-    });
-
-    // Bù cho trường hợp Leaflet đo kích thước khung chứa NGAY LÚC khung đó
-    // chưa kịp hiện hết cỡ (vd. dữ liệu 34 tỉnh đã được prefetch sẵn lúc rê
-    // chuột vào tab Maps, nên lúc bấm vào, Promise trả về gần như tức thì —
-    // có khi nhanh hơn cả lúc panel Maps kịp hiện ra đủ to). fitBounds tính
-    // theo kích thước đo sai (nhỏ hơn thật) khiến bản đồ hiện nhỏ hơn khung
-    // rất nhiều ở lần vào đầu tiên. Theo dõi kích thước THẬT của khung chứa
-    // bản đồ bằng ResizeObserver, hễ đổi (và người dùng chưa tự thao tác)
-    // thì đo lại + canh lại khung nhìn cho khớp kích thước mới nhất.
-    if ('ResizeObserver' in window) {
-      var lastW = 0, lastH = 0;
-      var ro = new ResizeObserver(function () {
-        var w = els.mapEl.clientWidth, h = els.mapEl.clientHeight;
-        if (!w || !h || (w === lastW && h === lastH)) return;
-        lastW = w; lastH = h;
-        map.invalidateSize();
-        if (!userInteractedMap) refitCurrentView();
-      });
-      ro.observe(els.mapEl);
+  function locateUser(onFirstFix) {
+    if (!navigator.geolocation) {
+      showMessage('Trình duyệt của bạn không hỗ trợ định vị GPS.', false);
+      return;
     }
 
-    // Xoay màn hình / đổi cỡ cửa sổ trình duyệt cũng có thể đổi hẳn breakpoint
-    // (padding cấp Toàn quốc phụ thuộc window.innerWidth — xem getCountryFitOptions),
-    // nên canh lại khung nhìn luôn khi resize, không chỉ khi khung chứa bản đồ đổi cỡ.
-    window.addEventListener('resize', function () {
-      if (!map || userInteractedMap) return;
-      map.invalidateSize();
-      refitCurrentView();
-    });
-  }
+    showLoading(true);
+    els.loadingText.textContent = 'Đang định vị thiết bị của bạn…';
 
-  // Canh lại khung nhìn hiện tại theo đúng cấp đang xem — tách riêng để
-  // dùng chung cho lúc mới render (bước 1/2/3) VÀ lúc ResizeObserver ở
-  // trên phát hiện khung chứa đổi kích thước thật.
-  function refitCurrentView() {
-    if (!map) return;
-    if (state.level === 'country') {
-      map.fitBounds(MAINLAND_BOUNDS, getCountryFitOptions());
-    } else if (state.level === 'province' && activeLayer) {
-      // Tăng từ [18,18] lên [32,32]: cùng lý do với COUNTRY_FIT_OPTIONS —
-      // nhãn tên xã/phường sát biên tỉnh (vd. xã giáp ranh tỉnh khác) cần
-      // đủ khoảng trống để không bị .leaflet-container (overflow:hidden)
-      // cắt chữ.
-      map.fitBounds(activeLayer.getBounds(), { padding: [32, 32] });
-    } else if (state.level === 'ward' && boundaryLayer) {
-      map.fitBounds(boundaryLayer.getBounds(), { padding: [24, 24], maxZoom: 14 });
-    }
-  }
-
-  function clearLayers() {
-    if (activeLayer) { map.removeLayer(activeLayer); activeLayer = null; }
-    if (boundaryLayer) { map.removeLayer(boundaryLayer); boundaryLayer = null; }
-    if (tileLayer) { map.removeLayer(tileLayer); tileLayer = null; }
-    if (smallIslandLayer) { map.removeLayer(smallIslandLayer); smallIslandLayer = null; }
-    if (archipelagoDotsLayer) { map.removeLayer(archipelagoDotsLayer); archipelagoDotsLayer = null; }
-  }
-
-  // Vẽ nhãn các đảo nhỏ ven bờ (chỉ hiện ở cấp Toàn quốc)
-  function renderSmallIslandLabels() {
-    var group = L.layerGroup();
-    SMALL_ISLANDS.forEach(function (isl) {
-      var marker = L.circleMarker([isl.lat, isl.lon], {
-        radius: 2.2,
-        color: '#023e8a',
-        weight: 1,
-        fillColor: '#3a86ff',
-        fillOpacity: 0.95,
-        interactive: false
-      });
-      marker.bindTooltip(isl.name, {
-        permanent: true,
-        direction: 'right',
-        offset: [3, 0],
-        className: 'vnmap-label vnmap-islet-label'
-      });
-      group.addLayer(marker);
-    });
-    smallIslandLayer = group.addTo(map);
-  }
-
-  // Vẽ chấm tròn cho từng đảo nhỏ trong 2 quần đảo Hoàng Sa / Trường Sa
-  // trực tiếp lên bản đồ Leaflet (chỉ hiện ở cấp Toàn quốc).
-  // Dữ liệu đầu vào là FeatureCollection từ islands.geojson đã được load sẵn.
-  //
-  // Để tỉ lệ trông đúng so với đất liền: dùng radius rất nhỏ (1.2px) và
-  // lọc bỏ các polygon quá nhỏ (span toạ độ < MIN_SPAN độ kinh/vĩ) — chỉ
-  // giữ lại những hòn đảo nổi bật, tránh vẽ hàng trăm chấm chen chúc.
-  var ARCHIPELAGO_DOT_MIN_SPAN = 0.01; // ~ 1 km, lọc bỏ polygon sieu nhỏ
-
-  function renderArchipelagoDots(islandsData) {
-    if (!islandsData || !islandsData.features) return;
-    var group = L.layerGroup();
-
-    islandsData.features.forEach(function (feature) {
-      var slug = feature.properties.codeName; // 'hoang_sa' hoặc 'truong_sa'
-      var isHoangSa = slug === 'hoang_sa';
-      // Màu chấm: xanh biển cho Hoàng Sa, xanh ngọc cho Trường Sa
-      var dotColor = isHoangSa ? '#1565c0' : '#00796b';
-
-      var coords = feature.geometry.coordinates;
-      coords.forEach(function (poly) {
-        var ring = poly[0]; // vòng ngoài cùng
-        // Tính bounding box để lọc polygon quá nhỏ
-        var minLon = Infinity, maxLon = -Infinity;
-        var minLat = Infinity, maxLat = -Infinity;
-        var sumLon = 0, sumLat = 0;
-        ring.forEach(function (pt) {
-          if (pt[0] < minLon) minLon = pt[0];
-          if (pt[0] > maxLon) maxLon = pt[0];
-          if (pt[1] < minLat) minLat = pt[1];
-          if (pt[1] > maxLat) maxLat = pt[1];
-          sumLon += pt[0]; sumLat += pt[1];
-        });
-        // Bỏ qua đảo quá nhỏ — giữ tỉ lệ chấm vừa phải trên bản đồ toàn quốc
-        var span = Math.max(maxLon - minLon, maxLat - minLat);
-        if (span < ARCHIPELAGO_DOT_MIN_SPAN) return;
-
-        var cx = sumLon / ring.length;
-        var cy = sumLat / ring.length;
-
-        var dot = L.circleMarker([cy, cx], {
-          radius: 1.2,       // kích thước rất nhỏ để đúng tỉ lệ
-          color: dotColor,
-          weight: 0.5,
-          fillColor: dotColor,
-          fillOpacity: 0.9,
-          interactive: false
-        });
-        group.addLayer(dot);
-      });
-    });
-
-    archipelagoDotsLayer = group.addTo(map);
-  }
-
-  // Canh 2 ô chú thích Hoàng Sa / Trường Sa: ở cấp Toàn quốc, KHÔNG ghim
-  // cứng vào mép phải khung nữa — mà bám theo đúng vị trí bờ biển thật
-  // trên bản đồ, giống bố cục bản đồ tham chiếu. Nhờ phép chiếu Mercator
-  // của Leaflet (trục X chỉ phụ thuộc kinh độ, trục Y chỉ phụ thuộc vĩ độ,
-  // độc lập với nhau), lấy kinh độ ở rìa đông của MAINLAND_BOUNDS — coi
-  // như ngay sát bờ biển — để tính X dùng chung cho cả 2 ô, cộng thêm 1
-  // khoảng hở nhỏ ra phía biển; còn Y thì vẫn tính theo đúng vĩ độ thật
-  // của từng quần đảo như trước, để chúng nằm ngang tầm Đà Nẵng / Khánh
-  // Hòa. Cả 2 trục đều được tính lại mỗi khi zoom/kéo bản đồ (gọi từ sự
-  // kiện 'zoomend moveend' ở ensureMap), nên 2 ô tự trôi theo bờ biển
-  // thay vì dính cứng 1 chỗ; nếu bám sát bờ mà tràn ra ngoài khung thì
-  // mới lùi lại gần mép để không bị cắt hình.
-  // Ở cấp tỉnh (chỉ 1 ô liên quan) thì vẫn ghim cố định góc dưới-phải cho
-  // đơn giản. Trên layout gọn của điện thoại (xem @media trong maps.css)
-  // thì nhường hẳn việc canh vị trí cho CSS, chỉ xoá style inline cũ đi.
-  function positionIslandCards() {
-    if (!map || els.islands.hidden) return;
-    var hsCard = els.islands.querySelector('[data-island="hoang-sa"]');
-    var tsCard = els.islands.querySelector('[data-island="truong-sa"]');
-    var isCompact = window.matchMedia('(max-width: ' + COMPACT_BREAKPOINT + 'px)').matches;
-
-    if (state.level === 'country' && !isCompact) {
-      var mapSize = map.getSize();
-      var half = 40;
-      var gap = 20;         // khoảng hở giữa bờ biển và ô, để không dính sát bờ
-      var edgeMargin = 8;   // không để ô tràn ra ngoài khung bản đồ
-      var coastLon = MAINLAND_BOUNDS[1][1]; // rìa đông đất liền — dùng chung cho cả 2 ô
-      var coastX = map.latLngToContainerPoint([0, coastLon]).x;
-
-      [[hsCard, HOANG_SA_LAT], [tsCard, TRUONG_SA_LAT]].forEach(function (pair) {
-        var card = pair[0];
-        if (!card || card.hidden) return;
-        var y = map.latLngToContainerPoint([pair[1], coastLon]).y;
-        y = Math.max(half, Math.min(mapSize.y - half, y));
-        var cardW = card.offsetWidth || 170;
-        var x = Math.max(edgeMargin, Math.min(mapSize.x - cardW - edgeMargin, coastX + gap));
-        card.style.top = y + 'px';
-        card.style.bottom = 'auto';
-        card.style.left = x + 'px';
-        card.style.right = 'auto';
-      });
-    } else if (state.level === 'country') {
-      [hsCard, tsCard].forEach(function (card) {
-        if (!card) return;
-        card.style.top = '';
-        card.style.bottom = '';
-        card.style.left = '';
-        card.style.right = '';
-      });
-    } else {
-      [hsCard, tsCard].forEach(function (card) {
-        if (!card) return;
-        card.style.top = 'auto';
-        card.style.bottom = '14px';
-        card.style.left = '';
-        card.style.right = '';
-      });
-    }
-  }
-
-  // Cỡ chữ nhãn tên tỉnh/xã co giãn theo mức zoom hiện tại, để lúc xem
-  // toàn quốc (zoom thấp, nhiều tỉnh nhỏ chen nhau) chữ đủ nhỏ để không
-  // đè lên nhau, còn lúc zoom vào gần thì chữ lớn dần cho dễ đọc.
-  function updateLabelScale() {
-    if (!map) return;
-    var z = map.getZoom();
-    var size = Math.max(8, Math.min(15, Math.round(z * 1.15)));
-    // Chiều rộng tối đa của khối nhãn cũng co giãn theo zoom, không cố
-    // định 70px như trước: ở zoom thấp (cấp Toàn quốc, nhiều tỉnh nhỏ
-    // chen nhau) nhãn cần hẹp lại để không tràn lấn sang tỉnh kế bên;
-    // zoom càng cao (tỉnh/xã đã đủ to) nhãn được phép rộng hơn 1 chút để
-    // đỡ phải xuống quá nhiều dòng.
-    var maxWidth = Math.max(46, Math.min(96, Math.round(z * 9)));
-    els.mapEl.style.setProperty('--vnmap-label-size', size + 'px');
-    els.mapEl.style.setProperty('--vnmap-label-maxw', maxWidth + 'px');
-  }
-
-  /* ---------------------- Bước 1: Toàn quốc ---------------------- */
-
-  function renderCountry() {
-    state.level = 'country';
-    state.provinceCode = null;
-    state.provinceName = null;
-    state.wardCode = null;
-    state.wardName = null;
-    userInteractedMap = false; // vào lại 1 khung nhìn mới — cho phép auto-fit lại
-
-    setLoading(true, 'Đang tải bản đồ 34 tỉnh, thành phố…');
-    hideInfo();
-
-    Promise.all([loadProvinces(), loadIslands()]).then(function (results) {
-      var provincesData = results[0];
-      clearLayers();
-      map.invalidateSize();
-
-      activeLayer = L.geoJSON(provincesData, {
-        style: function (feature) {
-          return {
-            color: '#fffaf0',
-            weight: 1.3,
-            fillColor: colorForCode(feature.properties.code),
-            fillOpacity: 0.92
-          };
-        },
-        onEachFeature: function (feature, layer) {
-          var p = feature.properties;
-          layer.bindTooltip(p.name, {
-            permanent: true,
-            direction: 'center',
-            className: 'vnmap-label'
-          });
-          layer.on('mouseover', function () { layer.setStyle({ weight: 2.6 }); layer.bringToFront(); });
-          layer.on('mouseout', function () { layer.setStyle({ weight: 1.3 }); });
-          layer.on('click', function () {
-            renderProvince(p.code, p.name, p);
+    navigator.geolocation.getCurrentPosition(
+      function (pos) {
+        handlePosition(pos);
+        showLoading(false);
+        if (onFirstFix) onFirstFix();
+        if (watchId === null) {
+          watchId = navigator.geolocation.watchPosition(handlePosition, function () {}, {
+            enableHighAccuracy: true,
+            maximumAge: 5000
           });
         }
-      }).addTo(map);
-
-      refitCurrentView();
-      updateLabelScale();
-      renderSmallIslandLabels();
-      renderArchipelagoDots(results[1]);
-      renderIslandInsets(results[1], null);
-      positionIslandCards();
-      renderBreadcrumb();
-      setLoading(false);
-    }).catch(function (err) { showFetchError(err, renderCountry); });
+      },
+      function (err) {
+        showLoading(false);
+        handleGeoError(err);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   }
 
-  /* ---------------------- Bước 2: Tỉnh / Thành phố ---------------------- */
+  /* -------------------- Tìm kiếm điểm đến (Nominatim) -------------------- */
 
-  function renderProvince(code, name, ownProps) {
-    state.level = 'province';
-    state.provinceCode = code;
-    state.provinceName = name;
-    state.wardCode = null;
-    state.wardName = null;
-    userInteractedMap = false; // vào lại 1 khung nhìn mới — cho phép auto-fit lại
-
-    setLoading(true, 'Đang tải xã, phường của ' + name + '…');
-    renderBreadcrumb();
-
-    // Nếu chưa có sẵn properties của chính tỉnh này (vd. vào từ ô tìm
-    // kiếm thay vì bấm trực tiếp trên bản đồ), tra trong danh sách tỉnh
-    // đã cache để lấy diện tích / mã bưu chính hiển thị ở panel thông tin.
-    var ownFeaturePromise = ownProps
-      ? Promise.resolve(ownProps)
-      : loadProvinces().then(function (data) {
-        var f = data.features.find(function (x) { return x.properties.code === code; });
-        return f ? f.properties : null;
-      });
-
-    Promise.all([loadWards(code), loadIslands(), ownFeaturePromise]).then(function (results) {
-      var wardsData = results[0];
-      var islandsData = results[1];
-      var provinceProps = results[2];
-
-      // Với Đà Nẵng (48) / Khánh Hòa (56): tách riêng đặc khu hải đảo
-      // ra khỏi lớp chính để không làm khung nhìn bị kéo dạt ra biển xa.
-      var mainFeatures = wardsData.features.filter(function (f) {
-        return !ISLAND_CODES.hasOwnProperty(f.properties.code);
-      });
-      var islandFeature = wardsData.features.find(function (f) {
-        return ISLAND_CODES.hasOwnProperty(f.properties.code) && ISLAND_CODES[f.properties.code] === code;
-      });
-
-      clearLayers();
-      map.invalidateSize();
-
-      activeLayer = L.geoJSON({ type: 'FeatureCollection', features: mainFeatures }, {
-        style: function (feature) {
-          return {
-            color: '#fffaf0',
-            weight: 1,
-            fillColor: colorForCode(feature.properties.code, true),
-            fillOpacity: 0.88
-          };
-        },
-        onEachFeature: function (feature, layer) {
-          var p = feature.properties;
-          // Hiện tên ngay trên bản đồ, thường trực — không cần hover.
-          layer.bindTooltip(p.name, {
-            permanent: true,
-            direction: 'center',
-            className: 'vnmap-label vnmap-label--ward'
-          });
-          layer.on('mouseover', function () { layer.setStyle({ weight: 2.4 }); layer.bringToFront(); });
-          layer.on('mouseout', function () { layer.setStyle({ weight: 1 }); });
-          layer.on('click', function () {
-            renderWardDetail(p.code, p.fullName || p.name, code, name);
-          });
-        }
-      }).addTo(map);
-
-      refitCurrentView();
-      updateLabelScale();
-
-      // Nếu tỉnh này có đặc khu hải đảo, hiện lại đúng 1 ô nhỏ tương ứng
-      renderIslandInsets(islandsData, islandFeature ? code : null);
-      positionIslandCards();
-
-      // Panel thông tin về chính tỉnh đang xem (giống panel ở cấp xã)
-      if (provinceProps) showInfo(provinceProps, 'Việt Nam');
-      else hideInfo();
-
-      setLoading(false);
-    }).catch(function (err) { showFetchError(err, function () { renderProvince(code, name, ownProps); }); });
+  function hideResults() {
+    els.searchResults.hidden = true;
+    els.searchResults.innerHTML = '';
   }
 
-  /* ---------------------- Bước 3: Xã / Phường / Đặc khu chi tiết ---------------------- */
+  // Tách địa chỉ trả về thành tối đa 4 lớp: địa chỉ/tên nơi cụ thể,
+  // đường, phường/xã, tỉnh/thành — dựa vào addressdetails=1 của Nominatim
+  // (nếu dữ liệu không đủ chi tiết thì dự phòng bằng display_name).
+  function buildAddressLines(item) {
+    var addr = item.address || {};
 
-  function renderWardDetail(code, name, provinceCode, provinceName) {
-    state.level = 'ward';
-    state.provinceCode = provinceCode;
-    state.provinceName = provinceName;
-    state.wardCode = code;
-    state.wardName = name;
-    userInteractedMap = false; // vào lại 1 khung nhìn mới — cho phép auto-fit lại
+    var houseNumber = addr.house_number || '';
+    var road = addr.road || addr.pedestrian || addr.footway || addr.residential || '';
+    var venue = addr.amenity || addr.shop || addr.tourism || addr.leisure ||
+      addr.office || addr.building || addr.historic || '';
 
-    setLoading(true, 'Đang tải bản đồ chi tiết ' + name + '…');
-    renderBreadcrumb();
-    els.islands.hidden = true;
+    var ward = addr.suburb || addr.quarter || addr.neighbourhood || addr.city_district ||
+      addr.village || addr.commune || addr.hamlet || addr.town || '';
+    var province = addr.state || addr.city || addr.province || addr.region || '';
 
-    var findFeature = function () {
-      if (ISLAND_CODES.hasOwnProperty(code)) {
-        return loadIslands().then(function (data) {
-          return data.features.find(function (f) { return f.properties.code === code; });
-        });
+    var line1 = venue || (houseNumber ? (houseNumber + (road ? ' ' + road : '')) : '');
+    var line2 = road && line1.indexOf(road) === -1 ? road : '';
+
+    var lines = [line1, line2, ward, province].filter(Boolean);
+    lines = lines.filter(function (v, idx) { return lines.indexOf(v) === idx; });
+
+    if (lines.length < 2) {
+      // Dữ liệu address chi tiết không đủ (thường gặp ở khu vực OSM còn thưa) —
+      // dự phòng bằng cách tách trực tiếp display_name.
+      lines = (item.display_name || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean).slice(0, 4);
+    }
+
+    return lines;
+  }
+
+  // Độ "cụ thể" của kết quả: địa chỉ có số nhà > tên/đường/POI > ranh giới
+  // hành chính (tỉnh/phường/xã) — để ưu tiên đúng địa điểm thay vì chỉ khớp
+  // tên đơn vị hành chính trùng tên.
+  function rankResult(item) {
+    if (item.address && item.address.house_number) return 0;
+    var poiClasses = ['amenity', 'shop', 'tourism', 'leisure', 'office', 'historic', 'education'];
+    if (poiClasses.indexOf(item.class) !== -1 || item.class === 'highway') return 1;
+    if (item.class === 'boundary' || item.type === 'administrative') return 3;
+    return 2;
+  }
+
+  function haversineKm(a, b) {
+    var R = 6371;
+    var dLat = (b[0] - a[0]) * Math.PI / 180;
+    var dLon = (b[1] - a[1]) * Math.PI / 180;
+    var lat1 = a[0] * Math.PI / 180, lat2 = b[0] * Math.PI / 180;
+    var sinDLat = Math.sin(dLat / 2), sinDLon = Math.sin(dLon / 2);
+    var h = sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  // Sắp xếp: ưu tiên độ cụ thể trước, rồi đến khoảng cách gần vị trí hiện
+  // tại — giống cách Google Maps ưu tiên kết quả gần bạn.
+  function sortResults(list) {
+    return list.slice().sort(function (a, b) {
+      var ra = rankResult(a), rb = rankResult(b);
+      if (ra !== rb) return ra - rb;
+      if (userLatLng) {
+        var da = haversineKm(userLatLng, [parseFloat(a.lat), parseFloat(a.lon)]);
+        var db = haversineKm(userLatLng, [parseFloat(b.lat), parseFloat(b.lon)]);
+        return da - db;
       }
-      return loadWards(provinceCode).then(function (data) {
-        return data.features.find(function (f) { return f.properties.code === code; });
-      });
-    };
-
-    findFeature().then(function (feature) {
-      clearLayers();
-      map.invalidateSize();
-
-      tileLayer = L.tileLayer(OSM_TILE_URL, {
-        maxZoom: 18,
-        attribution: OSM_ATTR
-      }).addTo(map);
-
-      if (feature) {
-        boundaryLayer = L.geoJSON(feature, {
-          style: {
-            color: '#e63946',
-            weight: 3,
-            fillColor: '#e63946',
-            fillOpacity: 0.12
-          }
-        }).addTo(map);
-        refitCurrentView();
-      }
-
-      showInfo(feature ? feature.properties : null, provinceName);
-      setLoading(false);
-    }).catch(function (err) {
-      showFetchError(err, function () { renderWardDetail(code, name, provinceCode, provinceName); });
+      return 0;
     });
   }
 
-  /* ---------------------- Ô nhỏ Hoàng Sa / Trường Sa ---------------------- */
+  function renderResults(list) {
+    lastResults = Array.isArray(list) ? list : [];
 
-  function svgFromMultiPolygon(geometry, size) {
-    var pts = [];
-    geometry.coordinates.forEach(function (poly) {
-      poly[0].forEach(function (pt) { pts.push(pt); });
-    });
-    var lons = pts.map(function (p) { return p[0]; });
-    var lats = pts.map(function (p) { return p[1]; });
-    var minLon = Math.min.apply(null, lons), maxLon = Math.max.apply(null, lons);
-    var minLat = Math.min.apply(null, lats), maxLat = Math.max.apply(null, lats);
-    var pad = size * 0.14;
-    var span = Math.max(maxLon - minLon, maxLat - minLat) || 1;
-    var scale = (size - pad * 2) / span;
+    if (lastResults.length === 0) {
+      els.searchResults.innerHTML = '<div class="vnmap-search-empty">Không tìm thấy địa điểm phù hợp.</div>';
+      els.searchResults.hidden = false;
+      return;
+    }
 
-    var toXY = function (lon, lat) {
-      var x = pad + (lon - minLon) * scale;
-      var y = size - (pad + (lat - minLat) * scale); // lật trục Y
-      return [x, y];
-    };
-
-    var dots = geometry.coordinates.map(function (poly) {
-      var ring = poly[0];
-      var cx = 0, cy = 0;
-      ring.forEach(function (pt) { cx += pt[0]; cy += pt[1]; });
-      cx /= ring.length; cy /= ring.length;
-      var xy = toXY(cx, cy);
-      return '<circle cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="2.1" fill="#0077b6" />';
+    var html = lastResults.map(function (item, idx) {
+      var lines = buildAddressLines(item);
+      var main = lines[0] || '';
+      var sub = lines.slice(1).join(' · ');
+      return (
+        '<button type="button" class="vnmap-search-item" data-idx="' + idx + '">' +
+        '<i data-lucide="map-pin" aria-hidden="true"></i>' +
+        '<span class="vnmap-search-item-text">' +
+        '<span class="vnmap-search-item-main">' + escapeHtml(main) + '</span>' +
+        (sub ? '<span class="vnmap-search-item-sub">' + escapeHtml(sub) + '</span>' : '') +
+        '</span>' +
+        '</button>'
+      );
     }).join('');
 
-    return '<rect x="0" y="0" width="' + size + '" height="' + size + '" fill="#eaf4fb" rx="10" />' + dots;
-  }
+    els.searchResults.innerHTML = html;
+    els.searchResults.hidden = false;
+    refreshIcons();
 
-  function renderIslandInsets(islandsData, onlyForProvince) {
-    if (!islandsData) { els.islands.hidden = true; return; }
-
-    var showAll = state.level === 'country';
-    var visibleFeatures = islandsData.features.filter(function (f) {
-      if (showAll) return true;
-      return onlyForProvince && f.properties.provinceCode === onlyForProvince;
-    });
-
-    els.islands.hidden = visibleFeatures.length === 0;
-    if (visibleFeatures.length === 0) return;
-
-    ['hoang-sa', 'truong-sa'].forEach(function (slug) {
-      var card = els.islands.querySelector('[data-island="' + slug + '"]');
-      // codeName trong dữ liệu dùng gạch dưới (hoang_sa) — chuẩn hoá về
-      // gạch ngang để so khớp với data-island trong HTML.
-      var feature = islandsData.features.find(function (f) {
-        return f.properties.codeName.replace(/_/g, '-') === slug;
+    Array.prototype.forEach.call(els.searchResults.querySelectorAll('.vnmap-search-item'), function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = parseInt(btn.getAttribute('data-idx'), 10);
+        selectDestination(lastResults[idx]);
       });
-      var isVisible = feature && visibleFeatures.indexOf(feature) !== -1;
-      card.hidden = !isVisible;
-      if (!isVisible) return;
-
-      var svgEl = card.querySelector('svg');
-      svgEl.innerHTML = svgFromMultiPolygon(feature.geometry, 100);
-      var areaEl = card.querySelector('.vnmap-island-area');
-      if (areaEl) areaEl.textContent = '~' + formatArea(feature.properties.areaKm2);
-      card.onclick = function () {
-        renderWardDetail(feature.properties.code, feature.properties.fullName, feature.properties.provinceCode, feature.properties.provinceName);
-      };
     });
   }
 
-  /* ---------------------- Breadcrumb & panel thông tin ---------------------- */
+  // Vùng ưu tiên (soft bias) quanh vị trí hiện tại — chỉ ưu tiên xếp hạng,
+  // không loại bỏ kết quả ở xa (bounded=0) để vẫn tìm được nơi khác tỉnh.
+  function viewboxParam() {
+    if (!userLatLng) return '';
+    var delta = 1.5; // ~150km mỗi hướng
+    var lat = userLatLng[0], lon = userLatLng[1];
+    return '&viewbox=' + (lon - delta) + ',' + (lat + delta) + ',' + (lon + delta) + ',' + (lat - delta) + '&bounded=0';
+  }
 
-  function renderBreadcrumb() {
-    var parts = [];
-    parts.push({ label: 'Toàn quốc', active: state.level === 'country', onClick: renderCountry });
+  function doSearch(query) {
+    if (searchAbort) searchAbort.abort();
+    searchAbort = ('AbortController' in window) ? new AbortController() : null;
 
-    if (state.provinceCode) {
-      parts.push({
-        label: state.provinceName,
-        active: state.level === 'province',
-        onClick: function () { renderProvince(state.provinceCode, state.provinceName); }
+    var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=8' +
+      '&countrycodes=vn&accept-language=vi&q=' + encodeURIComponent(query) + viewboxParam();
+
+    fetch(url, { signal: searchAbort ? searchAbort.signal : undefined })
+      .then(function (r) { return r.json(); })
+      .then(function (list) { renderResults(sortResults(list)); })
+      .catch(function (err) {
+        if (err && err.name === 'AbortError') return;
+        els.searchResults.innerHTML = '<div class="vnmap-search-empty">Có lỗi khi tìm kiếm, vui lòng thử lại.</div>';
+        els.searchResults.hidden = false;
       });
-    }
-    if (state.wardCode) {
-      parts.push({ label: state.wardName, active: true, onClick: null });
-    }
-
-    els.breadcrumb.innerHTML = '';
-    parts.forEach(function (part, i) {
-      if (i > 0) {
-        var sep = document.createElement('span');
-        sep.className = 'vnmap-crumb-sep';
-        sep.textContent = '›';
-        els.breadcrumb.appendChild(sep);
-      }
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'vnmap-crumb' + (part.active ? ' is-active' : '');
-      btn.textContent = part.label;
-      if (part.onClick) btn.addEventListener('click', part.onClick);
-      else btn.disabled = true;
-      els.breadcrumb.appendChild(btn);
-    });
-
-    els.backBtn.hidden = state.level === 'country';
   }
 
-  function showInfo(props, eyebrow) {
-    if (!props) { hideInfo(); return; }
-    var metaLines = [];
-    if (props.areaKm2) metaLines.push('<strong>Diện tích:</strong> ' + formatArea(props.areaKm2));
-    var postal = props.postalCode || props.postalCodePrefix;
-    if (postal) metaLines.push('<strong>Mã bưu chính:</strong> ' + postal);
-
-    els.infoBody.innerHTML =
-      '<p class="vnmap-info-eyebrow">' + eyebrow + '</p>' +
-      '<h3 class="vnmap-info-name">' + (props.fullName || props.name) + '</h3>' +
-      '<p class="vnmap-info-meta">' + metaLines.join('<br>') + '</p>';
-    els.info.hidden = false;
+  function onSearchInput() {
+    var q = els.searchInput.value.trim();
+    els.searchClear.hidden = !q;
+    clearTimeout(searchTimer);
+    if (!q) { hideResults(); return; }
+    searchTimer = setTimeout(function () { doSearch(q); }, SEARCH_DEBOUNCE_MS);
   }
 
-  function hideInfo() {
-    els.info.hidden = true;
-  }
+  /* -------------------- Điểm đến + chỉ đường (OSRM) -------------------- */
 
-  /* ---------------------- Điều hướng quay lại ---------------------- */
-
-  function goBack() {
-    if (state.level === 'ward') {
-      renderProvince(state.provinceCode, state.provinceName);
-    } else if (state.level === 'province') {
-      renderCountry();
+  function placeDestMarker(latlng, label) {
+    if (destMarker) map.removeLayer(destMarker);
+    destMarker = L.marker(latlng, { icon: destIcon }).addTo(map);
+    if (label) {
+      destMarker.bindPopup(escapeHtml(label.split(',').slice(0, 2).join(','))).openPopup();
     }
   }
 
-  /* ---------------------- Ô tìm kiếm tỉnh / xã theo tên ---------------------- */
+  function clearDestination() {
+    if (destMarker) { map.removeLayer(destMarker); destMarker = null; }
+    if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
+    els.routePanel.hidden = true;
+  }
 
-  function setupSearch() {
-    var input = els.searchInput;
-    var results = els.searchResults;
-    var clearBtn = els.searchClear;
-    var activeIndex = -1;
-    var currentMatches = [];
+  function showRouteMessage(text) {
+    els.routeSummary.innerHTML = '<div class="vnmap-route-message">' + escapeHtml(text) + '</div>';
+    els.routeSteps.innerHTML = '';
+    els.routePanel.hidden = false;
+  }
 
-    function renderResults(matches) {
-      currentMatches = matches;
-      activeIndex = -1;
-      if (matches.length === 0) {
-        results.innerHTML = '<p class="vnmap-search-empty">Không tìm thấy kết quả phù hợp.</p>';
-        results.hidden = false;
-        return;
-      }
-      results.innerHTML = matches.map(function (m, i) {
-        var meta = m.t === 'p' ? 'Tỉnh, thành phố' : m.pn;
-        return '<button type="button" class="vnmap-search-item" data-index="' + i + '">' +
-          '<span class="vnmap-search-item-name">' + m.name + '</span>' +
-          '<span class="vnmap-search-item-meta">' + meta + '</span>' +
-          '</button>';
-      }).join('');
-      results.hidden = false;
+  function drawRoute(route) {
+    if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
+
+    var latlngs = route.geometry.coordinates.map(function (c) { return [c[1], c[0]]; });
+    routeLine = L.polyline(latlngs, {
+      color: getCssVar('--vn-primary', '#0ea5e9'),
+      weight: 5,
+      opacity: 0.85,
+      lineJoin: 'round'
+    }).addTo(map);
+
+    map.fitBounds(routeLine.getBounds(), { padding: [48, 48] });
+
+    els.routeSummary.innerHTML =
+      '<div class="vnmap-route-distance">' + formatDistance(route.distance) + '</div>' +
+      '<div class="vnmap-route-duration">' + formatDuration(route.duration) + ' · đi xe</div>';
+
+    var steps = (route.legs && route.legs[0] && route.legs[0].steps) || [];
+    els.routeSteps.innerHTML = steps.map(function (step) {
+      return (
+        '<li class="vnmap-step">' +
+        '<span class="vnmap-step-text">' + escapeHtml(stepInstruction(step)) + '</span>' +
+        '<span class="vnmap-step-dist">' + formatDistance(step.distance) + '</span>' +
+        '</li>'
+      );
+    }).join('');
+
+    els.routePanel.hidden = false;
+  }
+
+  function fetchRoute(from, to) {
+    showLoading(true);
+    els.loadingText.textContent = 'Đang tìm đường đi…';
+
+    var url = 'https://router.project-osrm.org/route/v1/driving/' +
+      from[1] + ',' + from[0] + ';' + to[1] + ',' + to[0] +
+      '?overview=full&geometries=geojson&steps=true&alternatives=false';
+
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        showLoading(false);
+        if (data.code !== 'Ok' || !data.routes || !data.routes.length) {
+          showRouteMessage('Không tìm thấy đường đi phù hợp đến điểm này.');
+          return;
+        }
+        drawRoute(data.routes[0]);
+      })
+      .catch(function () {
+        showLoading(false);
+        showRouteMessage('Có lỗi khi tải chỉ đường, vui lòng thử lại.');
+      });
+  }
+
+  function selectDestination(item) {
+    if (!item) return;
+    hideResults();
+    els.searchInput.value = (item.display_name || '').split(',')[0];
+    els.searchClear.hidden = false;
+
+    var destLatLng = [parseFloat(item.lat), parseFloat(item.lon)];
+    placeDestMarker(destLatLng, item.display_name);
+
+    if (userLatLng) {
+      fetchRoute(userLatLng, destLatLng);
+    } else {
+      map.setView(destLatLng, 15);
+      showRouteMessage('Đang chờ vị trí của bạn để hiển thị chỉ đường…');
+      locateUser(function () { fetchRoute(userLatLng, destLatLng); });
     }
+  }
 
-    function selectMatch(m) {
-      if (!m) return;
-      input.value = m.name;
-      results.hidden = true;
-      if (m.t === 'p') {
-        renderProvince(m.code, m.name);
-      } else {
-        renderWardDetail(m.code, m.name, m.pc, m.pn);
-      }
-    }
+  /* -------------------- Gắn sự kiện giao diện -------------------- */
 
-    function runSearch(query) {
-      var key = normalize(query);
-      clearBtn.hidden = query.length === 0;
-      if (key.length < 1) { results.hidden = true; return; }
-      loadSearchIndex().then(function (index) {
-        var matches = index.filter(function (e) { return e._key.indexOf(key) !== -1; }).slice(0, 20);
-        renderResults(matches);
-      }).catch(function (err) { showFetchError(err); });
-    }
+  function bindUi() {
+    els.searchInput.addEventListener('input', onSearchInput);
 
-    var debounceTimer = null;
-    input.addEventListener('input', function () {
-      clearTimeout(debounceTimer);
-      var value = input.value;
-      debounceTimer = setTimeout(function () { runSearch(value); }, 120);
-    });
-
-    input.addEventListener('keydown', function (e) {
-      var items = results.querySelectorAll('.vnmap-search-item');
-      if (e.key === 'ArrowDown') {
+    els.searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
         e.preventDefault();
-        activeIndex = Math.min(activeIndex + 1, items.length - 1);
-        items.forEach(function (it, i) { it.classList.toggle('is-active', i === activeIndex); });
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        activeIndex = Math.max(activeIndex - 1, 0);
-        items.forEach(function (it, i) { it.classList.toggle('is-active', i === activeIndex); });
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (activeIndex >= 0 && currentMatches[activeIndex]) selectMatch(currentMatches[activeIndex]);
-        else if (currentMatches[0]) selectMatch(currentMatches[0]);
-      } else if (e.key === 'Escape') {
-        results.hidden = true;
+        var first = els.searchResults.querySelector('.vnmap-search-item');
+        if (first) first.click();
       }
     });
 
-    results.addEventListener('click', function (e) {
-      var btn = e.target.closest('.vnmap-search-item');
-      if (!btn) return;
-      selectMatch(currentMatches[parseInt(btn.dataset.index, 10)]);
-    });
-
-    clearBtn.addEventListener('click', function () {
-      input.value = '';
-      clearBtn.hidden = true;
-      results.hidden = true;
-      input.focus();
+    els.searchClear.addEventListener('click', function () {
+      els.searchInput.value = '';
+      els.searchClear.hidden = true;
+      hideResults();
+      clearDestination();
+      els.searchInput.focus();
     });
 
     document.addEventListener('click', function (e) {
-      if (!els.search.contains(e.target)) results.hidden = true;
+      if (els.searchResults.hidden) return;
+      if (!els.searchBox.contains(e.target)) hideResults();
+    });
+
+    els.locateBtn.addEventListener('click', function () {
+      if (userLatLng) {
+        map.setView(userLatLng, 16, { animate: true });
+      } else {
+        locateUser(function () {
+          if (userLatLng) map.setView(userLatLng, 16, { animate: true });
+        });
+      }
+    });
+
+    els.loadingRetry.addEventListener('click', function () {
+      locateUser(function () {});
+    });
+
+    els.routeClose.addEventListener('click', function () {
+      clearDestination();
+      els.searchInput.value = '';
+      els.searchClear.hidden = true;
     });
   }
 
-  /* ---------------------- Khởi động ---------------------- */
+  /* -------------------- Kích hoạt khi mở tab "Bản đồ" -------------------- */
 
-  function bootstrap() {
-    els = {
-      mapEl: qs('vnmap-map'),
-      loading: qs('vnmap-loading'),
-      loadingRetry: qs('vnmap-loading-retry'),
-      breadcrumb: qs('vnmap-breadcrumb'),
-      backBtn: qs('vnmap-back'),
-      islands: qs('vnmap-islands'),
-      info: qs('vnmap-info'),
-      infoBody: qs('vnmap-info-body'),
-      infoClose: qs('vnmap-info-close'),
-      search: qs('vnmap-search'),
-      searchInput: qs('vnmap-search-input'),
-      searchClear: qs('vnmap-search-clear'),
-      searchResults: qs('vnmap-search-results')
-    };
-
-    if (!els.mapEl) return; // panel Maps không tồn tại trên trang này
-
-    els.backBtn.addEventListener('click', goBack);
-    els.infoClose.addEventListener('click', hideInfo);
-    els.loadingRetry.addEventListener('click', function () { if (lastAction) lastAction(); });
-    setupSearch();
-
-    var started = false;
-    function activate() {
-      ensureMap();
-      if (!started) {
-        started = true;
-        renderCountry();
-      }
-
-      // Chỉ invalidateSize() suông (như bản cũ) là chưa đủ: nó chỉ báo cho
-      // Leaflet biết canvas giờ đã đúng cỡ, chứ KHÔNG tự tính lại khung
-      // nhìn (zoom/tâm bản đồ). Nếu renderCountry() ở trên lỡ fitBounds()
-      // trước đó bằng kích thước đo sai (nhỏ hơn thật — panel Maps chưa
-      // kịp hiện hết cỡ ngay lúc bấm, nhất là khi dữ liệu đã được prefetch
-      // nên Promise trả về gần như tức thì), thì bản đồ vẫn hiện với độ
-      // zoom cũ (nhỏ hơn khung chứa thật). Nên phải refitCurrentView()
-      // ngay sau mỗi lần invalidateSize(), không chỉ gọi invalidateSize
-      // suông. Gọi 2 mốc thời gian (60ms và 300ms) để chắc ăn với cả thiết
-      // bị nhanh lẫn panel có hiệu ứng chuyển tab (CSS transition) chậm hơn.
-      [60, 300].forEach(function (delay) {
-        setTimeout(function () {
-          map.invalidateSize();
-          if (!userInteractedMap) refitCurrentView();
-        }, delay);
-      });
+  function activate() {
+    if (initialized) {
+      setTimeout(function () { if (map) map.invalidateSize(); }, 150);
+      return;
     }
+    initialized = true;
+    initMap();
+    bindUi();
+    locateUser(function () {});
+  }
 
-    var mapsTab = document.querySelector('.sh-tab[data-panel="panel-maps"]');
-    if (mapsTab) {
-      mapsTab.addEventListener('click', activate);
-      // Tải trước dữ liệu 34 tỉnh + đảo ngay khi rê chuột/chạm vào tab
-      // Maps — thường xảy ra trước lúc bấm vài trăm mili-giây, nên khi
-      // click thật thì dữ liệu đã có sẵn (hoặc đang tải dở, dùng chung).
-      ['mouseenter', 'focus', 'touchstart'].forEach(function (evt) {
-        mapsTab.addEventListener(evt, prefetchCountryData, { once: true, passive: true });
-      });
-      // Nếu tab Maps đã được chọn sẵn khi tải trang (vd. đến từ URL/hash)
-      if (mapsTab.getAttribute('aria-selected') === 'true') activate();
-    } else {
-      // Không tìm thấy nav — vẫn khởi tạo để bản đồ dùng được độc lập
+  document.addEventListener('DOMContentLoaded', function () {
+    cacheEls();
+    if (!els.mapDiv) return; // Không có tab Bản đồ trên trang này
+
+    var tabBtn = document.querySelector('.sh-tab[data-panel="panel-maps"]');
+    if (!tabBtn) return;
+
+    tabBtn.addEventListener('click', function () {
+      // Đợi panel hiển thị (bỏ thuộc tính hidden) rồi mới khởi tạo Leaflet,
+      // vì Leaflet cần khung chứa có kích thước thật để vẽ đúng.
+      setTimeout(activate, 50);
+    });
+
+    // Trường hợp tab Bản đồ đã được chọn sẵn khi tải trang (deep link)
+    if (tabBtn.getAttribute('aria-selected') === 'true') {
       activate();
     }
-
-    // Dự phòng: nếu người dùng chưa từng hover/chạm tab Maps trước khi
-    // bấm (vd. gõ phím Tab để chuyển focus, hoặc vào thẳng bằng #panel-maps),
-    // vẫn tải trước lúc trình duyệt rảnh, không cạnh tranh với render trang.
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(prefetchCountryData, { timeout: 2000 });
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bootstrap);
-  } else {
-    bootstrap();
-  }
+  });
 })();

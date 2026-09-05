@@ -23,8 +23,8 @@
   <!-- Leaflet: thư viện bản đồ tương tác dùng cho tab Maps -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <!-- maps.css: giao diện bản đồ Việt Nam tương tác 3 cấp -->
-  <link rel="stylesheet" href="css/maps.css?v=1">
+  <!-- maps.css: giao diện bản đồ chỉ đường (Leaflet + Google Maps style) -->
+  <link rel="stylesheet" href="css/maps.css?v=2">
   <!-- auth.css: giao diện trang Đăng nhập / Đăng ký -->
   <link rel="stylesheet" href="css/auth.css?v=1">
   <!-- Flatpickr CSS -->
@@ -969,80 +969,57 @@
     </section>
 
     <!-- ============================================================
-         2. MAPS — bản đồ Việt Nam tương tác 3 bước
-         Toàn quốc → Tỉnh/Thành (xã, phường, đặc khu) → Chi tiết khu vực
-         Logic đầy đủ nằm ở js/maps.js, giao diện ở css/maps.css,
-         dữ liệu ranh giới ở data/maps/*.
+         2. MAPS — bản đồ chỉ đường thời gian thực (kiểu Google Maps)
+         Nền bản đồ: Leaflet + OpenStreetMap. Định vị: GPS thiết bị
+         (navigator.geolocation). Tìm điểm đến: Nominatim geocoding.
+         Chỉ đường: OSRM routing. Toàn bộ logic nằm ở js/maps.js,
+         giao diện ở css/maps.css.
          ============================================================ -->
     <section id="panel-maps" class="sh-panel vnmap-panel" hidden>
 
       <div class="vnmap-header">
-        <h2 class="vnmap-title">Bản đồ Việt Nam</h2>
-        <p class="vnmap-subtitle">Nhấp vào một tỉnh, thành để xem toàn bộ xã, phường, đặc khu — rồi nhấp tiếp để xem bản
-          đồ chi tiết khu vực đó.</p>
-        <div class="vnmap-search" id="vnmap-search">
-          <div class="vnmap-search-field">
-            <i data-lucide="search" aria-hidden="true"></i>
-            <input type="text" id="vnmap-search-input" class="vnmap-search-input"
-              placeholder="Tìm tỉnh, xã, phường theo tên…" autocomplete="off"
-              aria-label="Tìm tỉnh, xã, phường theo tên">
-            <button type="button" class="vnmap-search-clear" id="vnmap-search-clear" hidden aria-label="Xóa tìm kiếm">
-              <i data-lucide="x" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div class="vnmap-search-results" id="vnmap-search-results" hidden></div>
-        </div>
+        <h2 class="vnmap-title">Bản đồ &amp; Chỉ đường</h2>
+        <p class="vnmap-subtitle">Tìm một điểm đến bất kỳ — VNFinder sẽ chỉ đường trực tiếp từ vị trí hiện tại của
+          bạn, giống như trên Google Maps.</p>
       </div>
 
-      <div class="vnmap-toolbar">
-        <nav class="vnmap-breadcrumb" id="vnmap-breadcrumb" aria-label="Điều hướng bản đồ">
-          <button type="button" class="vnmap-crumb is-active">Toàn quốc</button>
-        </nav>
-        <button type="button" class="vnmap-back" id="vnmap-back" hidden>
-          <i data-lucide="arrow-left" aria-hidden="true"></i> Quay lại
-        </button>
+      <div class="vnmap-search-bar" id="vnmap-search">
+        <div class="vnmap-search-field">
+          <i data-lucide="search" aria-hidden="true"></i>
+          <input type="text" id="vnmap-search-input" class="vnmap-search-input"
+            placeholder="Tìm địa điểm, địa chỉ, quán ăn…" autocomplete="off"
+            aria-label="Tìm điểm đến">
+          <button type="button" class="vnmap-search-clear" id="vnmap-search-clear" hidden aria-label="Xóa tìm kiếm">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="vnmap-search-results" id="vnmap-search-results" hidden></div>
       </div>
 
       <div class="vnmap-stage">
         <div id="vnmap-map" class="vnmap-map"></div>
 
+        <button type="button" class="vnmap-locate-btn" id="vnmap-locate-btn" aria-label="Về vị trí của tôi">
+          <i data-lucide="locate-fixed" aria-hidden="true"></i>
+        </button>
+
         <div class="vnmap-loading" id="vnmap-loading">
           <div class="vnmap-spinner" aria-hidden="true"></div>
-          <span>Đang tải bản đồ…</span>
+          <span id="vnmap-loading-text">Đang định vị thiết bị của bạn…</span>
           <button type="button" class="vnmap-loading-retry" id="vnmap-loading-retry" hidden>Thử lại</button>
         </div>
 
-        <div class="vnmap-islands" id="vnmap-islands" hidden>
-          <button type="button" class="vnmap-island-card" data-island="hoang-sa">
-            <svg class="vnmap-island-svg" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <span class="vnmap-island-text">
-              <span class="vnmap-island-eyebrow">Quần đảo</span>
-              <span class="vnmap-island-label">QD. Hoàng Sa</span>
-              <span class="vnmap-island-sub">(Đà Nẵng - Việt Nam)</span>
-              <span class="vnmap-island-area"></span>
-            </span>
-          </button>
-          <button type="button" class="vnmap-island-card" data-island="truong-sa">
-            <svg class="vnmap-island-svg" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <span class="vnmap-island-text">
-              <span class="vnmap-island-eyebrow">Quần đảo</span>
-              <span class="vnmap-island-label">QD. Trường Sa</span>
-              <span class="vnmap-island-sub">(Khánh Hoà - Việt Nam)</span>
-              <span class="vnmap-island-area"></span>
-            </span>
-          </button>
-        </div>
-
-        <div class="vnmap-info" id="vnmap-info" hidden>
-          <button type="button" class="vnmap-info-close" id="vnmap-info-close" aria-label="Đóng">
+        <div class="vnmap-route-panel" id="vnmap-route-panel" hidden>
+          <button type="button" class="vnmap-route-close" id="vnmap-route-close" aria-label="Đóng chỉ đường">
             <i data-lucide="x" aria-hidden="true"></i>
           </button>
-          <div class="vnmap-info-body" id="vnmap-info-body"></div>
+          <div class="vnmap-route-summary" id="vnmap-route-summary"></div>
+          <ol class="vnmap-route-steps" id="vnmap-route-steps"></ol>
         </div>
       </div>
 
-      <p class="vnmap-hint">Dữ liệu ranh giới hành chính theo cơ cấu 34 tỉnh/thành · xã/phường/đặc khu áp dụng từ
-        01/07/2025.</p>
+      <p class="vnmap-hint">Vị trí thiết bị và chỉ đường được lấy trực tiếp qua GPS trình duyệt, dựa trên dữ liệu bản
+        đồ mở OpenStreetMap.</p>
 
     </section>
 
@@ -1892,7 +1869,7 @@
        tự gắn sự kiện vào tab Maps khi DOM đã có nav -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/maps.js?v=1" defer></script>
+  <script src="js/maps.js?v=2" defer></script>
   <!-- auth.js: đăng nhập / đăng ký + lưu cloud JSONBin.io -->
   <script src="js/auth.js?v=1" defer></script>
   <!-- Lọc vùng miền (Destinations Filter) -->
