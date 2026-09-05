@@ -1,0 +1,300 @@
+/* ============================================================
+   AUTH — giao diện trang Đăng nhập / Đăng ký.
+   Thiết kế tươi mới, khác biệt với GitHub: gradient nền, card
+   glassmorphism nhẹ, accent màu đỏ-cam đặc trưng của VNFinder.
+   Namespace riêng "auth-*" để không đụng các file css khác.
+   ============================================================ */
+
+/* BUG FIX QUAN TRỌNG: HTML attribute [hidden] set display:none nhưng
+   class selector có độ ưu tiên cao hơn → phải ghi đè rõ ràng.
+   Nếu không có dòng này, panel-login và panel-signup sẽ hiện ra trên
+   mọi trang dù đang là hidden. */
+.sh-panel[hidden],
+.auth-panel[hidden] {
+    display: none !important;
+}
+
+.auth-panel {
+    min-height: 76vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(32px, 6vw, 64px) 16px;
+    background: linear-gradient(135deg, #fdf6f0 0%, #fef9f5 40%, #f0f4ff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Vòng trang trí nền */
+.auth-panel::before,
+.auth-panel::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.auth-panel::before {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(193, 55, 58, 0.06) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+}
+
+.auth-panel::after {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(66, 133, 244, 0.05) 0%, transparent 70%);
+    bottom: -80px;
+    left: -80px;
+}
+
+.auth-wrapper {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    /* nổi lên trên các vòng trang trí ::before/::after */
+}
+
+.auth-brand {
+    margin-bottom: 20px;
+}
+
+.auth-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px -8px rgba(193, 55, 58, 0.35);
+    transition: transform 0.2s ease;
+}
+
+.auth-logo:hover {
+    transform: scale(1.05) rotate(-3deg);
+}
+
+.auth-title {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1a1f24;
+    margin: 0 0 22px;
+    text-align: center;
+    letter-spacing: -0.3px;
+}
+
+.auth-box {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(216, 222, 228, 0.7);
+    border-radius: 18px;
+    padding: 30px 28px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 16px 32px -8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Dòng thông báo lỗi/thành công — mặc định trung tính, đổi màu qua
+   class .is-error / .is-success do auth.js gắn thêm lúc hiển thị. */
+.auth-message {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 0 0 16px;
+    text-align: left;
+}
+
+.auth-message[hidden] {
+    display: none;
+}
+
+.auth-message.is-error {
+    background: #fff1f0;
+    border: 1px solid #ffb3ab;
+    color: #cf222e;
+}
+
+.auth-message.is-success {
+    background: #ecfdf3;
+    border: 1px solid #9be3b8;
+    color: #1a7f4e;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+}
+
+.auth-field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #24292f;
+}
+
+.auth-field-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.auth-field input {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 9px 11px;
+    font: inherit;
+    font-size: 0.95rem;
+    color: #24292f;
+    background: #ffffff;
+    width: 100%;
+}
+
+.auth-field input:focus {
+    outline: none;
+    border-color: var(--vnmap-accent, #c1373a);
+    box-shadow: 0 0 0 3px rgba(193, 55, 58, 0.14);
+}
+
+.auth-field input:invalid:not(:placeholder-shown) {
+    border-color: #ffb3ab;
+}
+
+.auth-link {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    font-size: 0.82rem;
+    color: #0969da;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+.auth-submit {
+    margin-top: 6px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #c1373a 0%, #e05a2b 100%);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px -4px rgba(193, 55, 58, 0.45);
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.auth-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -4px rgba(193, 55, 58, 0.5);
+}
+
+.auth-submit:hover::after {
+    opacity: 1;
+}
+
+.auth-submit:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px -4px rgba(193, 55, 58, 0.4);
+}
+
+.auth-submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Loading spinner khi form đang submit */
+.auth-submit.is-loading {
+    color: transparent;
+    pointer-events: none;
+}
+
+.auth-submit.is-loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    margin: -9px 0 0 -9px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: auth-spin 0.7s linear infinite;
+}
+
+@keyframes auth-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.auth-switch-box {
+    width: 100%;
+    margin-top: 18px;
+    border: 1px solid #d8dee4;
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: #24292f;
+    background: #ffffff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+}
+
+.auth-switch-btn {
+    font-weight: 700;
+}
+
+/* Trạng thái đã đăng nhập, thay thế 2 nút Đăng nhập/Đăng ký trên nav */
+.auth-welcome {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--vn-ink, #21302f);
+    margin-right: 6px;
+}
+
+.auth-btn.auth-logout {
+    background: transparent;
+    border: 1px solid var(--vn-line, #e2e8f0);
+}
