@@ -1,0 +1,306 @@
+/* ============================================================
+   CHECK-IN — danh sách lịch trình đã lưu. Mỗi lịch trình hiện thành
+   1 banner tách đôi (điểm khởi hành | máy bay | điểm đến), dùng ảnh
+   thật của từng nơi thay cho minh hoạ trời-mây trong bản phác thảo.
+   Namespace riêng "checkin-*" để không đụng các file css khác.
+   ============================================================ */
+
+.checkin-panel {
+    padding: clamp(20px, 4vw, 48px) clamp(16px, 5vw, 64px) 64px;
+    background: #ffffff;
+}
+
+.checkin-header {
+    max-width: 900px;
+    margin: 0 auto 28px;
+    text-align: center;
+}
+
+.checkin-title {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    margin: 0 0 10px;
+    color: var(--vn-ink, #21302f);
+}
+
+.checkin-subtitle {
+    color: var(--vn-muted, #64748b);
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.checkin-list {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.checkin-empty {
+    max-width: 560px;
+    margin: 48px auto;
+    text-align: center;
+    color: var(--vn-muted, #64748b);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.checkin-empty[hidden] {
+    display: none;
+}
+
+/* ---------- Thẻ 1 lịch trình đã lưu ---------- */
+
+.checkin-card {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--vn-line, #e2e8f0);
+    background: #eef2f5;
+    box-shadow: 0 14px 30px -20px rgba(33, 48, 47, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.checkin-card:hover,
+.checkin-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -18px rgba(33, 48, 47, 0.4);
+}
+
+.checkin-card:focus-visible {
+    outline: 2px solid var(--vn-coral, #c1373a);
+    outline-offset: 2px;
+}
+
+.checkin-side {
+    position: relative;
+    flex: 1;
+    min-height: 190px;
+    overflow: hidden;
+    background: #d8dee4;
+}
+
+.checkin-side-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+.checkin-card:hover .checkin-side-img {
+    transform: scale(1.05);
+}
+
+.checkin-side-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 55%);
+}
+
+.checkin-side-text {
+    position: absolute;
+    left: 18px;
+    bottom: 16px;
+    right: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #ffffff;
+}
+
+.checkin-side-text--right {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.checkin-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.92;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.checkin-place {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* Dải trắng ở giữa chứa icon máy bay — giống bố cục bản phác thảo */
+.checkin-plane {
+    flex: 0 0 74px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkin-plane-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--vn-coral, #c1373a);
+}
+
+.checkin-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.checkin-delete:hover {
+    background: rgba(0, 0, 0, 0.68);
+}
+
+.checkin-delete svg {
+    width: 14px;
+    height: 14px;
+}
+
+.checkin-meta {
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    color: var(--vn-muted, #64748b);
+    background: rgba(255, 255, 255, 0.92);
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+@media (max-width: 640px) {
+    .checkin-side {
+        min-height: 150px;
+    }
+
+    .checkin-plane {
+        flex-basis: 52px;
+    }
+
+    .checkin-plane-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .checkin-place {
+        font-size: 0.85rem;
+    }
+
+    .checkin-eyebrow {
+        font-size: 0.68rem;
+    }
+
+    .checkin-meta {
+        display: none;
+    }
+}
+
+/* ============================================================
+   CHECKBOX CHECK-IN — đánh dấu đã đến điểm đó trong lịch trình.
+   Nằm ở góc trên-phải của mỗi destination-card trong tab Lịch trình.
+   ============================================================ */
+
+.dest-checkin-label {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    cursor: pointer;
+    display: block;
+    width: 28px;
+    height: 28px;
+}
+
+.dest-checkin-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.dest-checkin-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2.5px solid rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+}
+
+.dest-checkin-mark::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 11px;
+    border: 2.5px solid transparent;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    transition: border-color 0.15s ease;
+}
+
+.dest-checkin-label:hover .dest-checkin-mark {
+    background: rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+}
+
+.dest-checkin-label input:checked+.dest-checkin-mark {
+    background: #22c55e;
+    border-color: #22c55e;
+}
+
+.dest-checkin-label input:checked+.dest-checkin-mark::after {
+    border-color: #ffffff;
+}
+
+/* Card đã check-in — thêm viền xanh nhẹ */
+.destination-card.is-checked {
+    outline: 2.5px solid #22c55e;
+    outline-offset: -2px;
+}
+
+.destination-card.is-checked .dest-image-wrap::after {
+    content: '✓ Đã đến';
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: #22c55e;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+    z-index: 5;
+    pointer-events: none;
+    letter-spacing: 0.3px;
+}
