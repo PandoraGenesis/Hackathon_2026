@@ -192,7 +192,9 @@ let state = {
   destProvince: '',
   isCbOpen: false,
   isDestOpen: false,
-  selectedPrefs: ['bien']
+  selectedPrefs: ['bien'],
+  // Mảng lưu các điểm đã check-in (dạng Set, mỗi phần tử là "day-session-index")
+  checkedDestinations: {}
 };
 
 /* ============ 4. LOGIC ============ */
@@ -841,6 +843,7 @@ generateBtn.addEventListener("click", () => {
 
     // Generate itinerary grouped by day and session
     state.generatedItinerary = {};
+    state.checkedDestinations = {};
     for (let day = 1; day <= state.duration; day++) {
       state.generatedItinerary[day] = {
         morning: generateDynamicSession(provinceStr, 'morning'),
@@ -869,7 +872,7 @@ function renderResult() {
       <div style="flex: 1; min-width: 120px;"></div>
       <h2 style="margin: 0; text-align: center; white-space: nowrap;">Lịch Trình Đề Xuất</h2>
       <div style="flex: 1; display: flex; justify-content: flex-end; min-width: 120px;">
-        <button type="button" class="save-itinerary-btn" onclick="alert('Đã lưu lịch trình thành công!')">
+        <button type="button" id="save-itinerary-btn" class="save-itinerary-btn">
           <i data-lucide="bookmark" style="width:18px; height:18px;"></i> Lưu lịch trình
         </button>
       </div>
@@ -958,7 +961,14 @@ function renderResult() {
       html += `<div class="destination-grid">`;
       session.data.forEach(dest => {
         html += `
-          <div class="destination-card">
+          <div class="destination-card" data-dest-key="${state.selectedDay}-${session.id}-${dest.name}">
+            <!-- Checkbox Check-in -->
+            <label class="dest-checkin-label" title="Đánh dấu đã đến nơi này">
+              <input type="checkbox" class="dest-checkin-cb"
+                data-key="${state.selectedDay}-${session.id}-${dest.name}"
+                ${state.checkedDestinations['${state.selectedDay}-${session.id}-${dest.name}'] ? 'checked' : ''}>
+              <span class="dest-checkin-mark"></span>
+            </label>
             <div class="dest-image-wrap">
               <img src="${dest.image}" alt="${dest.name}" data-keyword="${dest.keyword || dest.name}" class="dynamic-dest-img">
               <div class="dest-overlay"></div>
@@ -1000,6 +1010,30 @@ function renderResult() {
   resultSection.innerHTML = html;
   resultSection.hidden = false;
   window.lucide.createIcons();
+
+  // Gắn checkbox check-in cho từng điểm đến
+  resultSection.querySelectorAll('.dest-checkin-cb').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const key = cb.dataset.key;
+      if (cb.checked) {
+        state.checkedDestinations[key] = true;
+      } else {
+        delete state.checkedDestinations[key];
+      }
+      // Cập nhật visual trạng thái card
+      const card = cb.closest('.destination-card');
+      if (card) card.classList.toggle('is-checked', cb.checked);
+    });
+    // Áp dụng trạng thái đã check trước đó vào card
+    const card = cb.closest('.destination-card');
+    if (card && cb.checked) card.classList.add('is-checked');
+  });
+
+  // Gắn nút Lưu lịch trình thật (thay thế onclick giả của script.js)
+  var saveBtn = document.getElementById('save-itinerary-btn');
+  if (saveBtn && typeof window.handleSaveItinerary === 'function') {
+    saveBtn.onclick = function(e) { e.preventDefault(); window.handleSaveItinerary(); };
+  }
 
   if (!state.isRerendering) {
     resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
