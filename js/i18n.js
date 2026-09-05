@@ -50,9 +50,19 @@ const dict = {
 
   "Đăng nhập": "Login",
   "Đăng ký": "Sign Up",
+  "Tên đăng nhập hoặc email": "Username or email",
+  "Mật khẩu": "Password",
+  "Quên mật khẩu?": "Forgot password?",
+  "Đăng ký ngay.": "Sign Up now.",
+  "Chưa có tài khoản VNFinder?": "Don't have a VNFinder account?",
   "Trực quan": "Intuitive",
   "Hạ Long": "Ha Long",
   "Điểm đến nổi bật": "Outstanding destination",
+  "Địa chỉ email": "Email address",
+  "Tên đăng nhập": "Username",
+  "Đã có tài khoản VNFinder?": "Already have a VNFinder account?",
+  "Tạo tài khoản VNFinder": "Create a VNFinder account",
+  "Tạo tài khoản": "Create an account",
   "5. Vision & Mission (Redesigned as light elegant cards)": "Mountains & heritage",
   "Nghệ thuật đàn ca mộc mạc, phóng khoáng của người dân miệt vườn.": "The rustic and liberal art of singing and singing of garden people.",
   "Tìm tỉnh, xã, phường theo tên…": "Search provinces, communes, wards by name...",
@@ -206,8 +216,9 @@ const dict = {
   "10. Năm 1802 (Triều Nguyễn - Cố đô Huế)": "10. Year 1802 (Nguyen Dynasty - Hue Ancient Capital)",
   "Âm vang đại ngàn linh thiêng, nhịp đập kết nối cộng đồng các dân tộc.": "The sacred sound resonates, the heartbeat connects ethnic communities.",
   "Item vừa (chiếm 2 cột, 1 hàng)": "Medium item (occupies 2 columns, 1 row)",
-  "Trợ Lý Du Lịch AI: Khám Phá Việt Nam": "AI Travel Assistant: Discover Vietnam",
-  "Tự động phân cụm lịch trình tối ưu theo thực tế địa lý trên mọi miền Tổ Quốc": "Automatically cluster optimal itineraries based on actual geography across the country",
+  "Trợ Lý Du Lịch AI": "AI Travel Assistant",
+  "Khám Phá Việt Nam": "Discover Vietnam",
+  "Tự động lên lịch trình tối ưu theo thực tế địa lý trên mọi miền Tổ Quốc": "Automatically cluster optimal itineraries based on actual geography across the country",
   "2. Our Story (Centered Premium Card)": "2. Our Story (Centered Premium Card)",
   "Vẻ đẹp truyền thống": "Traditional beauty",
   "Nhã nhạc cung đình Huế": "Hue royal court music",
@@ -323,7 +334,7 @@ const dict = {
   "Tích hợp nguồn dữ liệu sâu rộng, bao quát cả những điểm đến \"ẩn mình\" ít người biết tới.": "Integrate extensive data sources, including unknown \"hidden\" destinations.",
   "End .phone-and-podium": "End .phone-and-podium",
   "8. Năm 1698 (Thành lập Sài Gòn)": "8. 1698 (Establishment of Saigon)",
-  "là một trợ lý AI do nhóm chúng tôi phát triển, với mục tiêu cá nhân hóa trải nghiệm khám phá Việt Nam cho từng du khách. Thay vì đưa ra một lịch trình dựng sẵn giống nhau cho tất cả mọi người, VNFinder cố gắng hiểu người dùng đang tìm gì và thích gì, để từ đó gợi ý một hành trình mang dấu ấn cá nhân.":"is an AI assistant developed by our team, with the goal of personalizing the experience of exploring Vietnam for each traveler. Instead of offering a pre-built schedule that is the same for everyone, VNFinder tries to understand what users are looking for and what they like, thereby suggesting a personal journey.",
+  "là một trợ lý AI do nhóm chúng tôi phát triển, với mục tiêu cá nhân hóa trải nghiệm khám phá Việt Nam cho từng du khách. Thay vì đưa ra một lịch trình dựng sẵn giống nhau cho tất cả mọi người, VNFinder cố gắng hiểu người dùng đang tìm gì và thích gì, để từ đó gợi ý một hành trình mang dấu ấn cá nhân.": "is an AI assistant developed by our team, with the goal of personalizing the experience of exploring Vietnam for each traveler. Instead of offering a pre-built schedule that is the same for everyone, VNFinder tries to understand what users are looking for and what they like, thereby suggesting a personal journey.",
   "Hà Nội": "Hanoi",
   "TP. Quy Nhơn": "TP. Quy Nhơn",
   "Mang không khí trầm mặc với hệ thống lăng tẩm, đại nội cung đình nguy nga và nhã nhạc cung đình đặc sắc.": "Bring a quiet atmosphere with a system of mausoleums, grand palaces and special court music.",
@@ -387,9 +398,9 @@ function translateNode(node, lang) {
   } else if (node.nodeType === Node.ELEMENT_NODE) {
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
     if (node.tagName === 'INPUT' && node.placeholder) {
-        const text = node.placeholder.trim();
-        if (lang === 'en' && dict[text]) node.placeholder = dict[text];
-        else if (lang === 'vn' && reverseDict[text]) node.placeholder = reverseDict[text];
+      const text = node.placeholder.trim();
+      if (lang === 'en' && dict[text]) node.placeholder = dict[text];
+      else if (lang === 'vn' && reverseDict[text]) node.placeholder = reverseDict[text];
     }
     for (const child of node.childNodes) {
       translateNode(child, lang);
@@ -416,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', (e) => {
       const lang = e.target.textContent.trim().toLowerCase();
       if (lang === 'en' || lang === 'vn') {
-          updateLanguage(lang);
+        updateLanguage(lang);
       }
     });
   });
